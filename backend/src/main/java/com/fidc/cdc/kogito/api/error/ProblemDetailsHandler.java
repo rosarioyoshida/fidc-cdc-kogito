@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.MDC;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,6 +58,15 @@ public class ProblemDetailsHandler {
         return createDetail(
                 problemTypeRegistry.get(exception.getProblemKey()),
                 exception.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    ProblemDetail handleNoResourceFound(NoResourceFoundException exception, HttpServletRequest request) {
+        return createDetail(
+                problemTypeRegistry.get("resource-not-found"),
+                "O recurso solicitado nao foi encontrado.",
                 request.getRequestURI()
         );
     }
