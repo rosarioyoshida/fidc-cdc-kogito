@@ -1,24 +1,32 @@
-import { EmptyState } from "@/components/feedback/empty-state";
-
 type CessaoDetailPageProps = {
   params: Promise<{ businessKey: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function CessaoDetailPage({ params }: CessaoDetailPageProps) {
+import { CessaoDetail } from "@/features/cessao/cessao-detail";
+import {
+  advanceEtapaAction,
+  getCessao,
+  refreshCessaoAction
+} from "@/features/cessao/actions";
+
+export default async function CessaoDetailPage({
+  params,
+  searchParams
+}: CessaoDetailPageProps) {
   const { businessKey } = await params;
+  const query = (await searchParams) ?? {};
+  const errorMessage =
+    typeof query.error === "string" ? decodeURIComponent(query.error) : undefined;
+  const cessao = await getCessao(businessKey);
 
   return (
-    <main className="grid gap-6">
-      <header className="rounded-lg border bg-surface-raised p-6 shadow-soft">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
-          Cessao
-        </p>
-        <h1 className="text-3xl font-semibold">{businessKey}</h1>
-      </header>
-
-      <EmptyState
-        title="Detalhe em preparacao"
-        description="A jornada ponta a ponta desta cessao sera habilitada na implementacao da US1."
+    <main>
+      <CessaoDetail
+        cessao={cessao}
+        errorMessage={errorMessage}
+        advanceAction={advanceEtapaAction}
+        refreshAction={refreshCessaoAction}
       />
     </main>
   );

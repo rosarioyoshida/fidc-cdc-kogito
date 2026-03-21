@@ -1,4 +1,4 @@
-import { forwardRef, InputHTMLAttributes } from "react";
+import React, { forwardRef, InputHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
