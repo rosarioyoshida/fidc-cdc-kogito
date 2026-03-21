@@ -29,6 +29,7 @@ backend, frontend, workflow BPMN, consulta consolidada e servicos auxiliares.
 
 ### Frontend
 
+- `FIDC_API_INTERNAL_URL=http://backend:8080/api/v1` no compose ou `http://localhost:8080/api/v1` em execucao local sem Docker
 - `NEXT_PUBLIC_FIDC_API_URL=http://localhost:8080/api/v1`
 - `NEXT_PUBLIC_FIDC_API_USERNAME=operador`
 - `NEXT_PUBLIC_FIDC_API_PASSWORD=operador123`

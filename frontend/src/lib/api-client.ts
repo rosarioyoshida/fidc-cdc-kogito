@@ -1,7 +1,10 @@
 import { getBasicAuthHeader } from "@/lib/auth";
 import { parseProblemDetails } from "@/lib/problem-details";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_FIDC_API_URL ?? "http://localhost:8080/api/v1";
+const API_BASE_URL =
+  process.env.FIDC_API_INTERNAL_URL ??
+  process.env.NEXT_PUBLIC_FIDC_API_URL ??
+  "http://localhost:8080/api/v1";
 
 export class ApiError extends Error {
   constructor(
