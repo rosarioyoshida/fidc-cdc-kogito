@@ -13,6 +13,8 @@ import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import com.fidc.cdc.kogito.infrastructure.messaging.ProcessEventPayload;
+import com.fidc.cdc.kogito.observability.ProcessMetricsService;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +33,7 @@ public class CessaoReadModelProjector {
     private final LastroRepository lastroRepository;
     private final RegraElegibilidadeRepository regraElegibilidadeRepository;
     private final EventoAuditoriaRepository eventoAuditoriaRepository;
+    private final ProcessMetricsService processMetricsService;
 
     public CessaoReadModelProjector(
             CessaoRepository cessaoRepository,
@@ -39,7 +42,8 @@ public class CessaoReadModelProjector {
             PagamentoRepository pagamentoRepository,
             LastroRepository lastroRepository,
             RegraElegibilidadeRepository regraElegibilidadeRepository,
-            EventoAuditoriaRepository eventoAuditoriaRepository
+            EventoAuditoriaRepository eventoAuditoriaRepository,
+            ProcessMetricsService processMetricsService
     ) {
         this.cessaoRepository = cessaoRepository;
         this.readModelRepository = readModelRepository;
@@ -48,12 +52,20 @@ public class CessaoReadModelProjector {
         this.lastroRepository = lastroRepository;
         this.regraElegibilidadeRepository = regraElegibilidadeRepository;
         this.eventoAuditoriaRepository = eventoAuditoriaRepository;
+        this.processMetricsService = processMetricsService;
     }
 
     @Transactional(readOnly = true)
     public void projectCurrentState(String businessKey, String lastEvent) {
+        OffsetDateTime startedAt = OffsetDateTime.now();
         cessaoRepository.findByBusinessKey(businessKey)
-                .ifPresent(cessao -> readModelRepository.save(toDocument(cessao, lastEvent)));
+                .ifPresent(cessao -> {
+                    readModelRepository.save(toDocument(cessao, lastEvent));
+                    processMetricsService.recordProjectionLag(
+                            "cessao-read-model",
+                            Math.max(0, Duration.between(startedAt, OffsetDateTime.now()).toMillis())
+                    );
+                });
     }
 
     @KafkaListener(

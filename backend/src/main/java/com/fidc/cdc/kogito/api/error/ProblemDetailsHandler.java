@@ -2,7 +2,9 @@ package com.fidc.cdc.kogito.api.error;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.Map;
+import org.slf4j.MDC;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -79,6 +81,8 @@ public class ProblemDetailsHandler {
         detail.setType(URI.create(definition.type()));
         detail.setTitle(definition.title());
         detail.setInstance(URI.create(instance));
+        detail.setProperty("timestamp", OffsetDateTime.now());
+        detail.setProperty("correlationId", MDC.get("correlationId"));
         return detail;
     }
 }

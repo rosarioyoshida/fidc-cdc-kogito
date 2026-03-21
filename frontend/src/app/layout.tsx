@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export const metadata: Metadata = {
   title: "FIDC CDC Kogito",
@@ -22,7 +23,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR" data-theme="light">
       <body className="text-text antialiased">
         <ThemeBootScript />
-        <div className="mx-auto min-h-screen max-w-7xl px-6 py-8">{children}</div>
+        <div className="mx-auto min-h-screen max-w-7xl px-6 py-8">
+          <div className="mb-6 flex justify-end">
+            <ThemeToggle />
+          </div>
+          {children}
+        </div>
       </body>
     </html>
   );

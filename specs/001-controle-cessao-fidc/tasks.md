@@ -156,17 +156,17 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T081 [P] Update environment variables, local run instructions, and service URLs in `backend/src/main/resources/application.yml`, `frontend/.env.local.example`, and `specs/001-controle-cessao-fidc/quickstart.md`
-- [ ] T082 Validate REST resource naming, versioning strategy, HATEOAS links, and RFC 9457 payloads in `backend/src/main/java/com/fidc/cdc/kogito/api/`
-- [ ] T083 Validate observability coverage for process, registradora retries, Kafka propagation, Data Index, Jobs Service, Task Console, and Management Console in `backend/src/main/java/com/fidc/cdc/kogito/observability/` and `infra/observability/`
-- [ ] T084 [P] Validate frontend accessibility, semantic colors, dark/light themes, and Atlassian token consistency in `frontend/src/design-system/` and `frontend/src/components/`
-- [ ] T085 [P] Validate Docker Compose startup order, minimum resources, and service health checks in `infra/compose/docker-compose.yml`
-- [ ] T086 Define operational baseline for volume, projection lag, and consultation targets in `specs/001-controle-cessao-fidc/quickstart.md`
-- [ ] T087 [P] Create backend integration test for read-model propagation lag through Kafka, Data Index, and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProjectionLagIntegrationTest.java`
-- [ ] T088 Validate consultation response time and projection lag against operational targets in `specs/001-controle-cessao-fidc/quickstart.md`
-- [ ] T089 Validate end-to-end operational flow for Kafka, Data Index, Jobs Service, Task Console, and Management Console in `specs/001-controle-cessao-fidc/quickstart.md`
-- [ ] T090 Run end-to-end quickstart validation and capture implementation notes in `specs/001-controle-cessao-fidc/quickstart.md`
-- [ ] T091 Run backend and frontend critical-path regression for BPMN, registradora, autorizacao e auditoria in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T081 [P] Update environment variables, local run instructions, and service URLs in `backend/src/main/resources/application.yml`, `frontend/.env.local.example`, and `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T082 Validate REST resource naming, versioning strategy, HATEOAS links, and RFC 9457 payloads in `backend/src/main/java/com/fidc/cdc/kogito/api/`
+- [X] T083 Validate observability coverage for process, registradora retries, Kafka propagation, Data Index, Jobs Service, Task Console, and Management Console in `backend/src/main/java/com/fidc/cdc/kogito/observability/` and `infra/observability/`
+- [X] T084 [P] Validate frontend accessibility, semantic colors, dark/light themes, and Atlassian token consistency in `frontend/src/design-system/` and `frontend/src/components/`
+- [X] T085 [P] Validate Docker Compose startup order, minimum resources, and service health checks in `infra/compose/docker-compose.yml`
+- [X] T086 Define operational baseline for volume, projection lag, and consultation targets in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T087 [P] Create backend integration test for read-model propagation lag through Kafka, Data Index, and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProjectionLagIntegrationTest.java`
+- [X] T088 Validate consultation response time and projection lag against operational targets in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T089 Validate end-to-end operational flow for Kafka, Data Index, Jobs Service, Task Console, and Management Console in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T090 Run end-to-end quickstart validation and capture implementation notes in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T091 Run backend and frontend critical-path regression for BPMN, registradora, autorizacao e auditoria in `specs/001-controle-cessao-fidc/quickstart.md`
 
 ---
 

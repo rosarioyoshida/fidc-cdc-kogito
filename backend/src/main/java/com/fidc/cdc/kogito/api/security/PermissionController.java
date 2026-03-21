@@ -9,6 +9,7 @@ import com.fidc.cdc.kogito.application.security.StageAuthorizationService;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
+import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,17 +25,20 @@ public class PermissionController {
     private final CessaoRepository cessaoRepository;
     private final TaskAssignmentService taskAssignmentService;
     private final ManagementConsoleSupport managementConsoleSupport;
+    private final ProcessMetricsService processMetricsService;
 
     public PermissionController(
             StageAuthorizationService stageAuthorizationService,
             CessaoRepository cessaoRepository,
             TaskAssignmentService taskAssignmentService,
-            ManagementConsoleSupport managementConsoleSupport
+            ManagementConsoleSupport managementConsoleSupport,
+            ProcessMetricsService processMetricsService
     ) {
         this.stageAuthorizationService = stageAuthorizationService;
         this.cessaoRepository = cessaoRepository;
         this.taskAssignmentService = taskAssignmentService;
         this.managementConsoleSupport = managementConsoleSupport;
+        this.processMetricsService = processMetricsService;
     }
 
     @GetMapping
@@ -51,6 +55,8 @@ public class PermissionController {
                 .orElse("SEM_ETAPA_ATIVA");
         TaskAssignmentContext taskContext = taskAssignmentService.describeTaskContext(businessKey, snapshot.actorId());
         ManagementConsoleContext managementContext = managementConsoleSupport.describeProcessContext(businessKey);
+        processMetricsService.registerConsoleAccess("task-console", "context-served");
+        processMetricsService.registerConsoleAccess("management-console", "context-served");
 
         return ResponseEntity.ok(Map.of(
                 "actorId", snapshot.actorId(),

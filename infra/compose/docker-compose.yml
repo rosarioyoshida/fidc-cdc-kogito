@@ -3,6 +3,7 @@ name: fidc-cdc-kogit
 services:
   mysql:
     image: mysql:8.4
+    mem_limit: 768m
     environment:
       MYSQL_DATABASE: fidc_cdc
       MYSQL_USER: fidc
@@ -20,6 +21,7 @@ services:
 
   mongodb:
     image: mongo:8.0
+    mem_limit: 512m
     ports:
       - "27017:27017"
     volumes:
@@ -32,6 +34,7 @@ services:
 
   kafka:
     image: apache/kafka:4.0.2
+    mem_limit: 1g
     ports:
       - "9092:9092"
     environment:
@@ -58,16 +61,20 @@ services:
 
   jobs-service:
     image: quay.io/kiegroup/kogito-jobs-service-ephemeral:latest
+    mem_limit: 512m
     ports:
       - "8085:8080"
     depends_on:
       kafka:
         condition: service_healthy
+      data-index:
+        condition: service_started
     environment:
       KOGITO_JOBS_SERVICE_DATA_INDEX_URL: http://data-index:8080
 
   data-index:
     image: quay.io/kiegroup/kogito-data-index-ephemeral:latest
+    mem_limit: 768m
     ports:
       - "8180:8080"
     depends_on:
@@ -78,20 +85,26 @@ services:
 
   task-console:
     image: quay.io/kiegroup/kogito-task-console:latest
+    mem_limit: 384m
     ports:
       - "8280:8080"
     depends_on:
       data-index:
+        condition: service_started
+      backend:
         condition: service_started
     environment:
       KOGITO_DATAINDEX_HTTP_URL: http://data-index:8080
 
   management-console:
     image: quay.io/kiegroup/kogito-management-console:latest
+    mem_limit: 384m
     ports:
       - "8380:8080"
     depends_on:
       data-index:
+        condition: service_started
+      backend:
         condition: service_started
     environment:
       KOGITO_DATAINDEX_HTTP_URL: http://data-index:8080
@@ -101,6 +114,7 @@ services:
   backend:
     build:
       context: ../../backend
+    mem_limit: 1g
     ports:
       - "8080:8080"
     depends_on:
@@ -126,6 +140,7 @@ services:
   frontend:
     build:
       context: ../../frontend
+    mem_limit: 384m
     ports:
       - "3000:3000"
     depends_on:

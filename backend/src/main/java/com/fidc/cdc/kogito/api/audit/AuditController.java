@@ -2,6 +2,7 @@ package com.fidc.cdc.kogito.api.audit;
 
 import com.fidc.cdc.kogito.application.audit.AuditTrailService;
 import com.fidc.cdc.kogito.domain.audit.EventoAuditoria;
+import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuditController {
 
     private final AuditTrailService auditTrailService;
+    private final ProcessMetricsService processMetricsService;
 
-    public AuditController(AuditTrailService auditTrailService) {
+    public AuditController(AuditTrailService auditTrailService, ProcessMetricsService processMetricsService) {
         this.auditTrailService = auditTrailService;
+        this.processMetricsService = processMetricsService;
     }
 
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> listar(@PathVariable String businessKey) {
+        processMetricsService.registerConsoleAccess("audit-api", "success");
         return ResponseEntity.ok(auditTrailService.listarPorBusinessKey(businessKey)
                 .stream()
                 .map(this::toResponse)

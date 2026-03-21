@@ -97,6 +97,9 @@ public class CessaoController {
         response.add(linkAssembler.self(cessao.getBusinessKey()));
         response.add(linkAssembler.etapas(cessao.getBusinessKey()));
         response.add(linkAssembler.historico(cessao.getBusinessKey()));
+        response.add(linkAssembler.analise(cessao.getBusinessKey()));
+        response.add(linkAssembler.auditoria(cessao.getBusinessKey()));
+        response.add(linkAssembler.permissoes(cessao.getBusinessKey()));
         if (includeEtapas) {
             response.setEtapas(cessao.getEtapas().stream().map(this::toEtapaResponse).toList());
         }
