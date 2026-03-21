@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Table } from "@/components/ui/table";
 import { CessaoStatusPanel } from "@/features/cessao/cessao-status-panel";
@@ -27,12 +28,21 @@ export function CessaoDetail({
           <h1 className="text-3xl font-semibold">{cessao.businessKey}</h1>
         </div>
 
-        <form action={refreshAction}>
-          <input type="hidden" name="businessKey" value={cessao.businessKey} />
-          <Button type="submit" variant="secondary">
-            Atualizar status
-          </Button>
-        </form>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={`/cessoes/${cessao.businessKey}/analise`}
+            className="inline-flex min-h-10 items-center justify-center rounded-md border bg-surface-raised px-4 py-2 text-sm font-semibold text-text transition hover:bg-surface"
+          >
+            Abrir analise
+          </Link>
+
+          <form action={refreshAction}>
+            <input type="hidden" name="businessKey" value={cessao.businessKey} />
+            <Button type="submit" variant="secondary">
+              Atualizar status
+            </Button>
+          </form>
+        </div>
       </header>
 
       <CessaoStatusPanel cessao={cessao} errorMessage={errorMessage} />
