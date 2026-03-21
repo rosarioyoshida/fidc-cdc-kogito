@@ -127,8 +127,8 @@ npx tsc --noEmit --incremental false
 - Data Index: `http://localhost:8180/graphql`
 - Task Console: `http://localhost:8280`
 - Management Console: `http://localhost:8380`
-- Keycloak realm metadata: `http://localhost:8480/realms/kogito/.well-known/openid-configuration`
-- Keycloak Admin Console: `http://localhost:8480`
+- Keycloak realm metadata: `http://localhost:8480/auth/realms/kogito/.well-known/openid-configuration`
+- Keycloak Admin Console: `http://localhost:8480/auth/`
 - Prometheus endpoint backend: `http://localhost:8080/actuator/prometheus`
 
 ## Validacoes minimas

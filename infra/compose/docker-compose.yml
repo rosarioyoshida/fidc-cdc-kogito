@@ -84,18 +84,21 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.4
+    image: quay.io/keycloak/keycloak:legacy
     mem_limit: 768m
-    command:
-      - start-dev
-      - --import-realm
     ports:
       - "8480:8080"
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin123
+      KEYCLOAK_IMPORT: /tmp/kogito-realm.json
     volumes:
-      - ../keycloak/kogito-realm.json:/opt/keycloak/data/import/kogito-realm.json:ro
+      - ../keycloak/kogito-realm.json:/tmp/kogito-realm.json:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/realms/kogito"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   task-console:
     image: quay.io/kiegroup/kogito-task-console:latest
@@ -108,13 +111,14 @@ services:
       backend:
         condition: service_started
       keycloak:
-        condition: service_started
+        condition: service_healthy
     environment:
       KOGITO_DATAINDEX_HTTP_URL: http://localhost:8180/graphql
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_URL: http://localhost:8480
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_REALM: kogito
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_CLIENT_ID: kogito-console-quarkus
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://localhost:8480/realms/kogito/.well-known/openid-configuration
+      KOGITO_TASK_CONSOLE_PROPS: >-
+        -Dkogito.consoles.keycloak.config.url=http://localhost:8480/auth
+        -Dkogito.consoles.keycloak.config.realm=kogito
+        -Dkogito.consoles.keycloak.config.client-id=kogito-console-quarkus
+        -Dkogito.consoles.keycloak.config.health-check-url=http://localhost:8480/auth/realms/kogito/.well-known/openid-configuration
 
   management-console:
     image: quay.io/kiegroup/kogito-management-console:latest
@@ -127,13 +131,14 @@ services:
       backend:
         condition: service_started
       keycloak:
-        condition: service_started
+        condition: service_healthy
     environment:
       KOGITO_DATAINDEX_HTTP_URL: http://localhost:8180/graphql
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_URL: http://localhost:8480
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_REALM: kogito
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_CLIENT_ID: kogito-console-quarkus
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://localhost:8480/realms/kogito/.well-known/openid-configuration
+      KOGITO_MANAGEMENT_CONSOLE_PROPS: >-
+        -Dkogito.consoles.keycloak.config.url=http://localhost:8480/auth
+        -Dkogito.consoles.keycloak.config.realm=kogito
+        -Dkogito.consoles.keycloak.config.client-id=kogito-console-quarkus
+        -Dkogito.consoles.keycloak.config.health-check-url=http://localhost:8480/auth/realms/kogito/.well-known/openid-configuration
 
   backend:
     build:
