@@ -47,9 +47,17 @@ public class SecurityConfig {
                         .password(passwordEncoder.encode("analista123"))
                         .roles("ANALISTA")
                         .build(),
+                User.withUsername("aprovador")
+                        .password(passwordEncoder.encode("aprovador123"))
+                        .roles("APROVADOR")
+                        .build(),
                 User.withUsername("auditor")
                         .password(passwordEncoder.encode("auditor123"))
                         .roles("AUDITOR")
+                        .build(),
+                User.withUsername("integracao")
+                        .password(passwordEncoder.encode("integracao123"))
+                        .roles("INTEGRACAO")
                         .build()
         );
     }

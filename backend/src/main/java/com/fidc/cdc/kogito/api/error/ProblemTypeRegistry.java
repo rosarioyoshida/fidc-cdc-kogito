@@ -23,6 +23,11 @@ public class ProblemTypeRegistry {
                     "Conflito de negocio",
                     HttpStatus.CONFLICT
             ),
+            "forbidden-operation", new ProblemTypeDefinition(
+                    "https://fidc-cdc-kogito.local/problems/forbidden-operation",
+                    "Operacao nao autorizada",
+                    HttpStatus.FORBIDDEN
+            ),
             "external-service-error", new ProblemTypeDefinition(
                     "https://fidc-cdc-kogito.local/problems/external-service-error",
                     "Falha de servico externo",

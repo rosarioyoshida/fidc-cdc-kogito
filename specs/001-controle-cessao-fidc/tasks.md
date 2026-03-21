@@ -129,12 +129,12 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 
 ### Implementation for User Story 3
 
-- [ ] T063 [P] [US3] Create `Usuario`, `PerfilAcesso`, and `EventoAuditoria` entities in `backend/src/main/java/com/fidc/cdc/kogito/domain/security/` and `backend/src/main/java/com/fidc/cdc/kogito/domain/audit/`
-- [ ] T064 [P] [US3] Create Flyway migration for users, roles, permissions, and audit events in `backend/src/main/resources/db/migration/V4__security_and_audit.sql`
-- [ ] T065 [US3] Create seed for operational roles, stage permissions, and default access mappings in `backend/src/main/resources/db/migration/V5__seed_roles_permissions.sql`
-- [ ] T066 [US3] Implement role-to-stage authorization policies in `backend/src/main/java/com/fidc/cdc/kogito/application/security/StageAuthorizationService.java`
-- [ ] T067 [US3] Implement immutable audit event persistence and retrieval in `backend/src/main/java/com/fidc/cdc/kogito/application/audit/AuditTrailService.java`
-- [ ] T068 [US3] Integrate stage authorization and audit registration into workflow commands in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoProcessService.java`
+- [X] T063 [P] [US3] Create `Usuario`, `PerfilAcesso`, and `EventoAuditoria` entities in `backend/src/main/java/com/fidc/cdc/kogito/domain/security/` and `backend/src/main/java/com/fidc/cdc/kogito/domain/audit/`
+- [X] T064 [P] [US3] Create Flyway migration for users, roles, permissions, and audit events in `backend/src/main/resources/db/migration/V4__security_and_audit.sql`
+- [X] T065 [US3] Create seed for operational roles, stage permissions, and default access mappings in `backend/src/main/resources/db/migration/V5__seed_roles_permissions.sql`
+- [X] T066 [US3] Implement role-to-stage authorization policies in `backend/src/main/java/com/fidc/cdc/kogito/application/security/StageAuthorizationService.java`
+- [X] T067 [US3] Implement immutable audit event persistence and retrieval in `backend/src/main/java/com/fidc/cdc/kogito/application/audit/AuditTrailService.java`
+- [X] T068 [US3] Integrate stage authorization and audit registration into workflow commands in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoProcessService.java`
 - [ ] T069 [US3] Expose audit trail, permissions, and operational history endpoints in `backend/src/main/java/com/fidc/cdc/kogito/api/audit/AuditController.java` and `backend/src/main/java/com/fidc/cdc/kogito/api/security/PermissionController.java`
 - [ ] T070 [US3] Configure human task metadata, assignments, and task visibility for Task Console in `backend/src/main/resources/processes/controle-cessao.bpmn`
 - [ ] T071 [US3] Implement task identity and assignment support for authorized operational profiles in `backend/src/main/java/com/fidc/cdc/kogito/application/process/TaskAssignmentService.java`
