@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
              xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:drools="http://www.jboss.org/drools"
              id="Definition_ControleCessao"
              targetNamespace="https://fidc-cdc-kogito/processes">
-    <process id="controle-cessao" name="Controle de Cessao" isExecutable="true">
+    <itemDefinition id="_task01_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task01_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task01_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task01_DescriptionInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task02_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task02_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task02_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task02_DescriptionInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task03_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task03_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task03_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task03_DescriptionInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task10_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task10_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task10_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task10_DescriptionInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task11_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task11_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task11_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task11_DescriptionInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task12_TaskNameInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task12_GroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task12_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+    <itemDefinition id="_task12_DescriptionInputXItem" structureRef="Object"/>
+
+    <process id="controle-cessao" name="Controle de Cessao" drools:packageName="com.fidc.cdc.kogito.processes" isExecutable="true">
         <startEvent id="start-cessao" name="Inicio da Cessao">
             <outgoing>flow-1</outgoing>
         </startEvent>
@@ -13,18 +40,138 @@
         <userTask id="task-01" name="01 Importar carteira">
             <incoming>flow-1</incoming>
             <outgoing>flow-2</outgoing>
+            <ioSpecification>
+                <dataInput id="task-01-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task01_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-01-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task01_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-01-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task01_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-01-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task01_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-01-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-01-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-01-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-01-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-01-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">IMPORTAR_CARTEIRA</from>
+                    <to xsi:type="tFormalExpression">task-01-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-01-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">OPERADOR</from>
+                    <to xsi:type="tFormalExpression">task-01-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-01-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-01-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-01-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Importacao inicial da carteira e preparacao do contexto operacional.</from>
+                    <to xsi:type="tFormalExpression">task-01-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
         <userTask id="task-02" name="02 Validar cedente">
             <incoming>flow-2</incoming>
             <outgoing>flow-3</outgoing>
+            <ioSpecification>
+                <dataInput id="task-02-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task02_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-02-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task02_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-02-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task02_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-02-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task02_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-02-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-02-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-02-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-02-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-02-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">VALIDAR_CEDENTE</from>
+                    <to xsi:type="tFormalExpression">task-02-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-02-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">OPERADOR</from>
+                    <to xsi:type="tFormalExpression">task-02-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-02-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-02-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-02-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Validacao cadastral e documental do cedente.</from>
+                    <to xsi:type="tFormalExpression">task-02-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
         <userTask id="task-03" name="03 Analisar elegibilidade">
             <incoming>flow-3</incoming>
             <outgoing>flow-4</outgoing>
+            <ioSpecification>
+                <dataInput id="task-03-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task03_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-03-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task03_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-03-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task03_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-03-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task03_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-03-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-03-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-03-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-03-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-03-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">ANALISAR_ELEGIBILIDADE</from>
+                    <to xsi:type="tFormalExpression">task-03-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-03-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">ANALISTA</from>
+                    <to xsi:type="tFormalExpression">task-03-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-03-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-03-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-03-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Analise de elegibilidade com bloqueios impeditivos e alertas rastreaveis.</from>
+                    <to xsi:type="tFormalExpression">task-03-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-4" sourceRef="task-03" targetRef="task-04"/>
@@ -68,12 +215,92 @@
         <userTask id="task-10" name="10 Coletar termo de aceite">
             <incoming>flow-10</incoming>
             <outgoing>flow-11</outgoing>
+            <ioSpecification>
+                <dataInput id="task-10-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task10_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-10-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task10_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-10-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task10_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-10-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task10_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-10-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-10-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-10-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-10-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-10-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">COLETAR_TERMO_ACEITE</from>
+                    <to xsi:type="tFormalExpression">task-10-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-10-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">ANALISTA</from>
+                    <to xsi:type="tFormalExpression">task-10-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-10-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-10-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-10-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Coleta e formalizacao do termo de aceite antes do fechamento financeiro.</from>
+                    <to xsi:type="tFormalExpression">task-10-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-11" sourceRef="task-10" targetRef="task-11"/>
         <userTask id="task-11" name="11 Validar lastros">
             <incoming>flow-11</incoming>
             <outgoing>flow-12</outgoing>
+            <ioSpecification>
+                <dataInput id="task-11-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task11_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-11-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task11_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-11-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task11_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-11-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task11_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-11-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-11-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-11-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-11-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-11-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">VALIDAR_LASTROS</from>
+                    <to xsi:type="tFormalExpression">task-11-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-11-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">ANALISTA</from>
+                    <to xsi:type="tFormalExpression">task-11-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-11-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-11-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-11-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Validacao documental de lastros com possibilidade de bloqueio do aceite final.</from>
+                    <to xsi:type="tFormalExpression">task-11-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-12" sourceRef="task-11" targetRef="gateway-lastros"/>
@@ -87,6 +314,46 @@
         <userTask id="task-12" name="12 Autorizar pagamento">
             <incoming>flow-12a</incoming>
             <outgoing>flow-13</outgoing>
+            <ioSpecification>
+                <dataInput id="task-12-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task12_TaskNameInputXItem" name="TaskName"/>
+                <dataInput id="task-12-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task12_GroupIdInputXItem" name="GroupId"/>
+                <dataInput id="task-12-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task12_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+                <dataInput id="task-12-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task12_DescriptionInputXItem" name="Description"/>
+                <inputSet>
+                    <dataInputRefs>task-12-TaskNameInputX</dataInputRefs>
+                    <dataInputRefs>task-12-GroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-12-BusinessAdministratorGroupIdInputX</dataInputRefs>
+                    <dataInputRefs>task-12-DescriptionInputX</dataInputRefs>
+                </inputSet>
+            </ioSpecification>
+            <dataInputAssociation>
+                <targetRef>task-12-TaskNameInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUTORIZAR_PAGAMENTO</from>
+                    <to xsi:type="tFormalExpression">task-12-TaskNameInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-12-GroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">APROVADOR</from>
+                    <to xsi:type="tFormalExpression">task-12-GroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-12-BusinessAdministratorGroupIdInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">AUDITOR</from>
+                    <to xsi:type="tFormalExpression">task-12-BusinessAdministratorGroupIdInputX</to>
+                </assignment>
+            </dataInputAssociation>
+            <dataInputAssociation>
+                <targetRef>task-12-DescriptionInputX</targetRef>
+                <assignment>
+                    <from xsi:type="tFormalExpression">Autorizacao final do pagamento apos validacao financeira e documental.</from>
+                    <to xsi:type="tFormalExpression">task-12-DescriptionInputX</to>
+                </assignment>
+            </dataInputAssociation>
         </userTask>
 
         <sequenceFlow id="flow-12b" sourceRef="gateway-lastros" targetRef="end-rejeicao"/>

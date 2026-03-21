@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PermissaoEtapaRepository extends JpaRepository<PermissaoEtapa, UUID> {
 
+    List<PermissaoEtapa> findByNomeEtapa(EtapaCessaoNome nomeEtapa);
+
     List<PermissaoEtapa> findByPerfilAcessoNomeAndNomeEtapa(String perfil, EtapaCessaoNome nomeEtapa);
 }

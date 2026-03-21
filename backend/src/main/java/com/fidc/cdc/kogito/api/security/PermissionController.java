@@ -1,5 +1,9 @@
 package com.fidc.cdc.kogito.api.security;
 
+import com.fidc.cdc.kogito.application.process.ManagementConsoleContext;
+import com.fidc.cdc.kogito.application.process.ManagementConsoleSupport;
+import com.fidc.cdc.kogito.application.process.TaskAssignmentContext;
+import com.fidc.cdc.kogito.application.process.TaskAssignmentService;
 import com.fidc.cdc.kogito.application.security.PermissionSnapshot;
 import com.fidc.cdc.kogito.application.security.StageAuthorizationService;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
@@ -18,13 +22,19 @@ public class PermissionController {
 
     private final StageAuthorizationService stageAuthorizationService;
     private final CessaoRepository cessaoRepository;
+    private final TaskAssignmentService taskAssignmentService;
+    private final ManagementConsoleSupport managementConsoleSupport;
 
     public PermissionController(
             StageAuthorizationService stageAuthorizationService,
-            CessaoRepository cessaoRepository
+            CessaoRepository cessaoRepository,
+            TaskAssignmentService taskAssignmentService,
+            ManagementConsoleSupport managementConsoleSupport
     ) {
         this.stageAuthorizationService = stageAuthorizationService;
         this.cessaoRepository = cessaoRepository;
+        this.taskAssignmentService = taskAssignmentService;
+        this.managementConsoleSupport = managementConsoleSupport;
     }
 
     @GetMapping
@@ -39,13 +49,17 @@ public class PermissionController {
                 .map(etapa -> etapa.getNomeEtapa().name())
                 .findFirst()
                 .orElse("SEM_ETAPA_ATIVA");
+        TaskAssignmentContext taskContext = taskAssignmentService.describeTaskContext(businessKey, snapshot.actorId());
+        ManagementConsoleContext managementContext = managementConsoleSupport.describeProcessContext(businessKey);
 
         return ResponseEntity.ok(Map.of(
                 "actorId", snapshot.actorId(),
                 "perfis", snapshot.perfis(),
                 "etapasPermitidas", snapshot.etapasPermitidas(),
                 "etapaAtual", etapaAtual,
-                "podeExecutarEtapaAtual", snapshot.etapasPermitidas().contains(etapaAtual)
+                "podeExecutarEtapaAtual", snapshot.etapasPermitidas().contains(etapaAtual),
+                "taskContext", taskContext,
+                "managementContext", managementContext
         ));
     }
 }
