@@ -1,0 +1,21 @@
+flowchart TB
+    FE["Frontend / Sistemas clientes"]
+    MC["Management Console"]
+    TC["Task Console"]
+
+    KP["Serviço Kogito de Processo"]
+    KF["Kafka"]
+    DI["Kogito Data Index"]
+    JS["Kogito Jobs Service"]
+
+    FE -->|"inicia e acompanha fluxos"| KP
+    KP -->|"emite eventos de execução"| KF
+    KF -->|"alimenta visão indexada"| DI
+
+    KP <-->|"agenda e recebe timers/jobs"| JS
+
+    MC -->|"consulta dados operacionais"| DI
+    TC -->|"consulta tarefas"| DI
+
+    MC -->|"opera instâncias de processo"| KP
+    TC -->|"atua em tarefas humanas"| KP

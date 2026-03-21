@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: FIDC CDC Kogito API
+  version: 1.0.0
+  description: >
+    Contrato inicial da API para operacao do fluxo de cessao de FIDC.
+servers:
+  - url: /api/v1
+paths:
+  /cessoes:
+    post:
+      summary: Registrar uma nova cessao
+      operationId: createCessao
+      responses:
+        '201':
+          description: Cessao registrada
+        '400':
+          description: Requisicao invalida
+    get:
+      summary: Listar cessoes
+      operationId: listCessoes
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: business-key
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de cessoes
+  /cessoes/{cessaoId}:
+    get:
+      summary: Consultar detalhe de uma cessao
+      operationId: getCessao
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhe da cessao
+        '404':
+          description: Cessao nao encontrada
+  /cessoes/{cessaoId}/etapas:
+    get:
+      summary: Consultar etapas da cessao
+      operationId: listEtapasCessao
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Etapas da cessao
+  /cessoes/{cessaoId}/etapas/{etapaNome}/acoes/avancar:
+    post:
+      summary: Executar acao da etapa
+      operationId: avancarEtapa
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: etapaNome
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Acao recebida
+        '409':
+          description: Etapa nao pode ser executada no estado atual
+  /cessoes/{cessaoId}/historico:
+    get:
+      summary: Consultar historico completo da cessao
+      operationId: getHistoricoCessao
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Historico da cessao

@@ -1,0 +1,14 @@
+.codex/
+.git/
+.idea/
+.vscode/
+backend/target/
+frontend/.next/
+frontend/node_modules/
+frontend/coverage/
+*.log
+*.tmp
+.env
+.env.*
+Dockerfile*
+specs/

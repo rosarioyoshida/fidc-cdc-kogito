@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: fidc-cdc-kogito-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/fidc_cdc
+    username: fidc
+    password: fidc
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 3
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fidc_cdc_read
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: false
+    open-in-view: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+      retries: 3
+    properties:
+      spring.json.trusted.packages: "*"
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+fidc:
+  api:
+    version: v1
+  jobs:
+    service-url: http://localhost:8085
+    callback-base-url: http://localhost:8080/api/v1/process/jobs/callbacks
+  data-index:
+    url: http://localhost:8180/graphql
+  consoles:
+    task-console-url: http://localhost:8280
+    management-console-url: http://localhost:8380
+  messaging:
+    topics:
+      process: fidc.process.events
+      tasks: fidc.task.events
+      audit: fidc.audit.events

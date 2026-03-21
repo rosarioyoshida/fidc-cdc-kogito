@@ -1,0 +1,39 @@
+flowchart LR
+    subgraph FE["Frontends / Canais de Uso"]
+        U1["Frontend de Negócio<br/>(portal, app, sistema corporativo)"]
+        U2["Management Console"]
+        U3["Task Console"]
+    end
+
+    subgraph BE["Backend de Execução"]
+        KPS["Serviço Kogito de Processo<br/>(BPMN, regras, APIs)"]
+    end
+
+    subgraph EVT["Mensageria / Eventos"]
+        KAFKA["Kafka"]
+    end
+
+    subgraph SUP["Serviços de Apoio do Kogito"]
+        DI["Kogito Data Index"]
+        JOBS["Kogito Jobs Service"]
+    end
+
+    %% Uso funcional
+    U1 -->|"chama APIs / inicia processos / consulta status"| KPS
+
+    %% Execução e eventos
+    KPS -->|"publica eventos de processo,<br/>tarefas e execução"| KAFKA
+    KAFKA -->|"eventos consumidos para indexação"| DI
+
+    %% Jobs / timers
+    KPS -->|"agenda timers / jobs"| JOBS
+    JOBS -->|"dispara callbacks / eventos temporizados"| KPS
+    JOBS -->|"publica eventos de jobs"| KAFKA
+
+    %% Consoles consultando Data Index
+    U2 -->|"consulta processos, instâncias,<br/>tarefas e jobs"| DI
+    U3 -->|"consulta tarefas de usuário"| DI
+
+    %% Consoles interagindo com runtime
+    U2 -->|"ações de gestão<br/>(ex.: abortar, gerenciar instância)"| KPS
+    U3 -->|"executa / completa tarefas humanas"| KPS

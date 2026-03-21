@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             id="Definition_ControleCessao"
+             targetNamespace="https://fidc-cdc-kogito/processes">
+    <process id="controle-cessao" name="Controle de Cessao" isExecutable="true">
+        <startEvent id="start-cessao" name="Inicio da Cessao">
+            <outgoing>flow-1</outgoing>
+        </startEvent>
+
+        <sequenceFlow id="flow-1" sourceRef="start-cessao" targetRef="task-01"/>
+        <userTask id="task-01" name="01 Importar carteira">
+            <incoming>flow-1</incoming>
+            <outgoing>flow-2</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
+        <userTask id="task-02" name="02 Validar cedente">
+            <incoming>flow-2</incoming>
+            <outgoing>flow-3</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
+        <userTask id="task-03" name="03 Analisar elegibilidade">
+            <incoming>flow-3</incoming>
+            <outgoing>flow-4</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-4" sourceRef="task-03" targetRef="task-04"/>
+        <serviceTask id="task-04" name="04 Consolidar contratos">
+            <incoming>flow-4</incoming>
+            <outgoing>flow-5</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-5" sourceRef="task-04" targetRef="task-05"/>
+        <serviceTask id="task-05" name="05 Consolidar parcelas">
+            <incoming>flow-5</incoming>
+            <outgoing>flow-6</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-6" sourceRef="task-05" targetRef="task-06"/>
+        <serviceTask id="task-06" name="06 Calcular valor">
+            <incoming>flow-6</incoming>
+            <outgoing>flow-7</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-7" sourceRef="task-06" targetRef="task-07"/>
+        <serviceTask id="task-07" name="07 Preparar oferta registradora">
+            <incoming>flow-7</incoming>
+            <outgoing>flow-8</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-8" sourceRef="task-07" targetRef="task-08"/>
+        <serviceTask id="task-08" name="08 Enviar oferta registradora">
+            <incoming>flow-8</incoming>
+            <outgoing>flow-9</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-9" sourceRef="task-08" targetRef="task-09"/>
+        <intermediateCatchEvent id="task-09" name="09 Aguardar confirmacao registradora">
+            <incoming>flow-9</incoming>
+            <outgoing>flow-10</outgoing>
+            <timerEventDefinition/>
+        </intermediateCatchEvent>
+
+        <sequenceFlow id="flow-10" sourceRef="task-09" targetRef="task-10"/>
+        <userTask id="task-10" name="10 Coletar termo de aceite">
+            <incoming>flow-10</incoming>
+            <outgoing>flow-11</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-11" sourceRef="task-10" targetRef="task-11"/>
+        <userTask id="task-11" name="11 Validar lastros">
+            <incoming>flow-11</incoming>
+            <outgoing>flow-12</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-12" sourceRef="task-11" targetRef="gateway-lastros"/>
+        <exclusiveGateway id="gateway-lastros" name="Lastros validados?">
+            <incoming>flow-12</incoming>
+            <outgoing>flow-12a</outgoing>
+            <outgoing>flow-12b</outgoing>
+        </exclusiveGateway>
+
+        <sequenceFlow id="flow-12a" sourceRef="gateway-lastros" targetRef="task-12"/>
+        <userTask id="task-12" name="12 Autorizar pagamento">
+            <incoming>flow-12a</incoming>
+            <outgoing>flow-13</outgoing>
+        </userTask>
+
+        <sequenceFlow id="flow-12b" sourceRef="gateway-lastros" targetRef="end-rejeicao"/>
+        <endEvent id="end-rejeicao" name="Fluxo encerrado por pendencia documental">
+            <incoming>flow-12b</incoming>
+        </endEvent>
+
+        <sequenceFlow id="flow-13" sourceRef="task-12" targetRef="task-13"/>
+        <serviceTask id="task-13" name="13 Processar pagamento">
+            <incoming>flow-13</incoming>
+            <outgoing>flow-14</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-14" sourceRef="task-13" targetRef="task-14"/>
+        <serviceTask id="task-14" name="14 Confirmar pagamento">
+            <incoming>flow-14</incoming>
+            <outgoing>flow-15</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-15" sourceRef="task-14" targetRef="task-15"/>
+        <serviceTask id="task-15" name="15 Encerrar cessao">
+            <incoming>flow-15</incoming>
+            <outgoing>flow-16</outgoing>
+        </serviceTask>
+
+        <sequenceFlow id="flow-16" sourceRef="task-15" targetRef="end-cessao"/>
+        <endEvent id="end-cessao" name="Fluxo concluido">
+            <incoming>flow-16</incoming>
+        </endEvent>
+    </process>
+</definitions>
