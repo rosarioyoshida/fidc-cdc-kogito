@@ -98,12 +98,12 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 
 ### Implementation for User Story 2
 
-- [ ] T045 [P] [US2] Create `RegraElegibilidade`, `Contrato`, `Parcela`, `Lastro`, `Pagamento`, `OfertaRegistradora`, and `TermoAceite` entities in `backend/src/main/java/com/fidc/cdc/kogito/domain/analise/`
-- [ ] T046 [P] [US2] Create repositories for analysis, payment, document, and registradora artifacts in `backend/src/main/java/com/fidc/cdc/kogito/domain/analise/`
-- [ ] T047 [P] [US2] Create Flyway migration for analysis, payment, lastro, offer, and termo tables in `backend/src/main/resources/db/migration/V3__analise_pagamento_documentos.sql`
-- [ ] T048 [US2] Implement eligibility evaluation service and blocking outcomes in `backend/src/main/java/com/fidc/cdc/kogito/application/analise/ElegibilidadeService.java`
-- [ ] T049 [US2] Implement payment calculation and approval basis service in `backend/src/main/java/com/fidc/cdc/kogito/application/financeiro/CalculoValorPagarService.java`
-- [ ] T050 [US2] Implement lastro intake and validation service in `backend/src/main/java/com/fidc/cdc/kogito/application/documental/LastroValidationService.java`
+- [X] T045 [P] [US2] Create `RegraElegibilidade`, `Contrato`, `Parcela`, `Lastro`, `Pagamento`, `OfertaRegistradora`, and `TermoAceite` entities in `backend/src/main/java/com/fidc/cdc/kogito/domain/analise/`
+- [X] T046 [P] [US2] Create repositories for analysis, payment, document, and registradora artifacts in `backend/src/main/java/com/fidc/cdc/kogito/domain/analise/`
+- [X] T047 [P] [US2] Create Flyway migration for analysis, payment, lastro, offer, and termo tables in `backend/src/main/resources/db/migration/V3__analise_pagamento_documentos.sql`
+- [X] T048 [US2] Implement eligibility evaluation service and blocking outcomes in `backend/src/main/java/com/fidc/cdc/kogito/application/analise/ElegibilidadeService.java`
+- [X] T049 [US2] Implement payment calculation and approval basis service in `backend/src/main/java/com/fidc/cdc/kogito/application/financeiro/CalculoValorPagarService.java`
+- [X] T050 [US2] Implement lastro intake and validation service in `backend/src/main/java/com/fidc/cdc/kogito/application/documental/LastroValidationService.java`
 - [ ] T051 [US2] Implement registradora REST client with retries, request/response evidence, and problem details handling in `backend/src/main/java/com/fidc/cdc/kogito/infrastructure/registradora/RegistradoraClient.java` and `backend/src/main/java/com/fidc/cdc/kogito/infrastructure/registradora/RegistradoraRetryPolicy.java`
 - [ ] T052 [US2] Implement workflow activities for carteira, contratos, parcelas, oferta, aceite, pagamento, and lastros in `backend/src/main/java/com/fidc/cdc/kogito/application/process/RegistradoraWorkflowHandler.java`
 - [ ] T053 [US2] Extend REST API with endpoints for regras, contratos, parcelas, pagamentos, lastros, and historico documental in `backend/src/main/java/com/fidc/cdc/kogito/api/analise/AnaliseController.java`
