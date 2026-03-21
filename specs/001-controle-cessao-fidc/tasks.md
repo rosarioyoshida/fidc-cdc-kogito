@@ -143,9 +143,9 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T074 [US3] Extend consolidated read model with audit and pending human task indicators in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
 - [X] T075 [US3] Implement frontend permission-aware actions and audit trail screens in `frontend/src/features/security/permission-guard.tsx`, `frontend/src/app/cessoes/[businessKey]/auditoria/page.tsx`, and `frontend/src/features/auditoria/audit-timeline.tsx`
 - [X] T076 [US3] Implement frontend user feedback for forbidden actions, audit queries, and human-task context in `frontend/src/components/feedback/forbidden-state.tsx` and `frontend/src/features/auditoria/task-context-panel.tsx`
-- [ ] T077 [P] [US3] Create backend integration test for autorizacao por perfil e etapa in `backend/src/test/java/com/fidc/cdc/kogito/integration/security/StageAuthorizationIntegrationTest.java`
-- [ ] T078 [P] [US3] Create backend integration test for persistencia e consulta da trilha de auditoria in `backend/src/test/java/com/fidc/cdc/kogito/integration/audit/AuditTrailIntegrationTest.java`
-- [ ] T079 [P] [US3] Create integration test for task lifecycle visibility in Task Console and process visibility in Management Console in `backend/src/test/java/com/fidc/cdc/kogito/integration/console/KogitoConsoleIntegrationTest.java`
+- [X] T077 [P] [US3] Create backend integration test for autorizacao por perfil e etapa in `backend/src/test/java/com/fidc/cdc/kogito/integration/security/StageAuthorizationIntegrationTest.java`
+- [X] T078 [P] [US3] Create backend integration test for persistencia e consulta da trilha de auditoria in `backend/src/test/java/com/fidc/cdc/kogito/integration/audit/AuditTrailIntegrationTest.java`
+- [X] T079 [P] [US3] Create integration test for task lifecycle visibility in Task Console and process visibility in Management Console in `backend/src/test/java/com/fidc/cdc/kogito/integration/console/KogitoConsoleIntegrationTest.java`
 - [X] T080 [P] [US3] Create frontend integration test for forbidden actions and audit timeline in `frontend/tests/integration/auditoria-permissoes.spec.tsx`
 
 **Checkpoint**: All user stories should now be independently functional
