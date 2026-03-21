@@ -1,4 +1,4 @@
-name: fidc-cdc-kogit
+name: fidc-cdc-kogito
 
 services:
   mysql:
