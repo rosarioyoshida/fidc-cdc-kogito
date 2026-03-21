@@ -35,6 +35,24 @@ backend, frontend, workflow BPMN, consulta consolidada e servicos auxiliares.
 - `NEXT_PUBLIC_FIDC_TASK_CONSOLE_URL=http://localhost:8280`
 - `NEXT_PUBLIC_FIDC_MANAGEMENT_CONSOLE_URL=http://localhost:8380`
 
+## Usuarios, senhas e perfis
+
+O backend usa autenticacao `Basic Auth` com os seguintes usuarios operacionais
+padrao:
+
+| Usuario | Senha | Perfil | Uso principal |
+|---------|-------|--------|---------------|
+| `operador` | `operador123` | `OPERADOR` | Importacao da carteira, validacao inicial do cedente e acompanhamento do fluxo |
+| `analista` | `analista123` | `ANALISTA` | Analise financeira e documental, consolidacao, calculo, oferta e validacao de lastros |
+| `aprovador` | `aprovador123` | `APROVADOR` | Autorizacao, processamento, confirmacao de pagamento e encerramento |
+| `auditor` | `auditor123` | `AUDITOR` | Consulta de trilha de auditoria e visibilidade somente leitura |
+| `integracao` | `integracao123` | `INTEGRACAO` | Etapas tecnicas de sincronizacao e aguardando confirmacao da registradora |
+
+Notas:
+
+- o frontend local usa `operador` e `operador123` como credenciais padrao via `NEXT_PUBLIC_FIDC_API_USERNAME` e `NEXT_PUBLIC_FIDC_API_PASSWORD`
+- os perfis acima refletem o `SecurityConfig` da aplicacao e o seed de `V5__seed_roles_permissions.sql`
+
 ## Servicos previstos no compose
 
 - `backend`
