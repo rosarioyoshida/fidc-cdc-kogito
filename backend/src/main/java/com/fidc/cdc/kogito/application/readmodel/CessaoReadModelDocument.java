@@ -1,6 +1,6 @@
 package com.fidc.cdc.kogito.application.readmodel;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.annotation.Id;
@@ -16,7 +16,7 @@ public class CessaoReadModelDocument {
     private String etapaAtual;
     private List<String> pendencias;
     private String ultimoEvento;
-    private OffsetDateTime ultimaAtualizacao;
+    private Instant ultimaAtualizacao;
     private Map<String, Object> resumoFinanceiro;
     private Map<String, Object> resumoDocumental;
     private Map<String, Object> resumoAuditoria;
@@ -62,11 +62,11 @@ public class CessaoReadModelDocument {
         this.ultimoEvento = ultimoEvento;
     }
 
-    public OffsetDateTime getUltimaAtualizacao() {
+    public Instant getUltimaAtualizacao() {
         return ultimaAtualizacao;
     }
 
-    public void setUltimaAtualizacao(OffsetDateTime ultimaAtualizacao) {
+    public void setUltimaAtualizacao(Instant ultimaAtualizacao) {
         this.ultimaAtualizacao = ultimaAtualizacao;
     }
 

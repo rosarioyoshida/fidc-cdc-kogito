@@ -15,6 +15,7 @@ import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import com.fidc.cdc.kogito.infrastructure.messaging.ProcessEventPayload;
 import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -98,7 +99,7 @@ public class CessaoReadModelProjector {
                 .map(etapa -> etapa.getNomeEtapa().name())
                 .toList());
         document.setUltimoEvento(lastEvent);
-        document.setUltimaAtualizacao(OffsetDateTime.now());
+        document.setUltimaAtualizacao(Instant.now());
         document.setResumoFinanceiro(buildResumoFinanceiro(cessao, contratos, pagamentos));
         document.setResumoDocumental(buildResumoDocumental(cessao, regras, lastros));
         document.setResumoAuditoria(buildResumoAuditoria(eventosAuditoria));

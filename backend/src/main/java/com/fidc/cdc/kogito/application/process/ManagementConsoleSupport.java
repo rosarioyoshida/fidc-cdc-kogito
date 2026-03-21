@@ -8,6 +8,8 @@ import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -86,7 +88,9 @@ public class ManagementConsoleSupport {
                 waitingForTimerJob,
                 readModel.isPresent(),
                 readModel.map(CessaoReadModelDocument::getUltimoEvento).orElse(null),
-                readModel.map(CessaoReadModelDocument::getUltimaAtualizacao).orElse(null),
+                readModel.map(CessaoReadModelDocument::getUltimaAtualizacao)
+                        .map(instant -> OffsetDateTime.ofInstant(instant, ZoneOffset.UTC))
+                        .orElse(null),
                 List.copyOf(availableAdminActions),
                 managementConsoleUrl,
                 dataIndexUrl,
