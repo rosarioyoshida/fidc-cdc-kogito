@@ -1,33 +1,20 @@
-name: fidc-cdc-kogito
+name: fidc-cdc-kogit
 
 services:
-  mysql:
-    image: mysql:8.4
+  postgres:
+    image: postgres:16
     mem_limit: 768m
     environment:
-      MYSQL_DATABASE: fidc_cdc
-      MYSQL_USER: fidc
-      MYSQL_PASSWORD: fidc
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_DB: postgres
+      POSTGRES_USER: fidc
+      POSTGRES_PASSWORD: fidc
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
+      - ../postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  mongodb:
-    image: mongo:8.0
-    mem_limit: 512m
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD-SHELL", "pg_isready -U fidc -d postgres"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -60,7 +47,7 @@ services:
       retries: 10
 
   jobs-service:
-    image: quay.io/kiegroup/kogito-jobs-service-ephemeral:latest
+    image: apache/incubator-kie-kogito-jobs-service-postgresql:10.1.0
     mem_limit: 512m
     ports:
       - "8085:8080"
@@ -69,19 +56,37 @@ services:
         condition: service_healthy
       data-index:
         condition: service_started
+      postgres:
+        condition: service_healthy
     environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KOGITO_JOBS_SERVICE_DATA_INDEX_URL: http://data-index:8080
+      QUARKUS_DATASOURCE_DB_KIND: postgresql
+      QUARKUS_DATASOURCE_USERNAME: fidc
+      QUARKUS_DATASOURCE_PASSWORD: fidc
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/kogito_jobs
+      QUARKUS_DATASOURCE_REACTIVE_URL: postgresql://postgres:5432/kogito_jobs
+      QUARKUS_FLYWAY_MIGRATE_AT_START: "true"
 
   data-index:
-    image: quay.io/kiegroup/kogito-data-index-ephemeral:latest
+    image: apache/incubator-kie-kogito-data-index-postgresql:10.1.0
     mem_limit: 768m
     ports:
       - "8180:8080"
     depends_on:
       kafka:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KOGITO_DATA_INDEX_QUARKUS_PROFILE: kafka-events-support
+      QUARKUS_DATASOURCE_DB_KIND: postgresql
+      QUARKUS_DATASOURCE_USERNAME: fidc
+      QUARKUS_DATASOURCE_PASSWORD: fidc
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/kogito_data_index
+      QUARKUS_FLYWAY_MIGRATE_AT_START: "true"
+      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: update
 
   keycloak:
     image: quay.io/keycloak/keycloak:legacy
@@ -114,7 +119,7 @@ services:
       keycloak:
         condition: service_healthy
     environment:
-      KOGITO_DATAINDEX_HTTP_URL: http://localhost:8180/graphql
+      KOGITO_DATAINDEX_HTTP_URL: http://data-index:8080/graphql
       KOGITO_TASK_CONSOLE_PROPS: >-
         -Dkogito.consoles.keycloak.config.url=http://localhost:8480/auth
         -Dkogito.consoles.keycloak.config.realm=kogito
@@ -134,7 +139,7 @@ services:
       keycloak:
         condition: service_healthy
     environment:
-      KOGITO_DATAINDEX_HTTP_URL: http://localhost:8180/graphql
+      KOGITO_DATAINDEX_HTTP_URL: http://data-index:8080/graphql
       KOGITO_MANAGEMENT_CONSOLE_PROPS: >-
         -Dkogito.consoles.keycloak.config.url=http://localhost:8480/auth
         -Dkogito.consoles.keycloak.config.realm=kogito
@@ -148,9 +153,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
-        condition: service_healthy
-      mongodb:
+      postgres:
         condition: service_healthy
       kafka:
         condition: service_healthy
@@ -159,12 +162,12 @@ services:
       data-index:
         condition: service_started
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fidc_cdc
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fidc_cdc
       SPRING_DATASOURCE_USERNAME: fidc
       SPRING_DATASOURCE_PASSWORD: fidc
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/fidc_cdc_read
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       FIDC_JOBS_SERVICE_URL: http://jobs-service:8080
+      FIDC_JOBS_CALLBACK_BASE_URL: http://backend:8080/api/v1/process/jobs/callbacks
       FIDC_DATA_INDEX_URL: http://data-index:8080/graphql
 
   frontend:
@@ -183,6 +186,5 @@ services:
       NEXT_PUBLIC_FIDC_API_PASSWORD: operador123
 
 volumes:
-  mysql-data:
-  mongodb-data:
+  postgres-data:
   kafka-data:

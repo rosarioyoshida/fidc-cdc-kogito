@@ -18,7 +18,7 @@ class ProcessReadModelIntegrationTest extends ApiContractTestBase {
     private CessaoReadModelRepository readModelRepository;
 
     @Test
-    void shouldProjectCurrentStateIntoMongoReadModel() throws Exception {
+    void shouldProjectCurrentStateIntoMysqlReadModel() throws Exception {
         mockMvc.perform(post("/api/v1/cessoes")
                         .with(httpBasic("operador", "operador123"))
                         .contentType(MediaType.APPLICATION_JSON)

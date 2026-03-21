@@ -26,15 +26,18 @@ integracoes e estados auditaveis. Kogito atende diretamente a esse desenho.
 
 ## Decision 3: Persistencia transacional e leitura consolidada separadas
 
-**Decision**: MySQL sera o banco transacional; MongoDB, Data Index e Kafka serao usados
-para a visao consolidada e historico consultavel.
+**Decision**: PostgreSQL LTS sera a base de persistencia do backend, do Kogito Data
+Index e do Kogito Jobs Service, enquanto Kafka seguira como barramento de eventos para
+indexacao, historico consultavel e timers operacionais.
 
-**Rationale**: A separacao reduz acoplamento entre escrita critica do fluxo e consultas
-operacionais de processo, auditoria e monitoramento.
+**Rationale**: A estrategia preserva separacao logica entre escrita critica do fluxo,
+indexacao operacional e persistencia de jobs, reduz a superficie de operacao local e
+mantem consultas de processo, auditoria e monitoramento integradas ao ecossistema
+Kogito.
 
 **Alternatives considered**:
-- Banco unico para tudo
-- Consulta direta no banco transacional sem Data Index
+- Persistencias distintas por servico
+- Consulta direta no runtime transacional sem Data Index
 
 ## Decision 4: Integracao sincrona REST com a registradora
 
@@ -90,8 +93,9 @@ humana, monitoramento e acessibilidade.
 
 ## Decision 8: Docker Compose minimo com agrupador `fidc-cdc-kogit`
 
-**Decision**: Fornecer ambiente local com backend, frontend, MySQL, MongoDB, Kafka,
-Jobs Service, Task Console, Management Console e Data Index no compose principal.
+**Decision**: Fornecer ambiente local com backend, frontend, PostgreSQL, Kafka, Jobs
+Service, Task Console, Management Console e Data Index no compose principal, usando as
+variantes PostgreSQL dos servicos Kogito.
 
 **Rationale**: O fluxo so pode ser validado fim a fim com BPMN, persistencia,
 integracoes, consulta consolidada e operacao humana disponiveis localmente.

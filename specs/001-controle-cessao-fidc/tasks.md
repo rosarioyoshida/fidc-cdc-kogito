@@ -33,7 +33,7 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [X] T006 Configure Spring Boot dependencies for OpenAPI, HATEOAS, Bean Validation, Flyway, JPA, MySQL, Kogito, and remove Logback in `backend/pom.xml`
+- [X] T006 Configure Spring Boot dependencies for OpenAPI, HATEOAS, Bean Validation, Flyway, JPA, PostgreSQL, Kogito, and remove Logback in `backend/pom.xml`
 - [X] T007 [P] Configure Log4j2, SLF4J, correlation IDs, and structured logging in `backend/src/main/resources/log4j2-spring.xml` and `backend/src/main/java/com/fidc/cdc/kogito/infrastructure/logging/CorrelationLoggingFilter.java`
 - [X] T008 [P] Configure Basic Auth, Spring Security, and role mapping base in `backend/src/main/java/com/fidc/cdc/kogito/security/SecurityConfig.java`
 - [X] T009 [P] Create Flyway baseline migration for core tables in `backend/src/main/resources/db/migration/V1__baseline.sql`
@@ -41,7 +41,7 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T011 [P] Create RFC 9457 problem details handler and error type registry in `backend/src/main/java/com/fidc/cdc/kogito/api/error/ProblemDetailsHandler.java` and `backend/src/main/java/com/fidc/cdc/kogito/api/error/ProblemTypeRegistry.java`
 - [X] T012 [P] Create API versioning, REST path conventions, and HATEOAS link factory base in `backend/src/main/java/com/fidc/cdc/kogito/api/config/ApiVersionConfig.java` and `backend/src/main/java/com/fidc/cdc/kogito/api/hateoas/CessaoLinkAssembler.java`
 - [X] T013 [P] Create Kogito process project skeleton and BPMN resource placeholder in `backend/src/main/resources/processes/controle-cessao.bpmn`
-- [X] T014 [P] Create Kafka, MongoDB, Data Index, Jobs Service, Task Console, and Management Console service definitions in `infra/compose/docker-compose.yml`
+- [X] T014 [P] Create PostgreSQL, Kafka, Data Index, Jobs Service, Task Console, and Management Console service definitions in `infra/compose/docker-compose.yml` and `infra/postgres/init/01-create-databases.sql`
 - [X] T015 [P] Create frontend design token layer and Atlassian-aligned theme contracts in `frontend/src/design-system/tokens.ts`, `frontend/src/design-system/theme.css`, and `frontend/src/design-system/color-semantics.ts`
 - [X] T016 [P] Create frontend API client, auth wiring, and RFC 9457 response handling in `frontend/src/lib/api-client.ts`, `frontend/src/lib/auth.ts`, and `frontend/src/lib/problem-details.ts`
 - [X] T017 [P] Create reusable UI primitives adapted from shadcn/ui in `frontend/src/components/ui/button.tsx`, `frontend/src/components/ui/input.tsx`, `frontend/src/components/ui/dialog.tsx`, and `frontend/src/components/ui/table.tsx`
@@ -76,13 +76,13 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T033 [US1] Enforce business key uniqueness and duplicate-blocking rules in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoRegistrationService.java`
 - [X] T034 [US1] Implement process and task event publication compatible with Kogito Data Index in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoEventPublisher.java`
 - [X] T035 [US1] Implement indexed event consumption and synchronization of consolidated read model in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
-- [X] T036 [US1] Implement MongoDB repository for indexed operational queries in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelRepository.java`
+- [X] T036 [US1] Implement PostgreSQL-backed consolidated read model persistence in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelDocument.java`, `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelRepository.java`, and `backend/src/main/resources/db/migration/V6__cessao_read_model.sql`
 - [X] T037 [US1] Implement frontend list and detail screens for cessoes and etapas in `frontend/src/app/cessoes/page.tsx` and `frontend/src/app/cessoes/[businessKey]/page.tsx`
 - [X] T038 [US1] Implement frontend actions to iniciar cessao, avancar etapa, and refresh status in `frontend/src/features/cessao/actions.ts`, `frontend/src/features/cessao/cessao-list.tsx`, and `frontend/src/features/cessao/cessao-detail.tsx`
 - [X] T039 [US1] Add operational loading, empty, and error states for the cessao flow in `frontend/src/features/cessao/cessao-status-panel.tsx` and `frontend/src/components/feedback/empty-state.tsx`
 - [X] T040 [P] [US1] Create backend integration test for criar cessao, iniciar fluxo e consultar historico in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/CessaoFlowIntegrationTest.java`
 - [X] T041 [P] [US1] Create backend integration test for bloqueio de avanço entre etapas dependentes in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/EtapaDependenciaIntegrationTest.java`
-- [X] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelIntegrationTest.java`
+- [X] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and PostgreSQL in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelIntegrationTest.java`
 - [X] T043 [P] [US1] Create integration test for BPMN timer scheduling through Kogito Jobs Service in `backend/src/test/java/com/fidc/cdc/kogito/integration/process/JobsServiceTimerIntegrationTest.java`
 - [X] T044 [P] [US1] Create frontend integration test for lista e detalhe de cessao in `frontend/tests/integration/cessao-flow.spec.tsx`
 
@@ -162,11 +162,12 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T084 [P] Validate frontend accessibility, semantic colors, dark/light themes, and Atlassian token consistency in `frontend/src/design-system/` and `frontend/src/components/`
 - [X] T085 [P] Validate Docker Compose startup order, minimum resources, and service health checks in `infra/compose/docker-compose.yml`
 - [X] T086 Define operational baseline for volume, projection lag, and consultation targets in `specs/001-controle-cessao-fidc/quickstart.md`
-- [X] T087 [P] Create backend integration test for read-model propagation lag through Kafka, Data Index, and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProjectionLagIntegrationTest.java`
+- [X] T087 [P] Create backend integration test for read-model propagation lag through Kafka, Data Index, and PostgreSQL in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProjectionLagIntegrationTest.java`
 - [X] T088 Validate consultation response time and projection lag against operational targets in `specs/001-controle-cessao-fidc/quickstart.md`
 - [X] T089 Validate end-to-end operational flow for Kafka, Data Index, Jobs Service, Task Console, and Management Console in `specs/001-controle-cessao-fidc/quickstart.md`
 - [X] T090 Run end-to-end quickstart validation and capture implementation notes in `specs/001-controle-cessao-fidc/quickstart.md`
 - [X] T091 Run backend and frontend critical-path regression for BPMN, registradora, autorizacao e auditoria in `specs/001-controle-cessao-fidc/quickstart.md`
+- [X] T092 [P] Validate PostgreSQL-backed container communication topology and Kogito runtime wiring in `backend/src/test/java/com/fidc/cdc/kogito/architecture/ContainerCommunicationTopologyTest.java`
 
 ---
 
@@ -199,7 +200,7 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - In US1, `T025`, `T026`, and `T027` can run in parallel before orchestration, API, projection, and tests
 - In US2, `T045`, `T046`, and `T047` can run in parallel before services, controllers, and tests
 - In US3, `T063` and `T064` can run in parallel before authorization, audit integration, console support, and tests
-- `T081`, `T084`, `T085`, and `T087` can run in parallel in the polish phase
+- `T081`, `T084`, `T085`, `T087`, and `T092` can run in parallel in the polish phase
 
 ---
 

@@ -17,8 +17,8 @@ transacional, mensageria/eventos, servicos de apoio do Kogito e consoles operaci
 **Primary Dependencies**: Spring Boot LTS, Spring Security, Spring HATEOAS,
 Swagger/OpenAPI, Log4j2, SLF4J, JPA, Hibernate, Bean Validation, Flyway, Kogito,
 React, Next.js, shadcn/ui, Tailwind CSS  
-**Storage**: MySQL para dados transacionais; MongoDB para visao consolidada e leitura
-operacional  
+**Storage**: PostgreSQL LTS para dados transacionais do backend, indexacao operacional
+do Kogito Data Index e persistencia do Kogito Jobs Service  
 **Testing**: JUnit no backend, testes de integracao para fluxo BPMN, registradora,
 autorizacao por etapa e auditoria, testes de contrato para APIs REST e RFC 9457, e
 testes de interface e integracao para os fluxos operacionais criticos no frontend  
@@ -45,7 +45,7 @@ consolidada separada
   responsabilidade distinta: UI operacional, runtime transacional, mensageria,
   leitura consolidada e consoles do ecossistema Kogito.
 - Architecture gate: aprovado. O plano define limites claros entre backend
-  transacional, frontend, Data Index, Jobs Service, Kafka e MongoDB, evitando
+  transacional, frontend, Data Index, Jobs Service, Kafka e PostgreSQL, evitando
   acoplamento indevido entre escrita critica e leitura consolidada.
 - API design gate: aprovado. APIs do backend devem seguir nomeacao REST baseada em
   substantivos, pluralizacao consistente, hierarquia por recurso e query parameters
@@ -58,8 +58,9 @@ consolidada separada
 - API error contract gate: aprovado. Erros HTTP devem usar RFC 9457 com
   `application/problem+json`, sem vazamento de detalhes internos.
 - Maintainability/scalability gate: aprovado. O runtime de processo e a camada de
-  leitura foram desacoplados; Kafka e MongoDB suportam expansao da consulta
-  consolidada sem pressionar o banco transacional.
+  leitura foram desacoplados; Kafka e PostgreSQL suportam expansao da consulta
+  consolidada, indexacao de processo e persistencia de jobs sem pressionar os fluxos
+  operacionais do backend.
 - Security/compliance gate: aprovado. O plano contempla Basic Auth, Spring Security,
   segregacao de funcao, trilha de auditoria e tratamento de evidencias desde a
   primeira versao.
@@ -83,7 +84,7 @@ estabelece a relacao normativa entre os blocos da solucao:
    status, apresenta historico, evidencia pendencias e chama exclusivamente as APIs do
    `backend`.
 2. O `backend` e o nucleo funcional. Ele hospeda as APIs REST, executa o BPMN no
-   Kogito, aplica regras, persiste dados transacionais no `MySQL`, integra com a
+   Kogito, aplica regras, persiste dados transacionais no `PostgreSQL`, integra com a
    registradora e publica eventos de processo no `Kafka`.
 3. O `Kafka` e o barramento de eventos internos. Ele desacopla o runtime transacional
    da camada de leitura e propaga eventos relevantes de processo, tarefas e jobs.
@@ -91,10 +92,10 @@ estabelece a relacao normativa entre os blocos da solucao:
    tarefas, status e historico do processo. Ele nao substitui o backend transacional;
    ele materializa consultas operacionais e nao deve ser tratado como storage
    transacional primario.
-5. O `MongoDB` armazena a visao consolidada e os read models consumidos pela consulta
-   operacional. Ele deve refletir a indexacao derivada do `Data Index` e agregacoes
-   adicionais necessarias para telas e monitoramento, sem assumir ownership do
-   processo transacional.
+5. O `PostgreSQL` tambem sustenta a persistencia operacional do `Kogito Data Index`
+   e do `Kogito Jobs Service`, consolidando indexacao de processos, tarefas e jobs em
+   esquemas dedicados sem transferir ownership do processo transacional para fora do
+   backend.
 6. O `Kogito Jobs Service` gerencia timers BPMN. O `backend` agenda jobs e recebe de
    volta callbacks/eventos temporizados para retomar o fluxo quando houver espera por
    prazo, expiracao ou escalonamento.
@@ -113,14 +114,15 @@ estabelece a relacao normativa entre os blocos da solucao:
   nao substitui os consoles oficiais do Kogito; ele cobre a experiencia de negocio da
   aplicacao.
 - Todo comando que altera estado do processo passa pelo `backend`.
-- Toda consulta operacional consolidada deve priorizar `Data Index` e `MongoDB`,
-  evitando sobrecarga no banco transacional.
+- Toda consulta operacional consolidada deve priorizar `Data Index` e as estruturas de
+  indexacao e jobs persistidas em `PostgreSQL`, evitando sobrecarga nas operacoes
+  transacionais do backend.
 - `Kafka` nao e canal de comando de usuario; ele e canal de propagacao de eventos
   tecnicos e de negocio.
 - `Jobs Service` participa apenas de timers e eventos temporizados; ele nao executa
   regra de negocio fora do contexto do processo.
-- `Data Index` indexa o estado observavel do processo; `MongoDB` materializa leituras
-  operacionais derivadas e nao substitui a fonte transacional do workflow.
+- `Data Index` indexa o estado observavel do processo e persiste essa indexacao em
+  `PostgreSQL`, sem substituir a fonte transacional do workflow no backend.
 - `Task Console` e `Management Console` dependem de integracao funcional real com
   tarefas humanas, instancias e jobs; subir containers sem metadados e eventos
   corretos nao atende ao objetivo operacional.
@@ -129,13 +131,15 @@ estabelece a relacao normativa entre os blocos da solucao:
 
 1. O usuario atua no `frontend` e envia uma acao operacional.
 2. O `backend` autentica, autoriza, executa a etapa BPMN e persiste o estado
-   transacional no `MySQL`.
+   transacional no `PostgreSQL`.
 3. Se houver integracao com registradora, o `backend` chama a API REST sincrona,
    registra request/response, retries e evidencias.
 4. O `backend` publica eventos de processo e execucao no `Kafka`.
-5. O `Kogito Data Index` consome esses eventos e atualiza a indexacao de processo.
-6. A camada de leitura em `MongoDB` consolida os dados necessarios para telas,
-   acompanhamento e historico operacional.
+5. O `Kogito Data Index` consome esses eventos e atualiza a indexacao de processo em
+   `PostgreSQL`.
+6. O `Kogito Jobs Service` persiste jobs, agendas e estados temporizados em
+   `PostgreSQL`, enquanto a camada de leitura consolidada do backend usa o mesmo banco
+   com tabelas dedicadas para consultas operacionais.
 7. `Task Console` e `Management Console` consultam essa visao indexada e disparam
    acoes administrativas ou humanas contra o `backend`.
 8. Quando o processo agenda prazo ou temporizador, o `backend` registra o job no
@@ -199,7 +203,7 @@ infra/
 
 **Structure Decision**: Aplicacao web com separacao explicita entre backend
 transacional, frontend operacional e infraestrutura/containerizacao. O ecossistema
-Kogito, Kafka, MongoDB e bancos de suporte sera orquestrado via `infra/compose`.
+Kogito, Kafka e PostgreSQL sera orquestrado via `infra/compose`.
 
 ## Phase 0: Research Outcomes
 
@@ -209,8 +213,9 @@ fecham os pontos necessarios para o plano:
 
 - Java 21 + Spring Boot LTS no backend
 - Kogito como motor BPMN
-- MySQL como persistencia transacional
-- Kafka + Data Index + MongoDB para leitura consolidada
+- PostgreSQL LTS como persistencia do backend, do Data Index e do Jobs Service
+- Kafka + Data Index + Jobs Service para leitura consolidada, indexacao de processos
+  e timers operacionais
 - REST sincrono para a registradora com retry limitado
 - OpenAPI + HATEOAS + RFC 9457 nas APIs
 - React + Next.js + TypeScript no frontend
@@ -244,8 +249,8 @@ Os contratos definidos para a fase atual sao:
 
 O fluxo minimo de inicializacao esta em
 [quickstart.md](D:/desenv/fidc-cdc-kogito/specs/001-controle-cessao-fidc/quickstart.md)
-e contempla backend, frontend, MySQL, MongoDB, Kafka, Data Index, Jobs Service,
-Task Console e Management Console.
+e contempla backend, frontend, PostgreSQL, Kafka, Data Index, Jobs Service, Task
+Console e Management Console.
 
 ## Phase 2: Implementation Direction
 
@@ -256,7 +261,8 @@ Task Console e Management Console.
 - Implementar autenticacao Basic Auth com Spring Security e autorizacao por perfil e
   etapa.
 - Modelar o fluxo BPMN de 15 etapas no Kogito, incluindo tarefas humanas e timers.
-- Persistir estado transacional e auditoria no MySQL com Flyway.
+- Persistir estado transacional, auditoria e read models operacionais no PostgreSQL
+  com Flyway.
 - Remover Logback e padronizar logging em Log4j2 + SLF4J.
 - Publicar eventos de processo e de integracao no Kafka com correlation ID.
 
@@ -273,12 +279,13 @@ Task Console e Management Console.
 
 - Usar Kogito Data Index para consulta de instancias, tarefas, jobs e historico do
   processo.
-- Materializar visoes consolidadas em MongoDB para dashboards, listas operacionais e
-  consultas de apoio.
+- Persistir Data Index, Jobs Service e leituras operacionais em PostgreSQL com
+  esquemas e tabelas dedicados para consultas, indexacao e timers.
 - Garantir que Task Console e Management Console funcionem sobre a camada de indexacao
   e ainda disparem comandos no runtime do backend quando necessario.
 - Configurar Kafka, Data Index e projetores de leitura de forma que a cadeia
-  `backend -> Kafka -> Data Index -> MongoDB` seja observavel, consistente e validavel.
+  `backend -> Kafka -> Data Index -> PostgreSQL` seja observavel, consistente e
+  validavel.
 - Tratar Jobs Service como dependencia funcional obrigatoria para timers BPMN,
   expiracoes e escalonamentos temporizados.
 - Tratar Task Console e Management Console como capacidades operacionais do produto,
@@ -286,9 +293,8 @@ Task Console e Management Console.
 
 ### Compose and local environment
 
-- O compose deve subir apenas o minimo necessario: `backend`, `frontend`, `mysql`,
-  `mongodb`, `kafka`, `data-index`, `jobs-service`, `task-console`,
-  `management-console`.
+- O compose deve subir apenas o minimo necessario: `backend`, `frontend`, `postgres`,
+  `kafka`, `data-index`, `jobs-service`, `task-console`, `management-console`.
 - O nome do agrupador deve ser `fidc-cdc-kogit`.
 - A ordem de bootstrap deve preservar primeiro infraestrutura de dados/eventos,
   depois servicos Kogito, depois backend e frontend.
@@ -309,5 +315,5 @@ Task Console e Management Console.
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| Separacao MySQL + MongoDB + Data Index | Isola escrita critica de leitura consolidada e monitoramento | Banco unico pressionaria a operacao transacional e pioraria consultas de historico/processo |
+| Compartilhamento de PostgreSQL entre backend, Data Index e Jobs Service com esquemas e bancos dedicados | Centraliza persistencia operacional sem perder separacao logica entre escrita transacional, indexacao e timers | Introduzir persistencias distintas por servico ampliaria operacao, observabilidade e custo de manutencao sem ganho proporcional neste escopo |
 | Uso de consoles oficiais junto com frontend proprio | Consoles atendem operacao tecnica e humana do Kogito, enquanto o frontend atende fluxo de negocio do produto | Unificar tudo no frontend aumentaria escopo e duplicaria capacidades nativas do ecossistema Kogito |

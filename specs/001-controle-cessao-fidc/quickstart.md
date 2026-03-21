@@ -15,10 +15,9 @@ backend, frontend, workflow BPMN, consulta consolidada e servicos auxiliares.
 
 ### Backend
 
-- `SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/fidc_cdc`
+- `SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/fidc_cdc`
 - `SPRING_DATASOURCE_USERNAME=fidc`
 - `SPRING_DATASOURCE_PASSWORD=fidc`
-- `SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/fidc_cdc_read`
 - `SPRING_KAFKA_BOOTSTRAP_SERVERS=localhost:9092`
 - `FIDC_JOBS_SERVICE_URL=http://localhost:8085`
 - `FIDC_JOBS_CALLBACK_BASE_URL=http://localhost:8080/api/v1/process/jobs/callbacks`
@@ -67,8 +66,7 @@ Para o ecossistema Kogito local, use as seguintes credenciais:
 
 - `backend`
 - `frontend`
-- `mysql`
-- `mongodb`
+- `postgres`
 - `kafka`
 - `jobs-service`
 - `task-console`
@@ -146,8 +144,8 @@ npx tsc --noEmit --incremental false
 - API do backend documentada
 - fluxo BPMN implantado
 - retries da registradora observaveis
-- dados transacionais persistidos no MySQL
-- visao consolidada disponivel via Data Index e MongoDB
+- dados transacionais persistidos no PostgreSQL
+- visao consolidada disponivel via Data Index e PostgreSQL
 - links HATEOAS para `analise`, `auditoria`, `permissoes`, `etapas` e `historico`
 - payloads RFC 9457 com `type`, `title`, `detail`, `instance`, `timestamp` e `correlationId`
 - metricas Prometheus para processo, registradora, consoles e projecao

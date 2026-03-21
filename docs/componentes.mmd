@@ -9,6 +9,10 @@ flowchart LR
         KPS["Serviço Kogito de Processo<br/>(BPMN, regras, APIs)"]
     end
 
+    subgraph RDB["Persistência Transacional"]
+        MYSQL["MySQL<br/>(estado transacional do runtime)"]
+    end
+
     subgraph EVT["Mensageria / Eventos"]
         KAFKA["Kafka"]
     end
@@ -18,22 +22,25 @@ flowchart LR
         JOBS["Kogito Jobs Service"]
     end
 
-    %% Uso funcional
-    U1 -->|"chama APIs / inicia processos / consulta status"| KPS
+    subgraph IDX["Persistência Indexada / Consulta"]
+        MONGO["MongoDB<br/>(processos, tarefas e jobs indexados)"]
+    end
 
-    %% Execução e eventos
+    U1 -->|"inicia processos / consulta status / envia comandos"| KPS
+
+    KPS -->|"persiste estado da instância,<br/>variáveis e dados de execução"| MYSQL
+
     KPS -->|"publica eventos de processo,<br/>tarefas e execução"| KAFKA
-    KAFKA -->|"eventos consumidos para indexação"| DI
-
-    %% Jobs / timers
-    KPS -->|"agenda timers / jobs"| JOBS
-    JOBS -->|"dispara callbacks / eventos temporizados"| KPS
     JOBS -->|"publica eventos de jobs"| KAFKA
+    KAFKA -->|"entrega eventos"| DI
 
-    %% Consoles consultando Data Index
-    U2 -->|"consulta processos, instâncias,<br/>tarefas e jobs"| DI
-    U3 -->|"consulta tarefas de usuário"| DI
+    DI -->|"persiste dados indexados para consulta"| MONGO
 
-    %% Consoles interagindo com runtime
-    U2 -->|"ações de gestão<br/>(ex.: abortar, gerenciar instância)"| KPS
-    U3 -->|"executa / completa tarefas humanas"| KPS
+    KPS -->|"agenda timers / jobs"| JOBS
+    JOBS -->|"notifica vencimento / callback temporizado"| KPS
+
+    U2 -->|"consulta visão operacional"| DI
+    U3 -->|"consulta tarefas humanas"| DI
+
+    U2 -->|"comandos operacionais sobre instâncias"| KPS
+    U3 -->|"completa / executa tarefas humanas"| KPS

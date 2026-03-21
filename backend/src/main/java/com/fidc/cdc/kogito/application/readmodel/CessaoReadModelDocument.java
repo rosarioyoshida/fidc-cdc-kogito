@@ -3,23 +3,51 @@ package com.fidc.cdc.kogito.application.readmodel;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-@Document(collection = "cessao_read_model")
+@Entity
+@Table(name = "cessao_read_model")
 public class CessaoReadModelDocument {
 
     @Id
+    @Column(name = "cessao_business_key", nullable = false, length = 120)
     private String cessaoBusinessKey;
 
+    @Column(name = "status_atual", nullable = false, length = 40)
     private String statusAtual;
+
+    @Column(name = "etapa_atual", nullable = false, length = 80)
     private String etapaAtual;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = false, columnDefinition = "json")
     private List<String> pendencias;
+
+    @Column(name = "ultimo_evento", length = 120)
     private String ultimoEvento;
+
+    @Column(name = "ultima_atualizacao", nullable = false)
     private Instant ultimaAtualizacao;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "resumo_financeiro", nullable = false, columnDefinition = "json")
     private Map<String, Object> resumoFinanceiro;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "resumo_documental", nullable = false, columnDefinition = "json")
     private Map<String, Object> resumoDocumental;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "resumo_auditoria", nullable = false, columnDefinition = "json")
     private Map<String, Object> resumoAuditoria;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "indicadores_tarefas_humanas", nullable = false, columnDefinition = "json")
     private Map<String, Object> indicadoresTarefasHumanas;
 
     public String getCessaoBusinessKey() {
