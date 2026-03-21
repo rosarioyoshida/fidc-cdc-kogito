@@ -19,6 +19,8 @@ public class CessaoReadModelDocument {
     private OffsetDateTime ultimaAtualizacao;
     private Map<String, Object> resumoFinanceiro;
     private Map<String, Object> resumoDocumental;
+    private Map<String, Object> resumoAuditoria;
+    private Map<String, Object> indicadoresTarefasHumanas;
 
     public String getCessaoBusinessKey() {
         return cessaoBusinessKey;
@@ -82,5 +84,21 @@ public class CessaoReadModelDocument {
 
     public void setResumoDocumental(Map<String, Object> resumoDocumental) {
         this.resumoDocumental = resumoDocumental;
+    }
+
+    public Map<String, Object> getResumoAuditoria() {
+        return resumoAuditoria;
+    }
+
+    public void setResumoAuditoria(Map<String, Object> resumoAuditoria) {
+        this.resumoAuditoria = resumoAuditoria;
+    }
+
+    public Map<String, Object> getIndicadoresTarefasHumanas() {
+        return indicadoresTarefasHumanas;
+    }
+
+    public void setIndicadoresTarefasHumanas(Map<String, Object> indicadoresTarefasHumanas) {
+        this.indicadoresTarefasHumanas = indicadoresTarefasHumanas;
     }
 }

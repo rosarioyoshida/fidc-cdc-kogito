@@ -1,5 +1,7 @@
 package com.fidc.cdc.kogito.application.readmodel;
 
+import com.fidc.cdc.kogito.domain.audit.EventoAuditoria;
+import com.fidc.cdc.kogito.domain.audit.EventoAuditoriaRepository;
 import com.fidc.cdc.kogito.domain.analise.ContratoRepository;
 import com.fidc.cdc.kogito.domain.analise.LastroRepository;
 import com.fidc.cdc.kogito.domain.analise.PagamentoRepository;
@@ -28,6 +30,7 @@ public class CessaoReadModelProjector {
     private final PagamentoRepository pagamentoRepository;
     private final LastroRepository lastroRepository;
     private final RegraElegibilidadeRepository regraElegibilidadeRepository;
+    private final EventoAuditoriaRepository eventoAuditoriaRepository;
 
     public CessaoReadModelProjector(
             CessaoRepository cessaoRepository,
@@ -35,7 +38,8 @@ public class CessaoReadModelProjector {
             ContratoRepository contratoRepository,
             PagamentoRepository pagamentoRepository,
             LastroRepository lastroRepository,
-            RegraElegibilidadeRepository regraElegibilidadeRepository
+            RegraElegibilidadeRepository regraElegibilidadeRepository,
+            EventoAuditoriaRepository eventoAuditoriaRepository
     ) {
         this.cessaoRepository = cessaoRepository;
         this.readModelRepository = readModelRepository;
@@ -43,6 +47,7 @@ public class CessaoReadModelProjector {
         this.pagamentoRepository = pagamentoRepository;
         this.lastroRepository = lastroRepository;
         this.regraElegibilidadeRepository = regraElegibilidadeRepository;
+        this.eventoAuditoriaRepository = eventoAuditoriaRepository;
     }
 
     @Transactional(readOnly = true)
@@ -68,6 +73,8 @@ public class CessaoReadModelProjector {
                 pagamentoRepository.findByCessaoBusinessKeyOrderByCreatedAtAsc(cessao.getBusinessKey());
         List<com.fidc.cdc.kogito.domain.analise.Lastro> lastros =
                 lastroRepository.findByCessaoBusinessKeyOrderByRecebidoEmAsc(cessao.getBusinessKey());
+        List<EventoAuditoria> eventosAuditoria =
+                eventoAuditoriaRepository.findByCessaoBusinessKeyOrderByOcorridoEmAsc(cessao.getBusinessKey());
 
         CessaoReadModelDocument document = new CessaoReadModelDocument();
         document.setCessaoBusinessKey(cessao.getBusinessKey());
@@ -82,6 +89,8 @@ public class CessaoReadModelProjector {
         document.setUltimaAtualizacao(OffsetDateTime.now());
         document.setResumoFinanceiro(buildResumoFinanceiro(cessao, contratos, pagamentos));
         document.setResumoDocumental(buildResumoDocumental(cessao, regras, lastros));
+        document.setResumoAuditoria(buildResumoAuditoria(eventosAuditoria));
+        document.setIndicadoresTarefasHumanas(buildIndicadoresTarefasHumanas(cessao.getEtapas()));
         return document;
     }
 
@@ -121,6 +130,27 @@ public class CessaoReadModelProjector {
         resumo.put("lastrosRejeitados", lastros.stream()
                 .filter(lastro -> lastro.getStatusValidacao() == StatusValidacaoLastro.REJEITADO)
                 .count());
+        return resumo;
+    }
+
+    private Map<String, Object> buildResumoAuditoria(List<EventoAuditoria> eventosAuditoria) {
+        Map<String, Object> resumo = new LinkedHashMap<>();
+        resumo.put("totalEventos", eventosAuditoria.size());
+        resumo.put("ultimoEventoAuditoria", eventosAuditoria.isEmpty()
+                ? "SEM_EVENTO"
+                : eventosAuditoria.get(eventosAuditoria.size() - 1).getTipoEvento());
+        resumo.put("ultimoAtor", eventosAuditoria.isEmpty()
+                ? "SEM_ATOR"
+                : eventosAuditoria.get(eventosAuditoria.size() - 1).getAtorId());
+        return resumo;
+    }
+
+    private Map<String, Object> buildIndicadoresTarefasHumanas(List<EtapaCessao> etapas) {
+        String etapaAtiva = identifyCurrentStage(etapas);
+        Map<String, Object> resumo = new LinkedHashMap<>();
+        resumo.put("tarefasHumanasPendentes", "SEM_ETAPA_ATIVA".equals(etapaAtiva) ? 0 : 1);
+        resumo.put("etapaHumanaAtual", etapaAtiva);
+        resumo.put("haAcaoOperacionalPendente", !"SEM_ETAPA_ATIVA".equals(etapaAtiva));
         return resumo;
     }
 

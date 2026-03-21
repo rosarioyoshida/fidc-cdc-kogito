@@ -135,12 +135,12 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T066 [US3] Implement role-to-stage authorization policies in `backend/src/main/java/com/fidc/cdc/kogito/application/security/StageAuthorizationService.java`
 - [X] T067 [US3] Implement immutable audit event persistence and retrieval in `backend/src/main/java/com/fidc/cdc/kogito/application/audit/AuditTrailService.java`
 - [X] T068 [US3] Integrate stage authorization and audit registration into workflow commands in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoProcessService.java`
-- [ ] T069 [US3] Expose audit trail, permissions, and operational history endpoints in `backend/src/main/java/com/fidc/cdc/kogito/api/audit/AuditController.java` and `backend/src/main/java/com/fidc/cdc/kogito/api/security/PermissionController.java`
+- [X] T069 [US3] Expose audit trail, permissions, and operational history endpoints in `backend/src/main/java/com/fidc/cdc/kogito/api/audit/AuditController.java` and `backend/src/main/java/com/fidc/cdc/kogito/api/security/PermissionController.java`
 - [ ] T070 [US3] Configure human task metadata, assignments, and task visibility for Task Console in `backend/src/main/resources/processes/controle-cessao.bpmn`
 - [ ] T071 [US3] Implement task identity and assignment support for authorized operational profiles in `backend/src/main/java/com/fidc/cdc/kogito/application/process/TaskAssignmentService.java`
 - [ ] T072 [US3] Implement process instance administration support for Management Console in `backend/src/main/java/com/fidc/cdc/kogito/application/process/ManagementConsoleSupport.java`
 - [ ] T073 [US3] Configure process and job visibility required by Management Console in `backend/src/main/resources/application.yml` and `infra/compose/docker-compose.yml`
-- [ ] T074 [US3] Extend consolidated read model with audit and pending human task indicators in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
+- [X] T074 [US3] Extend consolidated read model with audit and pending human task indicators in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
 - [ ] T075 [US3] Implement frontend permission-aware actions and audit trail screens in `frontend/src/features/security/permission-guard.tsx`, `frontend/src/app/cessoes/[businessKey]/auditoria/page.tsx`, and `frontend/src/features/auditoria/audit-timeline.tsx`
 - [ ] T076 [US3] Implement frontend user feedback for forbidden actions, audit queries, and human-task context in `frontend/src/components/feedback/forbidden-state.tsx` and `frontend/src/features/auditoria/task-context-panel.tsx`
 - [ ] T077 [P] [US3] Create backend integration test for autorizacao por perfil e etapa in `backend/src/test/java/com/fidc/cdc/kogito/integration/security/StageAuthorizationIntegrationTest.java`

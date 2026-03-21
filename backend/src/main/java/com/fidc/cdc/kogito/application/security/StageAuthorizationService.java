@@ -4,6 +4,8 @@ import com.fidc.cdc.kogito.api.error.ForbiddenOperationException;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import com.fidc.cdc.kogito.domain.security.Usuario;
 import com.fidc.cdc.kogito.domain.security.UsuarioRepository;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,9 +23,8 @@ public class StageAuthorizationService {
 
     @Transactional(readOnly = true)
     public AuthorizationDecision authorizeStageAction(String actorHint, EtapaCessaoNome etapa) {
-        String actorId = resolveActor(actorHint);
-        Usuario usuario = usuarioRepository.findByUsernameAndAtivoTrue(actorId)
-                .orElseThrow(() -> new ForbiddenOperationException("Usuario sem cadastro operacional para executar a etapa."));
+        Usuario usuario = loadUsuario(actorHint);
+        String actorId = usuario.getUsername();
 
         return usuario.getPerfis()
                 .stream()
@@ -31,10 +32,32 @@ public class StageAuthorizationService {
                         .stream()
                         .anyMatch(permissao -> permissao.getNomeEtapa() == etapa))
                 .findFirst()
-                .map(perfil -> new AuthorizationDecision(usuario.getUsername(), perfil.getNome()))
+                .map(perfil -> new AuthorizationDecision(actorId, perfil.getNome()))
                 .orElseThrow(() -> new ForbiddenOperationException(
                         "O usuario nao possui permissao para executar a etapa " + etapa.name() + "."
                 ));
+    }
+
+    @Transactional(readOnly = true)
+    public PermissionSnapshot describePermissions(String actorHint) {
+        Usuario usuario = loadUsuario(actorHint);
+        List<String> perfis = usuario.getPerfis().stream()
+                .map(perfil -> perfil.getNome())
+                .sorted()
+                .toList();
+        List<String> etapasPermitidas = usuario.getPerfis().stream()
+                .flatMap(perfil -> perfil.getPermissoes().stream())
+                .map(permissao -> permissao.getNomeEtapa().name())
+                .distinct()
+                .sorted(Comparator.naturalOrder())
+                .toList();
+        return new PermissionSnapshot(usuario.getUsername(), perfis, etapasPermitidas);
+    }
+
+    private Usuario loadUsuario(String actorHint) {
+        String actorId = resolveActor(actorHint);
+        return usuarioRepository.findByUsernameAndAtivoTrue(actorId)
+                .orElseThrow(() -> new ForbiddenOperationException("Usuario sem cadastro operacional para executar a etapa."));
     }
 
     private String resolveActor(String actorHint) {
