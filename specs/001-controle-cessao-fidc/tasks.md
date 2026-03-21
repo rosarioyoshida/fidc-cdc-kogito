@@ -139,7 +139,7 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T070 [US3] Configure human task metadata, assignments, and task visibility for Task Console in `backend/src/main/resources/processes/controle-cessao.bpmn`
 - [X] T071 [US3] Implement task identity and assignment support for authorized operational profiles in `backend/src/main/java/com/fidc/cdc/kogito/application/process/TaskAssignmentService.java`
 - [X] T072 [US3] Implement process instance administration support for Management Console in `backend/src/main/java/com/fidc/cdc/kogito/application/process/ManagementConsoleSupport.java`
-- [ ] T073 [US3] Configure process and job visibility required by Management Console in `backend/src/main/resources/application.yml` and `infra/compose/docker-compose.yml`
+- [X] T073 [US3] Configure process and job visibility required by Management Console in `backend/src/main/resources/application.yml` and `infra/compose/docker-compose.yml`
 - [X] T074 [US3] Extend consolidated read model with audit and pending human task indicators in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
 - [X] T075 [US3] Implement frontend permission-aware actions and audit trail screens in `frontend/src/features/security/permission-guard.tsx`, `frontend/src/app/cessoes/[businessKey]/auditoria/page.tsx`, and `frontend/src/features/auditoria/audit-timeline.tsx`
 - [X] T076 [US3] Implement frontend user feedback for forbidden actions, audit queries, and human-task context in `frontend/src/components/feedback/forbidden-state.tsx` and `frontend/src/features/auditoria/task-context-panel.tsx`
