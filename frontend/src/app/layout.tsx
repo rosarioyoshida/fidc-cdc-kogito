@@ -20,7 +20,7 @@ function ThemeBootScript() {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" data-theme="light">
+    <html lang="pt-BR" data-theme="light" suppressHydrationWarning>
       <body className="text-text antialiased">
         <ThemeBootScript />
         <div className="mx-auto min-h-screen max-w-7xl px-6 py-8">
