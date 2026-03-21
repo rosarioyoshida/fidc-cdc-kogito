@@ -114,7 +114,7 @@ services:
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_URL: http://localhost:8480
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_REALM: kogito
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_CLIENT_ID: kogito-console-quarkus
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://keycloak:8080/realms/kogito/.well-known/openid-configuration
+      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://localhost:8480/realms/kogito/.well-known/openid-configuration
 
   management-console:
     image: quay.io/kiegroup/kogito-management-console:latest
@@ -133,7 +133,7 @@ services:
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_URL: http://localhost:8480
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_REALM: kogito
       KOGITO_CONSOLES_KEYCLOAK_CONFIG_CLIENT_ID: kogito-console-quarkus
-      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://keycloak:8080/realms/kogito/.well-known/openid-configuration
+      KOGITO_CONSOLES_KEYCLOAK_CONFIG_HEALTH_CHECK_URL: http://localhost:8480/realms/kogito/.well-known/openid-configuration
 
   backend:
     build:

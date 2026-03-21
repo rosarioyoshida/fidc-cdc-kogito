@@ -53,6 +53,15 @@ Notas:
 - o frontend local usa `operador` e `operador123` como credenciais padrao via `NEXT_PUBLIC_FIDC_API_USERNAME` e `NEXT_PUBLIC_FIDC_API_PASSWORD`
 - os perfis acima refletem o `SecurityConfig` da aplicacao e o seed de `V5__seed_roles_permissions.sql`
 
+## Credenciais das consoles e do IAM local
+
+Para o ecossistema Kogito local, use as seguintes credenciais:
+
+| Sistema | Usuario | Senha | Uso principal |
+|---------|---------|-------|---------------|
+| `Task Console` / `Management Console` | `kogito-admin` | `kogito123` | Login funcional nas consoles Kogito com o realm `kogito` |
+| `Keycloak Admin Console` | `admin` | `admin123` | Administracao local do Keycloak importado no compose |
+
 ## Servicos previstos no compose
 
 - `backend`
@@ -64,6 +73,7 @@ Notas:
 - `task-console`
 - `management-console`
 - `data-index`
+- `keycloak`
 
 ## Nome do agrupador
 
@@ -117,6 +127,8 @@ npx tsc --noEmit --incremental false
 - Data Index: `http://localhost:8180/graphql`
 - Task Console: `http://localhost:8280`
 - Management Console: `http://localhost:8380`
+- Keycloak realm metadata: `http://localhost:8480/realms/kogito/.well-known/openid-configuration`
+- Keycloak Admin Console: `http://localhost:8480`
 - Prometheus endpoint backend: `http://localhost:8080/actuator/prometheus`
 
 ## Validacoes minimas
