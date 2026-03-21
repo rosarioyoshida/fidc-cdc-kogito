@@ -111,11 +111,11 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T055 [US2] Extend consolidated read model with financial and documental summaries in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
 - [X] T056 [US2] Implement frontend screens for elegibilidade, contratos, parcelas, pagamentos, and lastros in `frontend/src/app/cessoes/[businessKey]/analise/page.tsx` and `frontend/src/features/analise/`
 - [X] T057 [US2] Implement frontend forms, validation feedback, and retry visibility for registradora interactions in `frontend/src/features/analise/registradora-panel.tsx`, `frontend/src/features/analise/lastro-panel.tsx`, and `frontend/src/features/analise/calculo-panel.tsx`
-- [ ] T058 [P] [US2] Create backend integration test for elegibilidade e bloqueio por reprovacao impeditiva in `backend/src/test/java/com/fidc/cdc/kogito/integration/analise/ElegibilidadeIntegrationTest.java`
-- [ ] T059 [P] [US2] Create backend integration test for calculo do valor a pagar in `backend/src/test/java/com/fidc/cdc/kogito/integration/financeiro/CalculoValorPagarIntegrationTest.java`
-- [ ] T060 [P] [US2] Create backend integration test for validacao de lastros e bloqueio da aceitacao final in `backend/src/test/java/com/fidc/cdc/kogito/integration/documental/LastroValidationIntegrationTest.java`
-- [ ] T061 [P] [US2] Create backend contract test for registradora retries and RFC 9457 error mapping in `backend/src/test/java/com/fidc/cdc/kogito/contract/registradora/RegistradoraContractTest.java`
-- [ ] T062 [P] [US2] Create frontend integration test for analise, calculo e feedback de retry da registradora in `frontend/tests/integration/analise-cessao.spec.tsx`
+- [X] T058 [P] [US2] Create backend integration test for elegibilidade e bloqueio por reprovacao impeditiva in `backend/src/test/java/com/fidc/cdc/kogito/integration/analise/ElegibilidadeIntegrationTest.java`
+- [X] T059 [P] [US2] Create backend integration test for calculo do valor a pagar in `backend/src/test/java/com/fidc/cdc/kogito/integration/financeiro/CalculoValorPagarIntegrationTest.java`
+- [X] T060 [P] [US2] Create backend integration test for validacao de lastros e bloqueio da aceitacao final in `backend/src/test/java/com/fidc/cdc/kogito/integration/documental/LastroValidationIntegrationTest.java`
+- [X] T061 [P] [US2] Create backend contract test for registradora retries and RFC 9457 error mapping in `backend/src/test/java/com/fidc/cdc/kogito/contract/registradora/RegistradoraContractTest.java`
+- [X] T062 [P] [US2] Create frontend integration test for analise, calculo e feedback de retry da registradora in `frontend/tests/integration/analise-cessao.spec.tsx`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
