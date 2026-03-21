@@ -1,7 +1,9 @@
 package com.fidc.cdc.kogito.infrastructure.messaging;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
+@Component("kafkaTopicsProperties")
 @ConfigurationProperties(prefix = "fidc.messaging.topics")
 public class KafkaTopicsProperties {
 
