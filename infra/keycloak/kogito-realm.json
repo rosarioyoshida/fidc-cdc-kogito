@@ -26,6 +26,7 @@
         "http://localhost:8380"
       ],
       "attributes": {
+        "exclude.issuer.from.auth.response": "true",
         "post.logout.redirect.uris": "+"
       }
     }
@@ -34,9 +35,11 @@
     {
       "username": "kogito-admin",
       "enabled": true,
+      "email": "kogito-admin@local.test",
       "emailVerified": true,
       "firstName": "Kogito",
       "lastName": "Admin",
+      "requiredActions": [],
       "credentials": [
         {
           "type": "password",
