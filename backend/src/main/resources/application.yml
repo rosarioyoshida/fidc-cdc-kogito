@@ -48,10 +48,6 @@ management:
       probes:
         enabled: true
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-
 fidc:
   api:
     version: v1

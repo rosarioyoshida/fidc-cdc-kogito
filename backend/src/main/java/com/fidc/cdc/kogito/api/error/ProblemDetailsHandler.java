@@ -1,9 +1,12 @@
 package com.fidc.cdc.kogito.api.error;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindException;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ProblemDetailsHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(ProblemDetailsHandler.class);
+
     private final ProblemTypeRegistry problemTypeRegistry;
 
     public ProblemDetailsHandler(ProblemTypeRegistry problemTypeRegistry) {
@@ -22,6 +27,7 @@ public class ProblemDetailsHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @Hidden
     ProblemDetail handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception,
             HttpServletRequest request
@@ -40,6 +46,7 @@ public class ProblemDetailsHandler {
     }
 
     @ExceptionHandler(BindException.class)
+    @Hidden
     ProblemDetail handleBindException(BindException exception, HttpServletRequest request) {
         var detail = createDetail(
                 problemTypeRegistry.get("validation-error"),
@@ -54,6 +61,7 @@ public class ProblemDetailsHandler {
     }
 
     @ExceptionHandler(ApiProblemException.class)
+    @Hidden
     ProblemDetail handleProblem(ApiProblemException exception, HttpServletRequest request) {
         return createDetail(
                 problemTypeRegistry.get(exception.getProblemKey()),
@@ -63,6 +71,7 @@ public class ProblemDetailsHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
+    @Hidden
     ProblemDetail handleNoResourceFound(NoResourceFoundException exception, HttpServletRequest request) {
         return createDetail(
                 problemTypeRegistry.get("resource-not-found"),
@@ -72,7 +81,9 @@ public class ProblemDetailsHandler {
     }
 
     @ExceptionHandler(Exception.class)
+    @Hidden
     ProblemDetail handleUnexpected(Exception exception, HttpServletRequest request) {
+        log.error("Unhandled exception while processing {}", request.getRequestURI(), exception);
         var detail = createDetail(
                 problemTypeRegistry.get("internal-error"),
                 "Ocorreu uma falha inesperada durante o processamento da requisicao.",
