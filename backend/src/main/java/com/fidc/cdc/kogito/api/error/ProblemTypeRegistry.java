@@ -23,6 +23,11 @@ public class ProblemTypeRegistry {
                     "Conflito de negocio",
                     HttpStatus.CONFLICT
             ),
+            "external-service-error", new ProblemTypeDefinition(
+                    "https://fidc-cdc-kogito.local/problems/external-service-error",
+                    "Falha de servico externo",
+                    HttpStatus.BAD_GATEWAY
+            ),
             "internal-error", new ProblemTypeDefinition(
                     "https://fidc-cdc-kogito.local/problems/internal-error",
                     "Falha interna",

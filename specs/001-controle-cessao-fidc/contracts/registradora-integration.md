@@ -21,6 +21,26 @@ oferta e confirmacao de aceite.
 - registrar parcelas
 - realizar oferta
 - confirmar aceite
+- enviar pagamento
+- enviar lastros
+
+## Endpoint de referencia para a integracao
+
+- `POST /api/v1/operacoes/{operacao}`
+
+## Payload minimo esperado
+
+- `businessKey`: identificador externo da cessao
+- `cedenteId` e `cessionariaId` quando a operacao exigir carteira
+- `contratos` e `parcelas` quando a operacao exigir carga financeira
+- `valorCalculado` e `valorAprovado` quando a operacao exigir oferta ou pagamento
+- `lastros` quando a operacao exigir validacao documental
+
+## Resposta minima esperada
+
+- `status`: resultado de negocio retornado pela registradora
+- `requestId`: correlacao da chamada externa, quando disponivel
+- detalhes adicionais de rejeicao ou aceite quando houver erro de negocio
 
 ## Regras de contrato
 

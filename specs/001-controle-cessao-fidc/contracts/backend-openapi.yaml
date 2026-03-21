@@ -92,3 +92,150 @@ paths:
       responses:
         '200':
           description: Historico da cessao
+  /cessoes/{cessaoId}/analise/regras:
+    get:
+      summary: Consultar regras de elegibilidade avaliadas
+      operationId: listRegrasElegibilidade
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Regras avaliadas para a cessao
+  /cessoes/{cessaoId}/analise/contratos:
+    get:
+      summary: Consultar contratos e parcelas da cessao
+      operationId: listContratosAnalise
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contratos vinculados a cessao
+  /cessoes/{cessaoId}/analise/parcelas:
+    get:
+      summary: Consultar parcelas da cessao
+      operationId: listParcelasAnalise
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Parcelas vinculadas a cessao
+  /cessoes/{cessaoId}/analise/pagamentos:
+    get:
+      summary: Consultar pagamentos da cessao
+      operationId: listPagamentosAnalise
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pagamentos vinculados a cessao
+  /cessoes/{cessaoId}/analise/lastros:
+    get:
+      summary: Consultar lastros da cessao
+      operationId: listLastrosAnalise
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lastros vinculados a cessao
+    post:
+      summary: Registrar novo lastro na cessao
+      operationId: registrarLastro
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Lastro recebido para processamento
+  /cessoes/{cessaoId}/analise/historico-documental:
+    get:
+      summary: Consultar historico documental da cessao
+      operationId: historicoDocumental
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Historico documental consolidado
+  /cessoes/{cessaoId}/analise/elegibilidade/avaliar:
+    post:
+      summary: Avaliar regras de elegibilidade da cessao
+      operationId: avaliarElegibilidade
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Avaliacao recebida
+  /cessoes/{cessaoId}/analise/calculo/apurar:
+    post:
+      summary: Apurar o valor a pagar da cessao
+      operationId: apurarValorCessao
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Calculo recebido
+  /cessoes/{cessaoId}/analise/lastros/validar:
+    post:
+      summary: Validar lastros recebidos da cessao
+      operationId: validarLastros
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Validacao recebida
+  /cessoes/{cessaoId}/analise/registradora/{tipoOperacao}:
+    post:
+      summary: Executar operacao sincrona na registradora
+      operationId: executarOperacaoRegistradora
+      parameters:
+        - in: path
+          name: cessaoId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: tipoOperacao
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Operacao enviada a registradora

@@ -70,3 +70,10 @@ fidc:
       audit: fidc.audit.events
   read-model:
     kafka-listener-enabled: false
+  registradora:
+    base-url: http://localhost:8090
+    username: registradora
+    password: registradora
+    retries:
+      max-attempts: 3
+      delay: 1s
