@@ -9,6 +9,7 @@ import {
   getCessao,
   refreshCessaoAction
 } from "@/features/cessao/actions";
+import { getPermissionContext } from "@/features/security/actions";
 
 export default async function CessaoDetailPage({
   params,
@@ -18,12 +19,16 @@ export default async function CessaoDetailPage({
   const query = (await searchParams) ?? {};
   const errorMessage =
     typeof query.error === "string" ? decodeURIComponent(query.error) : undefined;
-  const cessao = await getCessao(businessKey);
+  const [cessao, permissionContext] = await Promise.all([
+    getCessao(businessKey),
+    getPermissionContext(businessKey)
+  ]);
 
   return (
     <main>
       <CessaoDetail
         cessao={cessao}
+        permissionContext={permissionContext}
         errorMessage={errorMessage}
         advanceAction={advanceEtapaAction}
         refreshAction={refreshCessaoAction}
