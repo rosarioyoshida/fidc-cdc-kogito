@@ -1,0 +1,86 @@
+package com.fidc.cdc.kogito.application.readmodel;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Map;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "cessao_read_model")
+public class CessaoReadModelDocument {
+
+    @Id
+    private String cessaoBusinessKey;
+
+    private String statusAtual;
+    private String etapaAtual;
+    private List<String> pendencias;
+    private String ultimoEvento;
+    private OffsetDateTime ultimaAtualizacao;
+    private Map<String, Object> resumoFinanceiro;
+    private Map<String, Object> resumoDocumental;
+
+    public String getCessaoBusinessKey() {
+        return cessaoBusinessKey;
+    }
+
+    public void setCessaoBusinessKey(String cessaoBusinessKey) {
+        this.cessaoBusinessKey = cessaoBusinessKey;
+    }
+
+    public String getStatusAtual() {
+        return statusAtual;
+    }
+
+    public void setStatusAtual(String statusAtual) {
+        this.statusAtual = statusAtual;
+    }
+
+    public String getEtapaAtual() {
+        return etapaAtual;
+    }
+
+    public void setEtapaAtual(String etapaAtual) {
+        this.etapaAtual = etapaAtual;
+    }
+
+    public List<String> getPendencias() {
+        return pendencias;
+    }
+
+    public void setPendencias(List<String> pendencias) {
+        this.pendencias = pendencias;
+    }
+
+    public String getUltimoEvento() {
+        return ultimoEvento;
+    }
+
+    public void setUltimoEvento(String ultimoEvento) {
+        this.ultimoEvento = ultimoEvento;
+    }
+
+    public OffsetDateTime getUltimaAtualizacao() {
+        return ultimaAtualizacao;
+    }
+
+    public void setUltimaAtualizacao(OffsetDateTime ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
+    }
+
+    public Map<String, Object> getResumoFinanceiro() {
+        return resumoFinanceiro;
+    }
+
+    public void setResumoFinanceiro(Map<String, Object> resumoFinanceiro) {
+        this.resumoFinanceiro = resumoFinanceiro;
+    }
+
+    public Map<String, Object> getResumoDocumental() {
+        return resumoDocumental;
+    }
+
+    public void setResumoDocumental(Map<String, Object> resumoDocumental) {
+        this.resumoDocumental = resumoDocumental;
+    }
+}

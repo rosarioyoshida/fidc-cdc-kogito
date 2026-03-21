@@ -25,11 +25,15 @@ spring:
     open-in-view: false
   kafka:
     bootstrap-servers: localhost:9092
+    consumer:
+      group-id: fidc-cdc-kogito
+      auto-offset-reset: earliest
     producer:
       acks: all
       retries: 3
     properties:
       spring.json.trusted.packages: "*"
+      spring.json.value.default.type: com.fidc.cdc.kogito.infrastructure.messaging.ProcessEventPayload
 
 server:
   port: 8080
@@ -64,3 +68,5 @@ fidc:
       process: fidc.process.events
       tasks: fidc.task.events
       audit: fidc.audit.events
+  read-model:
+    kafka-listener-enabled: false

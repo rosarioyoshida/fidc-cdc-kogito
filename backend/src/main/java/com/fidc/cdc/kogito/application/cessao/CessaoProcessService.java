@@ -4,6 +4,7 @@ import com.fidc.cdc.kogito.api.cessao.CessaoRequest;
 import com.fidc.cdc.kogito.api.error.BusinessConflictException;
 import com.fidc.cdc.kogito.api.error.ResourceNotFoundException;
 import com.fidc.cdc.kogito.application.audit.AuditEventPublisher;
+import com.fidc.cdc.kogito.application.process.TimerSchedulingService;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.CessaoStatus;
@@ -11,8 +12,8 @@ import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
-import com.fidc.cdc.kogito.infrastructure.messaging.DomainEventPublisher;
 import com.fidc.cdc.kogito.observability.ProcessMetricsService;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -26,30 +27,34 @@ public class CessaoProcessService {
     private final CessaoRepository cessaoRepository;
     private final EtapaCessaoRepository etapaCessaoRepository;
     private final CessaoRegistrationService cessaoRegistrationService;
-    private final DomainEventPublisher domainEventPublisher;
+    private final CessaoEventPublisher cessaoEventPublisher;
     private final AuditEventPublisher auditEventPublisher;
     private final ProcessMetricsService processMetricsService;
+    private final TimerSchedulingService timerSchedulingService;
 
     public CessaoProcessService(
             CessaoRepository cessaoRepository,
             EtapaCessaoRepository etapaCessaoRepository,
             CessaoRegistrationService cessaoRegistrationService,
-            DomainEventPublisher domainEventPublisher,
+            CessaoEventPublisher cessaoEventPublisher,
             AuditEventPublisher auditEventPublisher,
-            ProcessMetricsService processMetricsService
+            ProcessMetricsService processMetricsService,
+            TimerSchedulingService timerSchedulingService
     ) {
         this.cessaoRepository = cessaoRepository;
         this.etapaCessaoRepository = etapaCessaoRepository;
         this.cessaoRegistrationService = cessaoRegistrationService;
-        this.domainEventPublisher = domainEventPublisher;
+        this.cessaoEventPublisher = cessaoEventPublisher;
         this.auditEventPublisher = auditEventPublisher;
         this.processMetricsService = processMetricsService;
+        this.timerSchedulingService = timerSchedulingService;
     }
 
     @Transactional
     public Cessao createAndStart(CessaoRequest request) {
         Cessao cessao = cessaoRegistrationService.register(request);
-        publishProcessSignal(cessao.getBusinessKey(), "CESSAO_CRIADA");
+        cessaoEventPublisher.publishCessaoCreated(cessao);
+        processMetricsService.incrementProcessEvent("CESSAO_CRIADA", "success");
         return cessao;
     }
 
@@ -108,12 +113,21 @@ public class CessaoProcessService {
             next.setStatusEtapa(EtapaCessaoStatus.EM_EXECUCAO);
             next.setInicioEm(OffsetDateTime.now());
             cessao.setStatus(CessaoStatus.EM_ANDAMENTO);
+            if (next.getNomeEtapa() == EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA) {
+                String jobId = timerSchedulingService.scheduleAwaitingConfirmationTimer(
+                        cessao,
+                        next,
+                        Duration.ofMinutes(30)
+                );
+                cessaoEventPublisher.publishTimerScheduled(cessao, next, jobId);
+            }
         } else {
             cessao.setStatus(CessaoStatus.CONCLUIDA);
             cessao.setDataEncerramento(OffsetDateTime.now());
         }
 
-        publishProcessSignal(businessKey, "ETAPA_AVANCADA");
+        cessaoEventPublisher.publishStageAdvanced(cessao, etapa, next);
+        processMetricsService.incrementProcessEvent("ETAPA_AVANCADA", "success");
         auditEventPublisher.publish(
                 "ETAPA_AVANCADA",
                 responsavelId == null || responsavelId.isBlank() ? "sistema" : responsavelId,
@@ -141,14 +155,5 @@ public class CessaoProcessService {
         if (!cessaoRepository.existsByBusinessKey(businessKey)) {
             throw new ResourceNotFoundException("Cessao nao encontrada para o businessKey informado.");
         }
-    }
-
-    private void publishProcessSignal(String businessKey, String eventType) {
-        domainEventPublisher.publishProcessEvent(
-                businessKey,
-                eventType,
-                Map.of("businessKey", businessKey)
-        );
-        processMetricsService.incrementProcessEvent(eventType, "success");
     }
 }

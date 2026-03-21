@@ -69,21 +69,21 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T026 [P] [US1] Create `CessaoRepository` and `EtapaCessaoRepository` in `backend/src/main/java/com/fidc/cdc/kogito/domain/cessao/CessaoRepository.java` and `backend/src/main/java/com/fidc/cdc/kogito/domain/cessao/EtapaCessaoRepository.java`
 - [X] T027 [P] [US1] Create Flyway migration for `cessao` and `etapa_cessao` tables in `backend/src/main/resources/db/migration/V2__cessao_e_etapas.sql`
 - [X] T028 [US1] Model the 15-step BPMN flow with gateways, human tasks, and timer hooks in `backend/src/main/resources/processes/controle-cessao.bpmn`
-- [ ] T029 [US1] Implement BPMN timers and runtime scheduling integration with Kogito Jobs Service in `backend/src/main/java/com/fidc/cdc/kogito/application/process/TimerSchedulingService.java`
+- [X] T029 [US1] Implement BPMN timers and runtime scheduling integration with Kogito Jobs Service in `backend/src/main/java/com/fidc/cdc/kogito/application/process/TimerSchedulingService.java`
 - [X] T030 [US1] Implement process bootstrap and stage transition orchestration in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoProcessService.java`
 - [X] T031 [US1] Implement REST commands for criar cessao, consultar cessao, consultar etapas, and avancar etapa in `backend/src/main/java/com/fidc/cdc/kogito/api/cessao/CessaoController.java`
 - [X] T032 [US1] Implement request/response DTOs and HATEOAS representations for cessao and etapas in `backend/src/main/java/com/fidc/cdc/kogito/api/cessao/CessaoRequest.java`, `backend/src/main/java/com/fidc/cdc/kogito/api/cessao/CessaoResponse.java`, and `backend/src/main/java/com/fidc/cdc/kogito/api/cessao/EtapaResponse.java`
 - [X] T033 [US1] Enforce business key uniqueness and duplicate-blocking rules in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoRegistrationService.java`
-- [ ] T034 [US1] Implement process and task event publication compatible with Kogito Data Index in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoEventPublisher.java`
-- [ ] T035 [US1] Implement indexed event consumption and synchronization of consolidated read model in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
-- [ ] T036 [US1] Implement MongoDB repository for indexed operational queries in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelRepository.java`
+- [X] T034 [US1] Implement process and task event publication compatible with Kogito Data Index in `backend/src/main/java/com/fidc/cdc/kogito/application/cessao/CessaoEventPublisher.java`
+- [X] T035 [US1] Implement indexed event consumption and synchronization of consolidated read model in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelProjector.java`
+- [X] T036 [US1] Implement MongoDB repository for indexed operational queries in `backend/src/main/java/com/fidc/cdc/kogito/application/readmodel/CessaoReadModelRepository.java`
 - [ ] T037 [US1] Implement frontend list and detail screens for cessoes and etapas in `frontend/src/app/cessoes/page.tsx` and `frontend/src/app/cessoes/[businessKey]/page.tsx`
 - [ ] T038 [US1] Implement frontend actions to iniciar cessao, avancar etapa, and refresh status in `frontend/src/features/cessao/actions.ts`, `frontend/src/features/cessao/cessao-list.tsx`, and `frontend/src/features/cessao/cessao-detail.tsx`
 - [ ] T039 [US1] Add operational loading, empty, and error states for the cessao flow in `frontend/src/features/cessao/cessao-status-panel.tsx` and `frontend/src/components/feedback/empty-state.tsx`
 - [X] T040 [P] [US1] Create backend integration test for criar cessao, iniciar fluxo e consultar historico in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/CessaoFlowIntegrationTest.java`
 - [X] T041 [P] [US1] Create backend integration test for bloqueio de avanço entre etapas dependentes in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/EtapaDependenciaIntegrationTest.java`
-- [ ] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelIntegrationTest.java`
-- [ ] T043 [P] [US1] Create integration test for BPMN timer scheduling through Kogito Jobs Service in `backend/src/test/java/com/fidc/cdc/kogito/integration/process/JobsServiceTimerIntegrationTest.java`
+- [X] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and MongoDB in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelIntegrationTest.java`
+- [X] T043 [P] [US1] Create integration test for BPMN timer scheduling through Kogito Jobs Service in `backend/src/test/java/com/fidc/cdc/kogito/integration/process/JobsServiceTimerIntegrationTest.java`
 - [ ] T044 [P] [US1] Create frontend integration test for lista e detalhe de cessao in `frontend/tests/integration/cessao-flow.spec.tsx`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
