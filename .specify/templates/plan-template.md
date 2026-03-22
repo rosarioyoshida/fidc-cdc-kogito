@@ -61,6 +61,11 @@
   React, Next.js, and TypeScript usage, shadcn/ui as the structural base, Atlassian
   Design System as the visual/behavioral source of truth, centralized tokens, and
   required component states/variants.
+- Component governance gate: when new UI components are proposed, the plan must verify
+  reuse of available shadcn/ui and repository-local components in
+  `frontend/src/components/ui` before creating new components, and document any
+  exception with owner, state coverage, maintenance impact, test plan, approval
+  path, and PR rationale.
 
 ## Project Structure
 

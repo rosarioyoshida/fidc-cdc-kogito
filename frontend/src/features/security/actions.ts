@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { apiFetch } from "@/lib/api-client";
 import type { PermissionContext } from "@/features/security/types";
+import type { AccountActionState } from "@/features/security/account-action-state";
 import {
   AUTH_COOKIE_NAME,
   buildBasicAuthHeader,
@@ -63,30 +64,58 @@ export async function signInAction(formData: FormData) {
   redirect("/cessoes");
 }
 
-export async function updateOwnEmailAction(formData: FormData) {
+export async function updateOwnEmailAction(
+  _: AccountActionState,
+  formData: FormData
+): Promise<AccountActionState> {
   const email = String(formData.get("email") ?? "").trim();
-  const redirectTo = normalizeRedirect(String(formData.get("redirectTo") ?? "/cessoes"));
-  await apiFetch("/usuarios/me", {
-    method: "PATCH",
-    body: JSON.stringify({ email })
-  });
+  const currentPath = normalizePath(String(formData.get("currentPath") ?? "/cessoes"));
+
+  try {
+    await apiFetch("/usuarios/me", {
+      method: "PATCH",
+      body: JSON.stringify({ email })
+    });
+  } catch (error) {
+    const message = error instanceof ApiError ? error.message : "Falha ao atualizar email.";
+    return {
+      status: "error",
+      message
+    };
+  }
+
   revalidatePath("/", "layout");
-  revalidatePath(redirectTo);
-  redirect(withMessage(redirectTo, "Email atualizado com sucesso."));
+  revalidatePath(currentPath);
+  return {
+    status: "success",
+    message: "Email atualizado com sucesso.",
+    updatedEmail: email
+  };
 }
 
-export async function changeOwnPasswordAction(formData: FormData) {
+export async function changeOwnPasswordAction(
+  _: AccountActionState,
+  formData: FormData
+): Promise<AccountActionState> {
   const currentPassword = String(formData.get("currentPassword") ?? "");
   const newPassword = String(formData.get("newPassword") ?? "");
-  const redirectTo = normalizeRedirect(String(formData.get("redirectTo") ?? "/cessoes"));
+  const currentPath = normalizePath(String(formData.get("currentPath") ?? "/cessoes"));
 
-  await apiFetch("/usuarios/me/alteracao-senha", {
-    method: "POST",
-    body: JSON.stringify({
-      senhaAtual: currentPassword,
-      novaSenha: newPassword
-    })
-  });
+  try {
+    await apiFetch("/usuarios/me/alteracao-senha", {
+      method: "POST",
+      body: JSON.stringify({
+        senhaAtual: currentPassword,
+        novaSenha: newPassword
+      })
+    });
+  } catch (error) {
+    const message = error instanceof ApiError ? error.message : "Falha ao alterar senha.";
+    return {
+      status: "error",
+      message
+    };
+  }
 
   const cookieStore = await cookies();
   const session = deserializeAuthSession(cookieStore.get(AUTH_COOKIE_NAME)?.value);
@@ -102,8 +131,11 @@ export async function changeOwnPasswordAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  revalidatePath(redirectTo);
-  redirect(withMessage(redirectTo, "Senha alterada com sucesso."));
+  revalidatePath(currentPath);
+  return {
+    status: "success",
+    message: "Senha alterada com sucesso."
+  };
 }
 
 export async function logoutAction() {
@@ -119,10 +151,6 @@ export async function logoutAction() {
   redirect("/");
 }
 
-function normalizeRedirect(pathname: string) {
+function normalizePath(pathname: string) {
   return pathname.startsWith("/") ? pathname : "/cessoes";
-}
-
-function withMessage(pathname: string, message: string) {
-  return `${pathname}?message=${encodeURIComponent(message)}` as never;
 }

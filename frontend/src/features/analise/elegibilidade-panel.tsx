@@ -1,7 +1,14 @@
 import React from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import type { RegraElegibilidade } from "@/features/analise/types";
 
 type ElegibilidadePanelProps = {
@@ -57,26 +64,26 @@ export function ElegibilidadePanel({
         />
       ) : (
         <Table>
-          <thead className="bg-surface">
-            <tr>
-              <th className="px-4 py-3">Codigo</th>
-              <th className="px-4 py-3">Descricao</th>
-              <th className="px-4 py-3">Resultado</th>
-              <th className="px-4 py-3">Severidade</th>
-              <th className="px-4 py-3">Mensagem</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader className="bg-surface">
+            <TableRow>
+              <TableHead>Codigo</TableHead>
+              <TableHead>Descricao</TableHead>
+              <TableHead>Resultado</TableHead>
+              <TableHead>Severidade</TableHead>
+              <TableHead>Mensagem</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {regras.map((regra) => (
-              <tr key={regra.id} className="border-t">
-                <td className="px-4 py-3 font-semibold">{regra.codigoRegra}</td>
-                <td className="px-4 py-3">{regra.descricao}</td>
-                <td className="px-4 py-3">{regra.resultado}</td>
-                <td className="px-4 py-3">{regra.severidade}</td>
-                <td className="px-4 py-3 text-text-subtle">{regra.mensagem}</td>
-              </tr>
+              <TableRow key={regra.id}>
+                <TableCell className="font-semibold">{regra.codigoRegra}</TableCell>
+                <TableCell>{regra.descricao}</TableCell>
+                <TableCell>{regra.resultado}</TableCell>
+                <TableCell>{regra.severidade}</TableCell>
+                <TableCell className="text-text-subtle">{regra.mensagem}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </section>

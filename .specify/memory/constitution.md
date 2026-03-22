@@ -1,16 +1,10 @@
 <!--
 Sync Impact Report
-Version change: 1.7.0 -> 1.8.0
+Version change: 1.8.0 -> 1.9.0
 Modified principles:
-- Principle slot 1 -> I. Simplicidade e Evolucao Sustentavel
-- Principle slot 2 -> II. Arquitetura e Codigo de Alta Coesao
-- Principle slot 3 -> III. Security, Compliance e Auditoria by Design
-- Principle slot 4 -> IV. Observabilidade e Operacao by Design
-- Principle slot 5 -> V. Manutenibilidade e Escalabilidade por Design
-- Added principle -> VI. Experiencia, Performance e Qualidade de Entrega
+- VI. Experiencia, Performance e Qualidade de Entrega
 Added sections:
-- Requisitos e Restricoes de Engenharia
-- Fluxo de Entrega e Quality Gates
+- Governança de componentes de UI (Reuso, controle de duplicação e exceções)
 Removed sections:
 - None
 Templates requiring updates:
@@ -18,7 +12,7 @@ Templates requiring updates:
 - ✅ updated: .specify/templates/spec-template.md
 - ✅ updated: .specify/templates/tasks-template.md
 Follow-up TODOs:
-- None
+- Nenhum
 -->
 # FIDC CDC Kogito Constitution
 
@@ -140,14 +134,31 @@ MUST nascer documentados, com criterio de uso, estados, comportamento, restricoe
 tokens associados e guidance de acessibilidade.
 Para frontends web, React + Next.js + TypeScript MUST ser a stack principal de
 implementacao. O projeto MUST usar shadcn/ui como base tecnica e estrutural de
-componentes, nunca como fonte de verdade visual. A fonte normativa para decisoes
-visuais e comportamentais MUST ser o Design System da Atlassian, incluindo tokens,
-fundamentos, tipografia, espacamento, contraste, acessibilidade, foco visivel,
-estados interativos, composicao e semantica de uso. Componentes derivados de
-shadcn/ui MUST ser adaptados para obedecer a esse contrato. Valores visuais como
-cores, bordas, raios, opacidade, sombras, elevacao, hover, pressed, disabled,
-selected e foco MUST vir de uma camada central de tokens. APIs de componentes MUST
-ser previsiveis, compostas e tipadas explicitamente em TypeScript. Botoes MUST
+componentes de interface, nunca como fonte de verdade visual. O projeto MUST priorizar
+componentes de superficie em shadcn/ui (ou sua familia instalada no repositorio) antes de criar
+implementacao propria de componentes como button, input, dialog, tabela, dropdown, modal,
+card, badge, menu e equivalentes.
+
+A fonte normativa para decisoes visuais e comportamentais MUST ser o Design System da
+Atlassian, com valores, tokens, estados, acessibilidade, semantica e documentacao
+centralizados. O codigo de UI implementado localmente MUST ser derivado de shadcn/ui quando
+tecnicamente possivel, e so pode divergir por configuracao, composicao ou estilizacao
+adicional alinhada aos tokens adotados.
+
+Criacao de componente novo fora do acervo shadcn/ui padrao ou da familia ja instalada no
+repositorio e permitida apenas com justificativa forte e rastreavel. Essa justificativa
+MUST documentar: (a) ausencia funcional no shadcn/ui para o caso concreto, (b) por que
+composicao/extensao nao resolve, (c) impacto de manutencao e cobertura de estados, (d) owner e
+prazo de revisao do componente.
+
+Antes de propor novo componente de UI, o time MUST validar:
+1. Componente shadcn/ui equivalente e suficiente por composição.
+2. Componente local reutilizável equivalente já existente.
+3. Variação controlada via props/variants sem criação de novo componente.
+
+Valores visuais como cores, bordas, raios, opacidade, sombras, elevacao, hover, pressed,
+disabled, selected e foco MUST vir de uma camada central de tokens. Componentes derivados
+de shadcn/ui MUST ser adaptados para obedecer a esse contrato. Botoes MUST
 suportar ao menos variantes primary, secondary e subtle, com semantica coerente.
 Todo componente interativo MUST contemplar estados default, hover, active ou pressed,
 focus visible, disabled, loading quando aplicavel e selected quando aplicavel.
@@ -194,6 +205,33 @@ Especificacoes e planos MUST registrar explicitamente:
 - decisoes de arquitetura que introduzam complexidade, com justificativa objetiva;
 - estrategia de testes proporcional ao risco, cobrindo fluxos criticos e regressao.
 
+### Governança de componentes de UI (Reuso, controle de duplicação e exceções)
+
+O repositorio e o projeto MUST adotar politica de reuso estrito de componentes para reduzir
+divida de UX e codigo.
+
+Todo novo componente de UI só pode ser criado após:
+- Revisão do catálogo em `frontend/src/components/ui` para reutilização.
+- Verificação de composição possível a partir de componentes shadcn/ui existentes.
+- Validação prévia de tokenização com o Design System antes de criar estilos novos.
+
+São critérios de aceitação para criação de novo componente não existente no repertório:
+- Exceção formal com justificativa escrita no PR, contendo:
+  - problema funcional não coberto por composição;
+  - análise de duas alternativas rejeitadas (composição/extensão e composição condicional via props);
+  - impacto em acessibilidade e estados (hover/focus/active/disabled/loading/selected);
+  - mapeamento de tokens usados (cores, tipografia, raio, espacamento, sombra, foco);
+  - owner técnico, suíte de testes e documentação de uso.
+- Aprovação obrigatória de arquitetura/frontend no gate de revisão.
+
+Medidas práticas de controle de criação desgovernada:
+- Cada PR com novo componente deve incluir secao de "Racional de novo componente" no template de revisao.
+- Manter catalogo unico de componentes em `frontend/src/components/ui` e revisar duplicacoes por
+  semantica visual/funcional antes do merge.
+- Proibir variacoes locais que apenas trocam classes sem nova semantica de comportamento.
+- Exigir validacao de acessibilidade minima para novos componentes interativos.
+- Registrar excecoes aprovadas em changelog tecnico e revisar trimestralmente deduplicacao.
+
 Solucoes que aumentem acoplamento, multipliquem pontos de configuracao ou criem
 abstracoes sem caso concreto SHOULD ser rejeitadas em revisao. Reuso MUST priorizar
 componentes e padroes existentes do repositorio antes de novas implementacoes.
@@ -220,6 +258,8 @@ constituicao. O fluxo de desenvolvimento MUST validar:
   relacoes consistentes e ausencia de acoplamento desnecessario do cliente a paths;
 - aderencia das APIs REST a RFC 9457 para respostas de erro, com `type`, `title`,
   `status`, `detail` e `instance` coerentes e sem exposicao indevida de internals;
+- aderencia da proposta de novos componentes de UI ao fluxo de reuso: reutilizar shadcn/ui
+  e componentes locais antes de criar novos componentes;
 - aderencia da implementacao frontend a React, Next.js, TypeScript, shadcn/ui como
   base tecnica e Atlassian como contrato visual e comportamental;
 - metas de performance e ausencia de degradacao critica;
@@ -240,4 +280,4 @@ para clarificacoes sem impacto de governanca. Revisoes de conformidade com esta
 constituicao MUST ocorrer em especificacoes, planos, tarefas e revisoes de codigo.
 Excecoes MUST ser temporarias, documentadas e com prazo de remediacao definido.
 
-**Version**: 1.8.0 | **Ratified**: 2026-03-20 | **Last Amended**: 2026-03-20
+**Version**: 1.9.0 | **Ratified**: 2026-03-20 | **Last Amended**: 2026-03-22

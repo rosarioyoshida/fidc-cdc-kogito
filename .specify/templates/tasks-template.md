@@ -167,6 +167,8 @@ guardrails, maintainability constraints, scalability readiness, and performance 
 - [ ] TXXX REST API versioning and deprecation policy validation
 - [ ] TXXX HATEOAS link relation and hypermedia response validation
 - [ ] TXXX RFC 9457 problem details contract validation
+- [ ] TXXX Validate reuse of existing shadcn/ui and `frontend/src/components/ui` components before creating new ones
+- [ ] TXXX Registrar justificativa de excecao de novo componente no template de revisao do PR e obter aprovacao de arquitetura
 - [ ] TXXX UI/UX and accessibility refinements
 - [ ] TXXX Semantic color and visual hierarchy validation
 - [ ] TXXX Design System token/component alignment and documentation updates
@@ -273,6 +275,9 @@ With multiple developers:
   information, and consistency of interaction patterns whenever the feature has UI
 - Include explicit tasks for Design System compliance, token reuse, component
   documentation, and accessibility validation whenever the feature has UI
+- Include explicit tasks for component reuse checks and PR component-exception
+  justification when new UI components are proposed, including review of
+  `frontend/src/components/ui`
 - Include explicit tasks for React, Next.js, TypeScript, shadcn/ui adaptation, and
   Atlassian-aligned component states/variants whenever the feature has web UI
 - Include explicit tasks for REST resource naming, URI hierarchy, query parameter

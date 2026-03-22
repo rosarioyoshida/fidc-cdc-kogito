@@ -1,6 +1,13 @@
 import React from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import type { ContratoAnalise, ParcelaAnalise } from "@/features/analise/types";
 
 type ContratosPanelProps = {
@@ -45,31 +52,31 @@ export function ContratosPanel({ contratos, parcelas }: ContratosPanelProps) {
         />
       ) : (
         <Table>
-          <thead className="bg-surface">
-            <tr>
-              <th className="px-4 py-3">Contrato</th>
-              <th className="px-4 py-3">Sacado</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Parcelas</th>
-              <th className="px-4 py-3 text-right">Valor nominal</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader className="bg-surface">
+            <TableRow>
+              <TableHead>Contrato</TableHead>
+              <TableHead>Sacado</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Parcelas</TableHead>
+              <TableHead className="text-right">Valor nominal</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {contratos.map((contrato) => (
-              <tr key={contrato.id} className="border-t">
-                <td className="px-4 py-3 font-semibold">{contrato.identificadorExterno}</td>
-                <td className="px-4 py-3">{contrato.sacadoId}</td>
-                <td className="px-4 py-3">{contrato.statusRegistro}</td>
-                <td className="px-4 py-3 text-text-subtle">{contrato.parcelas.length}</td>
-                <td className="px-4 py-3 text-right">
+              <TableRow key={contrato.id}>
+                <TableCell className="font-semibold">{contrato.identificadorExterno}</TableCell>
+                <TableCell>{contrato.sacadoId}</TableCell>
+                <TableCell>{contrato.statusRegistro}</TableCell>
+                <TableCell className="text-text-subtle">{contrato.parcelas.length}</TableCell>
+                <TableCell className="text-right">
                   {contrato.valorNominal.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL"
                   })}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </section>

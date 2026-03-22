@@ -1,7 +1,14 @@
 import React from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import type { PagamentoAnalise } from "@/features/analise/types";
 
 type CalculoPanelProps = {
@@ -53,28 +60,28 @@ export function CalculoPanel({
         />
       ) : (
         <Table>
-          <thead className="bg-surface">
-            <tr>
-              <th className="px-4 py-3">Valor</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Autorizado por</th>
-              <th className="px-4 py-3">Autorizado em</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader className="bg-surface">
+            <TableRow>
+              <TableHead>Valor</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Autorizado por</TableHead>
+              <TableHead>Autorizado em</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {pagamentos.map((pagamento) => (
-              <tr key={pagamento.id} className="border-t">
-                <td className="px-4 py-3 font-semibold">
+              <TableRow key={pagamento.id}>
+                <TableCell className="font-semibold">
                   {pagamento.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-                </td>
-                <td className="px-4 py-3">{pagamento.statusPagamento}</td>
-                <td className="px-4 py-3">{pagamento.autorizadoPor ?? "Nao informado"}</td>
-                <td className="px-4 py-3 text-text-subtle">
+                </TableCell>
+                <TableCell>{pagamento.statusPagamento}</TableCell>
+                <TableCell>{pagamento.autorizadoPor ?? "Nao informado"}</TableCell>
+                <TableCell className="text-text-subtle">
                   {pagamento.autorizadoEm ?? "Aguardando"}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </section>

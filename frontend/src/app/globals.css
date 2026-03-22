@@ -7,6 +7,11 @@
 html {
   background: var(--ds-surface);
   color: var(--ds-text);
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -19,6 +24,11 @@ body {
 
 * {
   border-color: var(--ds-border);
+}
+
+*::selection {
+  background: color-mix(in srgb, var(--ds-brand) 18%, transparent);
+  color: var(--ds-text);
 }
 
 a {
