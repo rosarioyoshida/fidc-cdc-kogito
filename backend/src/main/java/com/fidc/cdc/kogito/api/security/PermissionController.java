@@ -6,9 +6,6 @@ import com.fidc.cdc.kogito.application.process.TaskAssignmentContext;
 import com.fidc.cdc.kogito.application.process.TaskAssignmentService;
 import com.fidc.cdc.kogito.application.security.PermissionSnapshot;
 import com.fidc.cdc.kogito.application.security.StageAuthorizationService;
-import com.fidc.cdc.kogito.domain.cessao.Cessao;
-import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
-import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class PermissionController {
 
     private final StageAuthorizationService stageAuthorizationService;
-    private final CessaoRepository cessaoRepository;
     private final TaskAssignmentService taskAssignmentService;
     private final ManagementConsoleSupport managementConsoleSupport;
     private final ProcessMetricsService processMetricsService;
 
     public PermissionController(
             StageAuthorizationService stageAuthorizationService,
-            CessaoRepository cessaoRepository,
             TaskAssignmentService taskAssignmentService,
             ManagementConsoleSupport managementConsoleSupport,
             ProcessMetricsService processMetricsService
     ) {
         this.stageAuthorizationService = stageAuthorizationService;
-        this.cessaoRepository = cessaoRepository;
         this.taskAssignmentService = taskAssignmentService;
         this.managementConsoleSupport = managementConsoleSupport;
         this.processMetricsService = processMetricsService;
@@ -44,15 +38,6 @@ public class PermissionController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> listar(@PathVariable String businessKey) {
         PermissionSnapshot snapshot = stageAuthorizationService.describePermissions(null);
-        Cessao cessao = cessaoRepository.findByBusinessKey(businessKey)
-                .orElseThrow(() -> new com.fidc.cdc.kogito.api.error.ResourceNotFoundException(
-                        "Cessao nao encontrada para consulta de permissoes."
-                ));
-        String etapaAtual = cessao.getEtapas().stream()
-                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
-                .map(etapa -> etapa.getNomeEtapa().name())
-                .findFirst()
-                .orElse("SEM_ETAPA_ATIVA");
         TaskAssignmentContext taskContext = taskAssignmentService.describeTaskContext(businessKey, snapshot.actorId());
         ManagementConsoleContext managementContext = managementConsoleSupport.describeProcessContext(businessKey);
         processMetricsService.registerConsoleAccess("task-console", "context-served");
@@ -62,8 +47,8 @@ public class PermissionController {
                 "actorId", snapshot.actorId(),
                 "perfis", snapshot.perfis(),
                 "etapasPermitidas", snapshot.etapasPermitidas(),
-                "etapaAtual", etapaAtual,
-                "podeExecutarEtapaAtual", snapshot.etapasPermitidas().contains(etapaAtual),
+                "etapaAtual", taskContext.currentStage(),
+                "podeExecutarEtapaAtual", snapshot.etapasPermitidas().contains(taskContext.currentStage()),
                 "taskContext", taskContext,
                 "managementContext", managementContext
         ));

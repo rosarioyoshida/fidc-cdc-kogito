@@ -5,13 +5,10 @@ import com.fidc.cdc.kogito.application.readmodel.CessaoReadModelDocument;
 import com.fidc.cdc.kogito.application.readmodel.CessaoReadModelRepository;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
-import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
-import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +21,7 @@ public class ManagementConsoleSupport {
     private final CessaoRepository cessaoRepository;
     private final CessaoReadModelRepository cessaoReadModelRepository;
     private final TaskAssignmentService taskAssignmentService;
+    private final KogitoWorkflowRuntimeService workflowRuntimeService;
     private final String managementConsoleUrl;
     private final String dataIndexUrl;
     private final String jobsServiceUrl;
@@ -32,13 +30,15 @@ public class ManagementConsoleSupport {
             CessaoRepository cessaoRepository,
             CessaoReadModelRepository cessaoReadModelRepository,
             TaskAssignmentService taskAssignmentService,
+            KogitoWorkflowRuntimeService workflowRuntimeService,
             @Value("${fidc.consoles.management-console-url}") String managementConsoleUrl,
             @Value("${fidc.data-index.url}") String dataIndexUrl,
-            @Value("${fidc.jobs.service-url}") String jobsServiceUrl
+            @Value("${fidc.jobs.public-service-url}") String jobsServiceUrl
     ) {
         this.cessaoRepository = cessaoRepository;
         this.cessaoReadModelRepository = cessaoReadModelRepository;
         this.taskAssignmentService = taskAssignmentService;
+        this.workflowRuntimeService = workflowRuntimeService;
         this.managementConsoleUrl = managementConsoleUrl;
         this.dataIndexUrl = dataIndexUrl;
         this.jobsServiceUrl = jobsServiceUrl;
@@ -50,19 +50,19 @@ public class ManagementConsoleSupport {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cessao nao encontrada para consulta de management context."
                 ));
-        Optional<EtapaCessao> currentStage = cessao.getEtapas().stream()
-                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
-                .min(Comparator.comparingInt(EtapaCessao::getOrdem));
+        KogitoProcessSnapshot runtimeSnapshot = workflowRuntimeService.getProcessByBusinessKey(businessKey);
+        String currentStage = runtimeSnapshot.activeTask() != null
+                ? runtimeSnapshot.activeTask().etapaNome().name()
+                : cessao.getEtapas().stream()
+                        .filter(etapa -> etapa.getStatusEtapa().name().equals("EM_EXECUCAO"))
+                        .map(etapa -> etapa.getNomeEtapa().name())
+                        .findFirst()
+                        .orElse("SEM_ETAPA_ATIVA");
         Optional<CessaoReadModelDocument> readModel = cessaoReadModelRepository.findById(businessKey);
 
-        boolean humanTaskPending = currentStage
-                .map(EtapaCessao::getNomeEtapa)
-                .map(taskAssignmentService::isHumanTaskStage)
-                .orElse(false);
-        boolean waitingForTimerJob = currentStage
-                .map(EtapaCessao::getNomeEtapa)
-                .filter(EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA::equals)
-                .isPresent();
+        boolean humanTaskPending = runtimeSnapshot.activeTask() != null
+                && taskAssignmentService.isHumanTaskStage(runtimeSnapshot.activeTask().etapaNome());
+        boolean waitingForTimerJob = EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA.name().equals(currentStage);
 
         List<String> availableAdminActions = new ArrayList<>();
         availableAdminActions.add("VIEW_PROCESS_INSTANCE");
@@ -82,8 +82,8 @@ public class ManagementConsoleSupport {
         return new ManagementConsoleContext(
                 businessKey,
                 cessao.getWorkflowInstanceId(),
-                cessao.getStatus().name(),
-                currentStage.map(etapa -> etapa.getNomeEtapa().name()).orElse("SEM_ETAPA_ATIVA"),
+                runtimeSnapshot.isCompleted() ? "CONCLUIDA" : cessao.getStatus().name(),
+                currentStage,
                 humanTaskPending,
                 waitingForTimerJob,
                 readModel.isPresent(),

@@ -5,6 +5,9 @@ import com.fidc.cdc.kogito.api.error.BusinessConflictException;
 import com.fidc.cdc.kogito.api.error.ResourceNotFoundException;
 import com.fidc.cdc.kogito.application.audit.AuditEventPublisher;
 import com.fidc.cdc.kogito.application.audit.AuditTrailService;
+import com.fidc.cdc.kogito.application.process.KogitoProcessSnapshot;
+import com.fidc.cdc.kogito.application.process.KogitoTaskSnapshot;
+import com.fidc.cdc.kogito.application.process.KogitoWorkflowRuntimeService;
 import com.fidc.cdc.kogito.application.process.TimerSchedulingService;
 import com.fidc.cdc.kogito.application.security.AuthorizationDecision;
 import com.fidc.cdc.kogito.application.security.StageAuthorizationService;
@@ -36,6 +39,7 @@ public class CessaoProcessService {
     private final ProcessMetricsService processMetricsService;
     private final TimerSchedulingService timerSchedulingService;
     private final StageAuthorizationService stageAuthorizationService;
+    private final KogitoWorkflowRuntimeService workflowRuntimeService;
 
     public CessaoProcessService(
             CessaoRepository cessaoRepository,
@@ -46,7 +50,8 @@ public class CessaoProcessService {
             AuditTrailService auditTrailService,
             ProcessMetricsService processMetricsService,
             TimerSchedulingService timerSchedulingService,
-            StageAuthorizationService stageAuthorizationService
+            StageAuthorizationService stageAuthorizationService,
+            KogitoWorkflowRuntimeService workflowRuntimeService
     ) {
         this.cessaoRepository = cessaoRepository;
         this.etapaCessaoRepository = etapaCessaoRepository;
@@ -57,12 +62,14 @@ public class CessaoProcessService {
         this.processMetricsService = processMetricsService;
         this.timerSchedulingService = timerSchedulingService;
         this.stageAuthorizationService = stageAuthorizationService;
+        this.workflowRuntimeService = workflowRuntimeService;
     }
 
     @Transactional
     public Cessao createAndStart(CessaoRequest request) {
         Cessao cessao = cessaoRegistrationService.register(request);
-        cessaoEventPublisher.publishCessaoCreated(cessao);
+        KogitoProcessSnapshot snapshot = workflowRuntimeService.getProcess(cessao.getWorkflowInstanceId());
+        cessaoEventPublisher.publishCessaoCreated(cessao, snapshot);
         processMetricsService.incrementProcessEvent("CESSAO_CRIADA", "success");
         auditTrailService.registrarEvento(
                 cessao,
@@ -114,6 +121,18 @@ public class CessaoProcessService {
 
         AuthorizationDecision authorization = stageAuthorizationService.authorizeStageAction(responsavelId, etapaNome);
         validateAdvancePreconditions(cessao, etapa);
+        KogitoProcessSnapshot beforeSnapshot = workflowRuntimeService.getProcess(cessao.getWorkflowInstanceId());
+        KogitoTaskSnapshot completedTask = beforeSnapshot.activeTask();
+        if (completedTask == null || completedTask.etapaNome() != etapaNome) {
+            throw new BusinessConflictException("A etapa ativa no runtime nao corresponde a etapa solicitada.");
+        }
+
+        KogitoProcessSnapshot afterSnapshot = workflowRuntimeService.completeActiveHumanTask(
+                businessKey,
+                etapaNome,
+                authorization.actorId(),
+                justificativa
+        );
 
         etapa.setStatusEtapa(EtapaCessaoStatus.CONCLUIDA);
         etapa.setResultado("SUCESSO");
@@ -121,16 +140,9 @@ public class CessaoProcessService {
         etapa.setJustificativa(justificativa);
         etapa.setConcluidaEm(OffsetDateTime.now());
 
-        EtapaCessao next = cessao.getEtapas()
-                .stream()
-                .sorted(Comparator.comparingInt(EtapaCessao::getOrdem))
-                .filter(candidate -> candidate.getOrdem() == etapa.getOrdem() + 1)
-                .findFirst()
-                .orElse(null);
+        EtapaCessao next = synchronizeFollowingStages(cessao, etapa, afterSnapshot, authorization.actorId());
 
         if (next != null) {
-            next.setStatusEtapa(EtapaCessaoStatus.EM_EXECUCAO);
-            next.setInicioEm(OffsetDateTime.now());
             cessao.setStatus(CessaoStatus.EM_ANDAMENTO);
             if (next.getNomeEtapa() == EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA) {
                 String jobId = timerSchedulingService.scheduleAwaitingConfirmationTimer(
@@ -140,12 +152,12 @@ public class CessaoProcessService {
                 );
                 cessaoEventPublisher.publishTimerScheduled(cessao, next, jobId);
             }
-        } else {
+        } else if (afterSnapshot.isCompleted()) {
             cessao.setStatus(CessaoStatus.CONCLUIDA);
             cessao.setDataEncerramento(OffsetDateTime.now());
         }
 
-        cessaoEventPublisher.publishStageAdvanced(cessao, etapa, next);
+        cessaoEventPublisher.publishStageAdvanced(cessao, etapa, completedTask, next, afterSnapshot, authorization.actorId());
         processMetricsService.incrementProcessEvent("ETAPA_AVANCADA", "success");
         auditEventPublisher.publish(
                 "ETAPA_AVANCADA",
@@ -166,6 +178,131 @@ public class CessaoProcessService {
                 )
         );
         return cessao;
+    }
+
+    @Transactional
+    public Cessao resumeAwaitingConfirmation(String businessKey, String processInstanceId, String actorId) {
+        Cessao cessao = getByBusinessKey(businessKey);
+        EtapaCessao etapa = etapaCessaoRepository.findByCessaoBusinessKeyAndNomeEtapa(
+                        businessKey,
+                        EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA
+                )
+                .orElseThrow(() -> new ResourceNotFoundException("Etapa de aguardando confirmacao nao encontrada."));
+
+        if (etapa.getStatusEtapa() != EtapaCessaoStatus.EM_EXECUCAO) {
+            throw new BusinessConflictException("A etapa de aguardando confirmacao nao esta ativa para retomada.");
+        }
+
+        KogitoProcessSnapshot afterSnapshot = workflowRuntimeService.confirmAwaitingRegistradora(
+                processInstanceId,
+                businessKey
+        );
+
+        OffsetDateTime now = OffsetDateTime.now();
+        etapa.setStatusEtapa(EtapaCessaoStatus.CONCLUIDA);
+        etapa.setResultado("SUCESSO");
+        etapa.setResponsavelId(actorId == null || actorId.isBlank() ? "system" : actorId);
+        etapa.setJustificativa("Confirmacao recebida via callback do Jobs Service.");
+        etapa.setConcluidaEm(now);
+
+        EtapaCessao next = synchronizeFollowingStages(cessao, etapa, afterSnapshot, actorId);
+        if (next != null) {
+            cessao.setStatus(CessaoStatus.EM_ANDAMENTO);
+        } else if (afterSnapshot.isCompleted()) {
+            cessao.setStatus(CessaoStatus.CONCLUIDA);
+            cessao.setDataEncerramento(now);
+        }
+
+        cessaoEventPublisher.publishStageAdvanced(
+                cessao,
+                etapa,
+                null,
+                next,
+                afterSnapshot,
+                actorId == null || actorId.isBlank() ? "system" : actorId
+        );
+        processMetricsService.incrementProcessEvent("TIMER_CALLBACK_PROCESSADO", "success");
+        auditEventPublisher.publish(
+                "TIMER_CALLBACK_PROCESSADO",
+                actorId == null || actorId.isBlank() ? "system" : actorId,
+                Map.of("businessKey", businessKey, "etapa", etapa.getNomeEtapa().name())
+        );
+        auditTrailService.registrarEvento(
+                cessao,
+                etapa,
+                actorId == null || actorId.isBlank() ? "system" : actorId,
+                "INTEGRACAO",
+                "TIMER_CALLBACK_PROCESSADO",
+                "SUCESSO",
+                Map.of("businessKey", businessKey, "processInstanceId", processInstanceId)
+        );
+        return cessao;
+    }
+
+    private EtapaCessao synchronizeFollowingStages(
+            Cessao cessao,
+            EtapaCessao etapaConcluida,
+            KogitoProcessSnapshot afterSnapshot,
+            String actorId
+    ) {
+        List<EtapaCessao> orderedStages = cessao.getEtapas()
+                .stream()
+                .sorted(Comparator.comparingInt(EtapaCessao::getOrdem))
+                .toList();
+
+        EtapaCessaoNome currentRuntimeStage = resolveCurrentRuntimeStage(afterSnapshot, etapaConcluida);
+        OffsetDateTime now = OffsetDateTime.now();
+        EtapaCessao next = null;
+
+        for (EtapaCessao candidate : orderedStages) {
+            if (candidate.getOrdem() <= etapaConcluida.getOrdem()) {
+                continue;
+            }
+
+            if (afterSnapshot.isCompleted()) {
+                markAutomaticStageAsCompleted(candidate, now, actorId);
+                continue;
+            }
+
+            if (candidate.getNomeEtapa() == currentRuntimeStage) {
+                candidate.setStatusEtapa(EtapaCessaoStatus.EM_EXECUCAO);
+                if (candidate.getInicioEm() == null) {
+                    candidate.setInicioEm(now);
+                }
+                next = candidate;
+                break;
+            }
+
+            markAutomaticStageAsCompleted(candidate, now, actorId);
+        }
+
+        return next;
+    }
+
+    private EtapaCessaoNome resolveCurrentRuntimeStage(KogitoProcessSnapshot afterSnapshot, EtapaCessao etapaConcluida) {
+        if (afterSnapshot.activeTask() != null) {
+            return afterSnapshot.activeTask().etapaNome();
+        }
+        if (afterSnapshot.isCompleted()) {
+            return null;
+        }
+        if (etapaConcluida.getOrdem() < EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA.ordinal() + 1) {
+            return EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA;
+        }
+        throw new BusinessConflictException("O runtime avancou para um estado sem etapa humana ativa que nao esta mapeado.");
+    }
+
+    private void markAutomaticStageAsCompleted(EtapaCessao etapa, OffsetDateTime timestamp, String actorId) {
+        etapa.setStatusEtapa(EtapaCessaoStatus.CONCLUIDA);
+        if (etapa.getInicioEm() == null) {
+            etapa.setInicioEm(timestamp);
+        }
+        etapa.setConcluidaEm(timestamp);
+        etapa.setResultado("SUCESSO");
+        etapa.setResponsavelId(actorId == null || actorId.isBlank() ? "system" : actorId);
+        if (etapa.getJustificativa() == null || etapa.getJustificativa().isBlank()) {
+            etapa.setJustificativa("Etapa automatica concluida pelo runtime.");
+        }
     }
 
     private void validateAdvancePreconditions(Cessao cessao, EtapaCessao etapa) {

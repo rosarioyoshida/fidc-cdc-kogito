@@ -50,17 +50,25 @@ fidc:
     version: v1
   jobs:
     service-url: ${FIDC_JOBS_SERVICE_URL:http://localhost:8085}
+    public-service-url: ${FIDC_JOBS_PUBLIC_SERVICE_URL:http://localhost:8085}
     callback-base-url: ${FIDC_JOBS_CALLBACK_BASE_URL:http://localhost:8080/api/v1/process/jobs/callbacks}
   data-index:
     url: ${FIDC_DATA_INDEX_URL:http://localhost:8180/graphql}
   consoles:
     task-console-url: ${FIDC_TASK_CONSOLE_URL:http://localhost:8280}
     management-console-url: ${FIDC_MANAGEMENT_CONSOLE_URL:http://localhost:8380}
+  runtime:
+    internal-service-url: ${FIDC_RUNTIME_INTERNAL_SERVICE_URL:http://localhost:8080}
+    public-service-url: ${FIDC_RUNTIME_PUBLIC_SERVICE_URL:http://localhost:8080}
   messaging:
     topics:
       process: ${FIDC_TOPIC_PROCESS:fidc.process.events}
       tasks: ${FIDC_TOPIC_TASKS:fidc.task.events}
       audit: ${FIDC_TOPIC_AUDIT:fidc.audit.events}
+      kogito-process-definitions: ${FIDC_TOPIC_KOGITO_PROCESS_DEFINITIONS:kogito-processdefinitions-events}
+      kogito-process-instances: ${FIDC_TOPIC_KOGITO_PROCESS_INSTANCES:kogito-processinstances-events}
+      kogito-user-task-instances: ${FIDC_TOPIC_KOGITO_USER_TASK_INSTANCES:kogito-usertaskinstances-events}
+      kogito-jobs: ${FIDC_TOPIC_KOGITO_JOBS:kogito-jobs-events}
   read-model:
     kafka-listener-enabled: ${FIDC_READ_MODEL_KAFKA_LISTENER_ENABLED:false}
   registradora:

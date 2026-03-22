@@ -2,6 +2,8 @@ package com.fidc.cdc.kogito.application.cessao;
 
 import com.fidc.cdc.kogito.api.cessao.CessaoRequest;
 import com.fidc.cdc.kogito.api.error.BusinessConflictException;
+import com.fidc.cdc.kogito.application.process.KogitoProcessSnapshot;
+import com.fidc.cdc.kogito.application.process.KogitoWorkflowRuntimeService;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.CessaoStatus;
@@ -16,9 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CessaoRegistrationService {
 
     private final CessaoRepository cessaoRepository;
+    private final KogitoWorkflowRuntimeService workflowRuntimeService;
 
-    public CessaoRegistrationService(CessaoRepository cessaoRepository) {
+    public CessaoRegistrationService(
+            CessaoRepository cessaoRepository,
+            KogitoWorkflowRuntimeService workflowRuntimeService
+    ) {
         this.cessaoRepository = cessaoRepository;
+        this.workflowRuntimeService = workflowRuntimeService;
     }
 
     @Transactional
@@ -33,17 +40,19 @@ public class CessaoRegistrationService {
         cessao.setCessionariaId(request.cessionariaId());
         cessao.setDataImportacao(OffsetDateTime.now());
         cessao.setStatus(CessaoStatus.EM_ANDAMENTO);
-        cessao.setWorkflowInstanceId("workflow-" + request.businessKey());
+
+        KogitoProcessSnapshot snapshot = workflowRuntimeService.startProcess(request);
+        cessao.setWorkflowInstanceId(snapshot.processInstanceId());
 
         int ordem = 1;
         for (EtapaCessaoNome nome : EtapaCessaoNome.orderedValues()) {
             EtapaCessao etapa = new EtapaCessao();
             etapa.setNomeEtapa(nome);
             etapa.setOrdem(ordem++);
-            etapa.setStatusEtapa(nome == EtapaCessaoNome.IMPORTAR_CARTEIRA
+            etapa.setStatusEtapa(snapshot.activeTask() != null && snapshot.activeTask().etapaNome() == nome
                     ? EtapaCessaoStatus.EM_EXECUCAO
                     : EtapaCessaoStatus.PENDENTE);
-            if (nome == EtapaCessaoNome.IMPORTAR_CARTEIRA) {
+            if (snapshot.activeTask() != null && snapshot.activeTask().etapaNome() == nome) {
                 etapa.setInicioEm(OffsetDateTime.now());
             }
             cessao.addEtapa(etapa);

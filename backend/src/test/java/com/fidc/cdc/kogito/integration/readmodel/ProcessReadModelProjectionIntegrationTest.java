@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-class ProcessReadModelIntegrationTest extends ApiContractTestBase {
+class ProcessReadModelProjectionIntegrationTest extends ApiContractTestBase {
 
     @Autowired
     private CessaoReadModelRepository readModelRepository;
 
     @Test
-    void shouldProjectCurrentStateIntoMysqlReadModel() throws Exception {
+    void shouldProjectCurrentStateIntoProjectedReadModel() throws Exception {
         mockMvc.perform(post("/api/v1/cessoes")
                         .with(httpBasic("operador", "operador123"))
                         .contentType(MediaType.APPLICATION_JSON)

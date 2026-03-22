@@ -1,387 +1,705 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-             xmlns:drools="http://www.jboss.org/drools"
-             id="Definition_ControleCessao"
-             targetNamespace="https://fidc-cdc-kogito/processes">
-    <itemDefinition id="_task01_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task01_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task01_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task01_DescriptionInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task02_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task02_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task02_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task02_DescriptionInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task03_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task03_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task03_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task03_DescriptionInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task10_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task10_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task10_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task10_DescriptionInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task11_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task11_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task11_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task11_DescriptionInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task12_TaskNameInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task12_GroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task12_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
-    <itemDefinition id="_task12_DescriptionInputXItem" structureRef="Object"/>
-
-    <process id="controle-cessao" name="Controle de Cessao" drools:packageName="com.fidc.cdc.kogito.processes" isExecutable="true">
-        <startEvent id="start-cessao" name="Inicio da Cessao">
-            <outgoing>flow-1</outgoing>
-        </startEvent>
-
-        <sequenceFlow id="flow-1" sourceRef="start-cessao" targetRef="task-01"/>
-        <userTask id="task-01" name="01 Importar carteira">
-            <incoming>flow-1</incoming>
-            <outgoing>flow-2</outgoing>
-            <ioSpecification>
-                <dataInput id="task-01-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task01_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-01-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task01_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-01-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task01_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-01-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task01_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-01-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-01-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-01-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-01-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-01-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">IMPORTAR_CARTEIRA</from>
-                    <to xsi:type="tFormalExpression">task-01-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-01-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">OPERADOR</from>
-                    <to xsi:type="tFormalExpression">task-01-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-01-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-01-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-01-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Importacao inicial da carteira e preparacao do contexto operacional.</from>
-                    <to xsi:type="tFormalExpression">task-01-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
-        <userTask id="task-02" name="02 Validar cedente">
-            <incoming>flow-2</incoming>
-            <outgoing>flow-3</outgoing>
-            <ioSpecification>
-                <dataInput id="task-02-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task02_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-02-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task02_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-02-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task02_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-02-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task02_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-02-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-02-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-02-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-02-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-02-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">VALIDAR_CEDENTE</from>
-                    <to xsi:type="tFormalExpression">task-02-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-02-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">OPERADOR</from>
-                    <to xsi:type="tFormalExpression">task-02-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-02-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-02-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-02-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Validacao cadastral e documental do cedente.</from>
-                    <to xsi:type="tFormalExpression">task-02-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
-        <userTask id="task-03" name="03 Analisar elegibilidade">
-            <incoming>flow-3</incoming>
-            <outgoing>flow-4</outgoing>
-            <ioSpecification>
-                <dataInput id="task-03-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task03_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-03-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task03_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-03-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task03_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-03-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task03_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-03-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-03-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-03-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-03-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-03-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">ANALISAR_ELEGIBILIDADE</from>
-                    <to xsi:type="tFormalExpression">task-03-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-03-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">ANALISTA</from>
-                    <to xsi:type="tFormalExpression">task-03-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-03-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-03-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-03-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Analise de elegibilidade com bloqueios impeditivos e alertas rastreaveis.</from>
-                    <to xsi:type="tFormalExpression">task-03-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-4" sourceRef="task-03" targetRef="task-04"/>
-        <serviceTask id="task-04" name="04 Consolidar contratos">
-            <incoming>flow-4</incoming>
-            <outgoing>flow-5</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-5" sourceRef="task-04" targetRef="task-05"/>
-        <serviceTask id="task-05" name="05 Consolidar parcelas">
-            <incoming>flow-5</incoming>
-            <outgoing>flow-6</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-6" sourceRef="task-05" targetRef="task-06"/>
-        <serviceTask id="task-06" name="06 Calcular valor">
-            <incoming>flow-6</incoming>
-            <outgoing>flow-7</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-7" sourceRef="task-06" targetRef="task-07"/>
-        <serviceTask id="task-07" name="07 Preparar oferta registradora">
-            <incoming>flow-7</incoming>
-            <outgoing>flow-8</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-8" sourceRef="task-07" targetRef="task-08"/>
-        <serviceTask id="task-08" name="08 Enviar oferta registradora">
-            <incoming>flow-8</incoming>
-            <outgoing>flow-9</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-9" sourceRef="task-08" targetRef="task-09"/>
-        <intermediateCatchEvent id="task-09" name="09 Aguardar confirmacao registradora">
-            <incoming>flow-9</incoming>
-            <outgoing>flow-10</outgoing>
-            <timerEventDefinition/>
-        </intermediateCatchEvent>
-
-        <sequenceFlow id="flow-10" sourceRef="task-09" targetRef="task-10"/>
-        <userTask id="task-10" name="10 Coletar termo de aceite">
-            <incoming>flow-10</incoming>
-            <outgoing>flow-11</outgoing>
-            <ioSpecification>
-                <dataInput id="task-10-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task10_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-10-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task10_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-10-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task10_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-10-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task10_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-10-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-10-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-10-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-10-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-10-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">COLETAR_TERMO_ACEITE</from>
-                    <to xsi:type="tFormalExpression">task-10-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-10-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">ANALISTA</from>
-                    <to xsi:type="tFormalExpression">task-10-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-10-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-10-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-10-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Coleta e formalizacao do termo de aceite antes do fechamento financeiro.</from>
-                    <to xsi:type="tFormalExpression">task-10-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-11" sourceRef="task-10" targetRef="task-11"/>
-        <userTask id="task-11" name="11 Validar lastros">
-            <incoming>flow-11</incoming>
-            <outgoing>flow-12</outgoing>
-            <ioSpecification>
-                <dataInput id="task-11-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task11_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-11-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task11_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-11-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task11_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-11-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task11_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-11-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-11-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-11-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-11-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-11-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">VALIDAR_LASTROS</from>
-                    <to xsi:type="tFormalExpression">task-11-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-11-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">ANALISTA</from>
-                    <to xsi:type="tFormalExpression">task-11-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-11-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-11-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-11-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Validacao documental de lastros com possibilidade de bloqueio do aceite final.</from>
-                    <to xsi:type="tFormalExpression">task-11-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-12" sourceRef="task-11" targetRef="gateway-lastros"/>
-        <exclusiveGateway id="gateway-lastros" name="Lastros validados?">
-            <incoming>flow-12</incoming>
-            <outgoing>flow-12a</outgoing>
-            <outgoing>flow-12b</outgoing>
-        </exclusiveGateway>
-
-        <sequenceFlow id="flow-12a" sourceRef="gateway-lastros" targetRef="task-12"/>
-        <userTask id="task-12" name="12 Autorizar pagamento">
-            <incoming>flow-12a</incoming>
-            <outgoing>flow-13</outgoing>
-            <ioSpecification>
-                <dataInput id="task-12-TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task12_TaskNameInputXItem" name="TaskName"/>
-                <dataInput id="task-12-GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task12_GroupIdInputXItem" name="GroupId"/>
-                <dataInput id="task-12-BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task12_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
-                <dataInput id="task-12-DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task12_DescriptionInputXItem" name="Description"/>
-                <inputSet>
-                    <dataInputRefs>task-12-TaskNameInputX</dataInputRefs>
-                    <dataInputRefs>task-12-GroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-12-BusinessAdministratorGroupIdInputX</dataInputRefs>
-                    <dataInputRefs>task-12-DescriptionInputX</dataInputRefs>
-                </inputSet>
-            </ioSpecification>
-            <dataInputAssociation>
-                <targetRef>task-12-TaskNameInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUTORIZAR_PAGAMENTO</from>
-                    <to xsi:type="tFormalExpression">task-12-TaskNameInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-12-GroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">APROVADOR</from>
-                    <to xsi:type="tFormalExpression">task-12-GroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-12-BusinessAdministratorGroupIdInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">AUDITOR</from>
-                    <to xsi:type="tFormalExpression">task-12-BusinessAdministratorGroupIdInputX</to>
-                </assignment>
-            </dataInputAssociation>
-            <dataInputAssociation>
-                <targetRef>task-12-DescriptionInputX</targetRef>
-                <assignment>
-                    <from xsi:type="tFormalExpression">Autorizacao final do pagamento apos validacao financeira e documental.</from>
-                    <to xsi:type="tFormalExpression">task-12-DescriptionInputX</to>
-                </assignment>
-            </dataInputAssociation>
-        </userTask>
-
-        <sequenceFlow id="flow-12b" sourceRef="gateway-lastros" targetRef="end-rejeicao"/>
-        <endEvent id="end-rejeicao" name="Fluxo encerrado por pendencia documental">
-            <incoming>flow-12b</incoming>
-        </endEvent>
-
-        <sequenceFlow id="flow-13" sourceRef="task-12" targetRef="task-13"/>
-        <serviceTask id="task-13" name="13 Processar pagamento">
-            <incoming>flow-13</incoming>
-            <outgoing>flow-14</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-14" sourceRef="task-13" targetRef="task-14"/>
-        <serviceTask id="task-14" name="14 Confirmar pagamento">
-            <incoming>flow-14</incoming>
-            <outgoing>flow-15</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-15" sourceRef="task-14" targetRef="task-15"/>
-        <serviceTask id="task-15" name="15 Encerrar cessao">
-            <incoming>flow-15</incoming>
-            <outgoing>flow-16</outgoing>
-        </serviceTask>
-
-        <sequenceFlow id="flow-16" sourceRef="task-15" targetRef="end-cessao"/>
-        <endEvent id="end-cessao" name="Fluxo concluido">
-            <incoming>flow-16</incoming>
-        </endEvent>
-    </process>
-</definitions>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_9JRGMAe-ED-s68H1jqlaew" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:itemDefinition id="_task-12_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-12_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-11_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-10_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-03_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-02_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_task-01_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:signal id="_-1857756468" name="registradora-confirmada"/>
+  <bpmn2:collaboration id="_C815EF3A-CE6D-4CA3-907B-D846B424F38C" name="Default Collaboration">
+    <bpmn2:participant id="_BAC65D7E-B46F-4A8C-905C-9FE768425A4B" name="Pool Participant" processRef="controle_cessao"/>
+  </bpmn2:collaboration>
+  <bpmn2:process id="controle_cessao" drools:packageName="com.fidc.cdc.kogito.processes" drools:version="1.0" drools:adHoc="false" name="Controle de Cessao" isExecutable="true" processType="Public">
+    <bpmn2:sequenceFlow id="flow-1" sourceRef="start-cessao" targetRef="task-01"/>
+    <bpmn2:sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
+    <bpmn2:sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
+    <bpmn2:sequenceFlow id="flow-4" sourceRef="task-03" targetRef="task-09"/>
+    <bpmn2:sequenceFlow id="flow-10" sourceRef="task-09" targetRef="task-10"/>
+    <bpmn2:sequenceFlow id="flow-11" sourceRef="task-10" targetRef="task-11"/>
+    <bpmn2:sequenceFlow id="flow-12" sourceRef="task-11" targetRef="gateway-lastros"/>
+    <bpmn2:sequenceFlow id="flow-12a" sourceRef="gateway-lastros" targetRef="task-12"/>
+    <bpmn2:sequenceFlow id="flow-12b" sourceRef="gateway-lastros" targetRef="end-rejeicao"/>
+    <bpmn2:sequenceFlow id="flow-13" sourceRef="task-12" targetRef="end-cessao"/>
+    <bpmn2:startEvent id="start-cessao" name="Inicio da Cessao">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Inicio da Cessao]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>flow-1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="task-01" name="01 Importar carteira">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[01 Importar carteira]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-1</bpmn2:incoming>
+      <bpmn2:outgoing>flow-2</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-01_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-01_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-01_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-01_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-01_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-01_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-01_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-01_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-01_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-01_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-01_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-01_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-01_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-01_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-01_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-01_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[IMPORTAR_CARTEIRA]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-01_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-01_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-01_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[OPERADOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-01_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Importacao inicial da carteira e preparacao do contexto operacional.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="task-02" name="02 Validar cedente">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[02 Validar cedente]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-2</bpmn2:incoming>
+      <bpmn2:outgoing>flow-3</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-02_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-02_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-02_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-02_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-02_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-02_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-02_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-02_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-02_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-02_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-02_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-02_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-02_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-02_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-02_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-02_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[VALIDAR_CEDENTE]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-02_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-02_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-02_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-02_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-02_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-02_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[OPERADOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-02_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-02_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Validacao cadastral e documental do cedente.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-02_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="task-03" name="03 Analisar elegibilidade">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[03 Analisar elegibilidade]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-3</bpmn2:incoming>
+      <bpmn2:outgoing>flow-4</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-03_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-03_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-03_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-03_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-03_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-03_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-03_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-03_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-03_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-03_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-03_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-03_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-03_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-03_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-03_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-03_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[ANALISAR_ELEGIBILIDADE]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-03_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-03_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-03_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-03_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-03_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-03_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[ANALISTA]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-03_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-03_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Analise de elegibilidade com bloqueios impeditivos e alertas rastreaveis.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-03_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:intermediateCatchEvent id="task-09" name="09 Aguardar confirmacao registradora">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[09 Aguardar confirmacao registradora]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-4</bpmn2:incoming>
+      <bpmn2:outgoing>flow-10</bpmn2:outgoing>
+      <bpmn2:signalEventDefinition signalRef="_-1857756468"/>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:userTask id="task-10" name="10 Coletar termo de aceite">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[10 Coletar termo de aceite]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-10</bpmn2:incoming>
+      <bpmn2:outgoing>flow-11</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-10_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-10_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-10_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-10_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-10_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-10_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-10_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-10_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-10_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-10_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-10_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-10_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-10_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-10_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-10_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-10_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[COLETAR_TERMO_ACEITE]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-10_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-10_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-10_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-10_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-10_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-10_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[ANALISTA]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-10_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-10_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Coleta e formalizacao do termo de aceite antes do fechamento financeiro.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-10_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="task-11" name="11 Validar lastros">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[11 Validar lastros]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-11</bpmn2:incoming>
+      <bpmn2:outgoing>flow-12</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-11_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-11_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-11_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-11_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-11_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-11_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-11_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-11_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-11_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-11_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-11_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-11_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-11_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-11_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-11_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-11_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[VALIDAR_LASTROS]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-11_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-11_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-11_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-11_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-11_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-11_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[ANALISTA]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-11_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-11_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Validacao documental de lastros com possibilidade de bloqueio do aceite final.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-11_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="gateway-lastros" name="Lastros validados?" gatewayDirection="Diverging">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Lastros validados?]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-12</bpmn2:incoming>
+      <bpmn2:outgoing>flow-12b</bpmn2:outgoing>
+      <bpmn2:outgoing>flow-12a</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="task-12" name="12 Autorizar pagamento">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[12 Autorizar pagamento]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-12a</bpmn2:incoming>
+      <bpmn2:outgoing>flow-13</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="task-12_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_task-12_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="task-12_BusinessAdministratorGroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-12_BusinessAdministratorGroupIdInputXItem" name="BusinessAdministratorGroupId"/>
+        <bpmn2:dataInput id="task-12_SkippableInputX" drools:dtype="Object" itemSubjectRef="_task-12_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:dataInput id="task-12_GroupIdInputX" drools:dtype="Object" itemSubjectRef="_task-12_GroupIdInputXItem" name="GroupId"/>
+        <bpmn2:dataInput id="task-12_DescriptionInputX" drools:dtype="Object" itemSubjectRef="_task-12_DescriptionInputXItem" name="Description"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>task-12_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-12_BusinessAdministratorGroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-12_SkippableInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-12_GroupIdInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>task-12_DescriptionInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-12_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUTORIZAR_PAGAMENTO]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-12_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-12_BusinessAdministratorGroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[AUDITOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-12_BusinessAdministratorGroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-12_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-12_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-12_GroupIdInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[APROVADOR]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-12_GroupIdInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>task-12_DescriptionInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Autorizacao final do pagamento apos validacao financeira e documental.]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-12_DescriptionInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:endEvent id="end-rejeicao" name="Fluxo encerrado por pendencia documental">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Fluxo encerrado por pendencia documental]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-12b</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:endEvent id="end-cessao" name="Fluxo concluido">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Fluxo concluido]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>flow-13</bpmn2:incoming>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="controle_cessao">
+      <bpmndi:BPMNShape id="shape_end-cessao" bpmnElement="end-cessao">
+        <dc:Bounds height="56" width="56" x="1380" y="172"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_end-rejeicao" bpmnElement="end-rejeicao">
+        <dc:Bounds height="56" width="56" x="1380" y="313"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-12" bpmnElement="task-12">
+        <dc:Bounds height="80" width="120" x="1152" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway-lastros" bpmnElement="gateway-lastros">
+        <dc:Bounds height="56" width="56" x="1056" y="172"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-11" bpmnElement="task-11">
+        <dc:Bounds height="80" width="120" x="896" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-10" bpmnElement="task-10">
+        <dc:Bounds height="80" width="120" x="736" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-09" bpmnElement="task-09">
+        <dc:Bounds height="56" width="56" x="640" y="172"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-03" bpmnElement="task-03">
+        <dc:Bounds height="80" width="120" x="480" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-02" bpmnElement="task-02">
+        <dc:Bounds height="80" width="120" x="320" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-01" bpmnElement="task-01">
+        <dc:Bounds height="80" width="120" x="160" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_start-cessao" bpmnElement="start-cessao">
+        <dc:Bounds height="56" width="56" x="64" y="172"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge_shape_task-12_to_shape_end-cessao" bpmnElement="flow-13">
+        <di:waypoint x="1272" y="200"/>
+        <di:waypoint x="1380" y="190"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_gateway-lastros_to_shape_end-rejeicao" bpmnElement="flow-12b">
+        <di:waypoint x="1081" y="222"/>
+        <di:waypoint x="1084" y="341"/>
+        <di:waypoint x="1380" y="331"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_gateway-lastros_to_shape_task-12" bpmnElement="flow-12a">
+        <di:waypoint x="1106" y="197"/>
+        <di:waypoint x="1152" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-11_to_shape_gateway-lastros" bpmnElement="flow-12">
+        <di:waypoint x="1016" y="200"/>
+        <di:waypoint x="1056" y="197"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-10_to_shape_task-11" bpmnElement="flow-11">
+        <di:waypoint x="856" y="200"/>
+        <di:waypoint x="896" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-09_to_shape_task-10" bpmnElement="flow-10">
+        <di:waypoint x="676" y="190"/>
+        <di:waypoint x="736" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-03_to_shape_task-09" bpmnElement="flow-4">
+        <di:waypoint x="600" y="200"/>
+        <di:waypoint x="640" y="194"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-02_to_shape_task-03" bpmnElement="flow-3">
+        <di:waypoint x="440" y="200"/>
+        <di:waypoint x="480" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_task-01_to_shape_task-02" bpmnElement="flow-2">
+        <di:waypoint x="280" y="200"/>
+        <di:waypoint x="320" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_start-cessao_to_shape_task-01" bpmnElement="flow-1">
+        <di:waypoint x="100" y="190"/>
+        <di:waypoint x="160" y="200"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmn2:relationship type="BPSimData">
+    <bpmn2:extensionElements>
+      <bpsim:BPSimData>
+        <bpsim:Scenario id="default" name="Simulationscenario">
+          <bpsim:ScenarioParameters/>
+          <bpsim:ElementParameters elementRef="task-12">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="task-11">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="task-10">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="task-03">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="task-02">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="task-01">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="start-cessao">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+          </bpsim:ElementParameters>
+        </bpsim:Scenario>
+      </bpsim:BPSimData>
+    </bpmn2:extensionElements>
+    <bpmn2:source>_9JRGMAe-ED-s68H1jqlaew</bpmn2:source>
+    <bpmn2:target>_9JRGMAe-ED-s68H1jqlaew</bpmn2:target>
+  </bpmn2:relationship>
+</bpmn2:definitions>

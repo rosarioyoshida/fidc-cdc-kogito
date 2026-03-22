@@ -35,11 +35,12 @@ export async function createCessaoAction(formData: FormData) {
       method: "POST",
       body: JSON.stringify({ businessKey, cedenteId, cessionariaId })
     });
-    revalidatePath("/cessoes");
-    redirect(`/cessoes/${businessKey}`);
   } catch (error) {
     redirect(`/cessoes?error=${encodeURIComponent(toMessage(error))}`);
   }
+
+  revalidatePath("/cessoes");
+  redirect(`/cessoes/${businessKey}`);
 }
 
 export async function advanceEtapaAction(formData: FormData) {
@@ -52,11 +53,12 @@ export async function advanceEtapaAction(formData: FormData) {
       method: "POST",
       body: JSON.stringify({ responsavelId })
     });
-    revalidatePath(`/cessoes/${businessKey}`);
-    redirect(`/cessoes/${businessKey}`);
   } catch (error) {
     redirect(`/cessoes/${businessKey}?error=${encodeURIComponent(toMessage(error))}`);
   }
+
+  revalidatePath(`/cessoes/${businessKey}`);
+  redirect(`/cessoes/${businessKey}`);
 }
 
 export async function refreshCessaoAction(formData: FormData) {

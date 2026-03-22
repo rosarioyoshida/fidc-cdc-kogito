@@ -1,5 +1,6 @@
 package com.fidc.cdc.kogito.security;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,14 +22,22 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
                                 "/actuator/health",
                                 "/actuator/info",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/svg/processes/**",
+                                "/management/processes/**"
                         )
                         .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/process/jobs/callbacks/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cessoes/*/*/*/*/schema").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/cessoes/*/*/*/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/controle-cessao/*/*/*/*/schema").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/controle-cessao/*/*/*/*").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

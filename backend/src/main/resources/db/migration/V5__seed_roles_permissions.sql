@@ -1,25 +1,28 @@
-INSERT IGNORE INTO perfil_acesso (id, created_at, updated_at, nome, descricao) VALUES
+INSERT INTO perfil_acesso (id, created_at, updated_at, nome, descricao) VALUES
 ('11111111-1111-1111-1111-111111111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'OPERADOR', 'Perfil operacional para etapas iniciais e acompanhamento'),
 ('22222222-2222-2222-2222-222222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ANALISTA', 'Perfil responsavel por analise financeira e documental'),
 ('33333333-3333-3333-3333-333333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'APROVADOR', 'Perfil responsavel por autorizacao de pagamento e encerramento'),
 ('44444444-4444-4444-4444-444444444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'AUDITOR', 'Perfil somente leitura para trilha de auditoria'),
-('55555555-5555-5555-5555-555555555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'INTEGRACAO', 'Perfil tecnico para automacoes e sincronizacoes');
+('55555555-5555-5555-5555-555555555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'INTEGRACAO', 'Perfil tecnico para automacoes e sincronizacoes')
+ON CONFLICT DO NOTHING;
 
-INSERT IGNORE INTO usuario (id, created_at, updated_at, username, nome_exibicao, ativo) VALUES
+INSERT INTO usuario (id, created_at, updated_at, username, nome_exibicao, ativo) VALUES
 ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'operador', 'Operador Padrao', TRUE),
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'analista', 'Analista Padrao', TRUE),
 ('cccccccc-cccc-cccc-cccc-cccccccccccc', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'aprovador', 'Aprovador Padrao', TRUE),
 ('dddddddd-dddd-dddd-dddd-dddddddddddd', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'auditor', 'Auditor Padrao', TRUE),
-('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'integracao', 'Integracao Padrao', TRUE);
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'integracao', 'Integracao Padrao', TRUE)
+ON CONFLICT DO NOTHING;
 
-INSERT IGNORE INTO usuario_perfil_acesso (usuario_id, perfil_acesso_id) VALUES
+INSERT INTO usuario_perfil_acesso (usuario_id, perfil_acesso_id) VALUES
 ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111'),
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '22222222-2222-2222-2222-222222222222'),
 ('cccccccc-cccc-cccc-cccc-cccccccccccc', '33333333-3333-3333-3333-333333333333'),
 ('dddddddd-dddd-dddd-dddd-dddddddddddd', '44444444-4444-4444-4444-444444444444'),
-('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '55555555-5555-5555-5555-555555555555');
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '55555555-5555-5555-5555-555555555555')
+ON CONFLICT DO NOTHING;
 
-INSERT IGNORE INTO permissao_etapa (id, created_at, updated_at, perfil_acesso_id, nome_etapa) VALUES
+INSERT INTO permissao_etapa (id, created_at, updated_at, perfil_acesso_id, nome_etapa) VALUES
 ('10000000-0000-0000-0000-000000000001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '11111111-1111-1111-1111-111111111111', 'IMPORTAR_CARTEIRA'),
 ('10000000-0000-0000-0000-000000000002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '11111111-1111-1111-1111-111111111111', 'VALIDAR_CEDENTE'),
 ('10000000-0000-0000-0000-000000000003', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '22222222-2222-2222-2222-222222222222', 'ANALISAR_ELEGIBILIDADE'),
@@ -34,4 +37,5 @@ INSERT IGNORE INTO permissao_etapa (id, created_at, updated_at, perfil_acesso_id
 ('10000000-0000-0000-0000-000000000012', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '33333333-3333-3333-3333-333333333333', 'AUTORIZAR_PAGAMENTO'),
 ('10000000-0000-0000-0000-000000000013', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '33333333-3333-3333-3333-333333333333', 'PROCESSAR_PAGAMENTO'),
 ('10000000-0000-0000-0000-000000000014', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '33333333-3333-3333-3333-333333333333', 'CONFIRMAR_PAGAMENTO'),
-('10000000-0000-0000-0000-000000000015', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '33333333-3333-3333-3333-333333333333', 'ENCERRAR_CESSAO');
+('10000000-0000-0000-0000-000000000015', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '33333333-3333-3333-3333-333333333333', 'ENCERRAR_CESSAO')
+ON CONFLICT DO NOTHING;

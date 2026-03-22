@@ -82,7 +82,7 @@ retries da registradora e testes de interface para os fluxos operacionais critic
 - [X] T039 [US1] Add operational loading, empty, and error states for the cessao flow in `frontend/src/features/cessao/cessao-status-panel.tsx` and `frontend/src/components/feedback/empty-state.tsx`
 - [X] T040 [P] [US1] Create backend integration test for criar cessao, iniciar fluxo e consultar historico in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/CessaoFlowIntegrationTest.java`
 - [X] T041 [P] [US1] Create backend integration test for bloqueio de avanço entre etapas dependentes in `backend/src/test/java/com/fidc/cdc/kogito/integration/cessao/EtapaDependenciaIntegrationTest.java`
-- [X] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and PostgreSQL in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelIntegrationTest.java`
+- [X] T042 [P] [US1] Create integration test for process event publication and read model propagation through Kafka and PostgreSQL in `backend/src/test/java/com/fidc/cdc/kogito/integration/readmodel/ProcessReadModelProjectionIntegrationTest.java`
 - [X] T043 [P] [US1] Create integration test for BPMN timer scheduling through Kogito Jobs Service in `backend/src/test/java/com/fidc/cdc/kogito/integration/process/JobsServiceTimerIntegrationTest.java`
 - [X] T044 [P] [US1] Create frontend integration test for lista e detalhe de cessao in `frontend/tests/integration/cessao-flow.spec.tsx`
 

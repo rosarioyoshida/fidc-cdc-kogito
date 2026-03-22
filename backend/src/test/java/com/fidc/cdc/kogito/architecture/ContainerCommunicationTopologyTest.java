@@ -18,7 +18,7 @@ class ContainerCommunicationTopologyTest {
         Map<String, Object> compose = readYaml(COMPOSE_FILE);
         Map<String, Object> services = map(compose.get("services"));
 
-        assertThat(compose.get("name")).isEqualTo("fidc-cdc-kogit");
+        assertThat(compose.get("name")).isEqualTo("fidc-cdc-kogito");
         assertThat(services.keySet()).contains(
                 "backend",
                 "frontend",
@@ -48,6 +48,7 @@ class ContainerCommunicationTopologyTest {
         assertThat(map(services.get("jobs-service")).get("image"))
                 .isEqualTo("apache/incubator-kie-kogito-jobs-service-postgresql:10.1.0");
         assertThat(env(services, "backend", "FIDC_JOBS_SERVICE_URL")).isEqualTo("http://jobs-service:8080");
+        assertThat(env(services, "backend", "FIDC_JOBS_PUBLIC_SERVICE_URL")).isEqualTo("http://localhost:8085");
         assertThat(env(services, "backend", "FIDC_JOBS_CALLBACK_BASE_URL"))
                 .isEqualTo("http://backend:8080/api/v1/process/jobs/callbacks");
         assertThat(env(services, "jobs-service", "KAFKA_BOOTSTRAP_SERVERS")).isEqualTo("kafka:9092");
@@ -57,10 +58,12 @@ class ContainerCommunicationTopologyTest {
                 .isEqualTo("postgresql://postgres:5432/kogito_jobs");
         assertThat(dependsOn(services, "jobs-service")).containsKey("postgres");
 
+        assertThat(env(services, "backend", "FIDC_DATA_INDEX_URL"))
+                .isEqualTo("http://localhost:8180/graphql");
         assertThat(env(services, "management-console", "KOGITO_DATAINDEX_HTTP_URL"))
-                .isEqualTo("http://data-index:8080/graphql");
+                .isEqualTo("http://localhost:8180/graphql");
         assertThat(env(services, "task-console", "KOGITO_DATAINDEX_HTTP_URL"))
-                .isEqualTo("http://data-index:8080/graphql");
+                .isEqualTo("http://localhost:8180/graphql");
         assertThat(dependsOn(services, "management-console")).containsKey("backend");
         assertThat(dependsOn(services, "task-console")).containsKey("backend");
     }

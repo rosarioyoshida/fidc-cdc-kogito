@@ -54,11 +54,12 @@ export async function avaliarElegibilidadeAction(formData: FormData) {
     await apiFetch(`/cessoes/${businessKey}/analise/elegibilidade/avaliar`, {
       method: "POST"
     });
-    revalidatePath(`/cessoes/${businessKey}/analise`);
-    redirectWithState(businessKey, { message: "Elegibilidade atualizada com sucesso." });
   } catch (error) {
     redirectWithState(businessKey, { error: toMessage(error) });
   }
+
+  revalidatePath(`/cessoes/${businessKey}/analise`);
+  redirectWithState(businessKey, { message: "Elegibilidade atualizada com sucesso." });
 }
 
 export async function apurarValorAction(formData: FormData) {
@@ -68,11 +69,12 @@ export async function apurarValorAction(formData: FormData) {
     await apiFetch(`/cessoes/${businessKey}/analise/calculo/apurar`, {
       method: "POST"
     });
-    revalidatePath(`/cessoes/${businessKey}/analise`);
-    redirectWithState(businessKey, { message: "Calculo financeiro reprocessado." });
   } catch (error) {
     redirectWithState(businessKey, { error: toMessage(error) });
   }
+
+  revalidatePath(`/cessoes/${businessKey}/analise`);
+  redirectWithState(businessKey, { message: "Calculo financeiro reprocessado." });
 }
 
 export async function registrarLastroAction(formData: FormData) {
@@ -88,11 +90,12 @@ export async function registrarLastroAction(formData: FormData) {
         origem: String(formData.get("origem") ?? "")
       })
     });
-    revalidatePath(`/cessoes/${businessKey}/analise`);
-    redirectWithState(businessKey, { message: "Lastro recebido para validacao." });
   } catch (error) {
     redirectWithState(businessKey, { error: toMessage(error) });
   }
+
+  revalidatePath(`/cessoes/${businessKey}/analise`);
+  redirectWithState(businessKey, { message: "Lastro recebido para validacao." });
 }
 
 export async function validarLastrosAction(formData: FormData) {
@@ -102,11 +105,12 @@ export async function validarLastrosAction(formData: FormData) {
     await apiFetch(`/cessoes/${businessKey}/analise/lastros/validar`, {
       method: "POST"
     });
-    revalidatePath(`/cessoes/${businessKey}/analise`);
-    redirectWithState(businessKey, { message: "Validacao documental concluida." });
   } catch (error) {
     redirectWithState(businessKey, { error: toMessage(error) });
   }
+
+  revalidatePath(`/cessoes/${businessKey}/analise`);
+  redirectWithState(businessKey, { message: "Validacao documental concluida." });
 }
 
 export async function executarRegistradoraAction(formData: FormData) {
@@ -117,13 +121,14 @@ export async function executarRegistradoraAction(formData: FormData) {
     await apiFetch(`/cessoes/${businessKey}/analise/registradora/${tipoOperacao}`, {
       method: "POST"
     });
-    revalidatePath(`/cessoes/${businessKey}/analise`);
-    redirectWithState(businessKey, {
-      message: `Operacao ${tipoOperacao} enviada a registradora com retry automatico controlado.`
-    });
   } catch (error) {
     redirectWithState(businessKey, { error: toMessage(error) });
   }
+
+  revalidatePath(`/cessoes/${businessKey}/analise`);
+  redirectWithState(businessKey, {
+    message: `Operacao ${tipoOperacao} enviada a registradora com retry automatico controlado.`
+  });
 }
 
 export async function refreshAnaliseAction(formData: FormData) {

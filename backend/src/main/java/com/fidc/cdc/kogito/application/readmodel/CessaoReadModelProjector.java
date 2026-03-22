@@ -11,12 +11,14 @@ import com.fidc.cdc.kogito.domain.analise.StatusValidacaoLastro;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
+import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import com.fidc.cdc.kogito.infrastructure.messaging.ProcessEventPayload;
 import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CessaoReadModelProjector {
+
+    private static final EnumSet<EtapaCessaoNome> HUMAN_TASK_STAGES = EnumSet.of(
+            EtapaCessaoNome.IMPORTAR_CARTEIRA,
+            EtapaCessaoNome.VALIDAR_CEDENTE,
+            EtapaCessaoNome.ANALISAR_ELEGIBILIDADE,
+            EtapaCessaoNome.COLETAR_TERMO_ACEITE,
+            EtapaCessaoNome.VALIDAR_LASTROS,
+            EtapaCessaoNome.AUTORIZAR_PAGAMENTO
+    );
 
     private final CessaoRepository cessaoRepository;
     private final CessaoReadModelRepository readModelRepository;
@@ -160,10 +171,14 @@ public class CessaoReadModelProjector {
 
     private Map<String, Object> buildIndicadoresTarefasHumanas(List<EtapaCessao> etapas) {
         String etapaAtiva = identifyCurrentStage(etapas);
+        boolean humanTaskPending = etapas.stream()
+                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
+                .map(EtapaCessao::getNomeEtapa)
+                .anyMatch(HUMAN_TASK_STAGES::contains);
         Map<String, Object> resumo = new LinkedHashMap<>();
-        resumo.put("tarefasHumanasPendentes", "SEM_ETAPA_ATIVA".equals(etapaAtiva) ? 0 : 1);
-        resumo.put("etapaHumanaAtual", etapaAtiva);
-        resumo.put("haAcaoOperacionalPendente", !"SEM_ETAPA_ATIVA".equals(etapaAtiva));
+        resumo.put("tarefasHumanasPendentes", humanTaskPending ? 1 : 0);
+        resumo.put("etapaHumanaAtual", humanTaskPending ? etapaAtiva : "SEM_ETAPA_HUMANA_ATIVA");
+        resumo.put("haAcaoOperacionalPendente", humanTaskPending);
         return resumo;
     }
 

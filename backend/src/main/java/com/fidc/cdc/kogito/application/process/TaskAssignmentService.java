@@ -35,6 +35,7 @@ public class TaskAssignmentService {
     private final PermissaoEtapaRepository permissaoEtapaRepository;
     private final UsuarioRepository usuarioRepository;
     private final StageAuthorizationService stageAuthorizationService;
+    private final KogitoWorkflowRuntimeService workflowRuntimeService;
     private final String taskConsoleUrl;
 
     public TaskAssignmentService(
@@ -42,12 +43,14 @@ public class TaskAssignmentService {
             PermissaoEtapaRepository permissaoEtapaRepository,
             UsuarioRepository usuarioRepository,
             StageAuthorizationService stageAuthorizationService,
+            KogitoWorkflowRuntimeService workflowRuntimeService,
             @Value("${fidc.consoles.task-console-url}") String taskConsoleUrl
     ) {
         this.cessaoRepository = cessaoRepository;
         this.permissaoEtapaRepository = permissaoEtapaRepository;
         this.usuarioRepository = usuarioRepository;
         this.stageAuthorizationService = stageAuthorizationService;
+        this.workflowRuntimeService = workflowRuntimeService;
         this.taskConsoleUrl = taskConsoleUrl;
     }
 
@@ -58,13 +61,19 @@ public class TaskAssignmentService {
                         "Cessao nao encontrada para consulta de task context."
                 ));
         PermissionSnapshot snapshot = stageAuthorizationService.describePermissions(actorHint);
+        KogitoProcessSnapshot runtimeSnapshot = workflowRuntimeService.getProcessByBusinessKey(businessKey);
+        KogitoTaskSnapshot currentTask = runtimeSnapshot.activeTask();
         Optional<EtapaCessao> currentStage = findCurrentStage(cessao);
-        if (currentStage.isEmpty() || !isHumanTaskStage(currentStage.get().getNomeEtapa())) {
+        String currentStageName = currentTask != null
+                ? currentTask.etapaNome().name()
+                : currentStage.map(etapa -> etapa.getNomeEtapa().name()).orElse("SEM_ETAPA_ATIVA");
+
+        if (currentTask == null || !isHumanTaskStage(currentTask.etapaNome())) {
             return new TaskAssignmentContext(
                     businessKey,
                     cessao.getWorkflowInstanceId(),
                     snapshot.actorId(),
-                    currentStage.map(etapa -> etapa.getNomeEtapa().name()).orElse("SEM_ETAPA_ATIVA"),
+                    currentStageName,
                     false,
                     false,
                     null,
@@ -77,32 +86,38 @@ public class TaskAssignmentService {
             );
         }
 
-        EtapaCessao etapa = currentStage.get();
-        List<String> candidateGroups = permissaoEtapaRepository.findByNomeEtapa(etapa.getNomeEtapa())
+        EtapaCessaoNome etapaNome = currentTask.etapaNome();
+        List<String> candidateGroups = permissaoEtapaRepository.findByNomeEtapa(etapaNome)
                 .stream()
                 .map(permissao -> permissao.getPerfilAcesso().getNome())
                 .distinct()
                 .sorted()
                 .toList();
+        if (currentTask.groupId() != null && !currentTask.groupId().isBlank() && !candidateGroups.contains(currentTask.groupId())) {
+            candidateGroups = java.util.stream.Stream.concat(candidateGroups.stream(), java.util.stream.Stream.of(currentTask.groupId()))
+                    .distinct()
+                    .sorted(Comparator.naturalOrder())
+                    .toList();
+        }
         List<String> candidateUsers = usuarioRepository.findDistinctByPerfisPermissoesNomeEtapaAndAtivoTrue(
-                        etapa.getNomeEtapa()
+                        etapaNome
                 )
                 .stream()
                 .map(usuario -> usuario.getUsername())
                 .sorted(Comparator.naturalOrder())
                 .toList();
-        boolean actorAuthorized = snapshot.etapasPermitidas().contains(etapa.getNomeEtapa().name());
+        boolean actorAuthorized = snapshot.etapasPermitidas().contains(etapaNome.name());
 
         return new TaskAssignmentContext(
                 businessKey,
                 cessao.getWorkflowInstanceId(),
                 snapshot.actorId(),
-                etapa.getNomeEtapa().name(),
+                etapaNome.name(),
                 true,
                 actorAuthorized,
-                etapa.getNomeEtapa().name(),
-                etapa.getNomeEtapa().getDisplayName(),
-                etapa.getResponsavelId(),
+                etapaNome.name(),
+                currentTask.description(),
+                currentTask.actualOwner(),
                 candidateGroups,
                 candidateUsers,
                 List.of("AUDITOR"),
