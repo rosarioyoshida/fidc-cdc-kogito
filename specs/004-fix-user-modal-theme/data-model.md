@@ -7,9 +7,12 @@
 **Fields**:
 
 - `aberta`: indica se a janela esta visivel
-- `origemDeRetorno`: identifica a tela protegida de onde o fluxo foi iniciado
+- `origemDeRetorno`: identifica a rota protegida de onde o fluxo foi iniciado
 - `alteracoesPendentes`: indica se houve edicao ainda nao salva
-- `estadoDeFeedback`: representa ausencia de mensagem, sucesso ou falha
+- `confirmacaoDescarteAberta`: indica se o usuario esta decidindo descartar ou nao
+- `estadoSubmissao`: representa ocioso, submetendo, sucesso ou falha
+- `destinoFeedback`: identifica que o feedback de sucesso deve ser renderizado na
+  tela protegida apos fechamento automatico
 
 **Relationships**:
 
@@ -18,8 +21,12 @@
 
 **Validation Rules**:
 
-- o fechamento nao pode aplicar alteracoes pendentes automaticamente
-- falha de salvamento nao pode descartar o contexto atual da janela
+- o fechamento sem alteracoes pendentes pode ocorrer imediatamente
+- o fechamento com alteracoes pendentes deve exigir confirmacao de descarte
+- cancelar a confirmacao de descarte deve manter a janela aberta e preservar os
+  valores em edicao
+- sucesso de salvamento deve fechar a janela automaticamente
+- falha de salvamento deve manter a janela aberta e o contexto atual
 
 ## PreferenciaTemaVisual
 
@@ -28,8 +35,10 @@
 **Fields**:
 
 - `modoAtivo`: modo visual atualmente selecionado
-- `origemPersistida`: referencia da fonte de verdade ja usada pela interface
-- `restauravelAposAcao`: indica se o modo deve ser reaplicado apos navegar ou salvar
+- `fontePrimaria`: `localStorage`
+- `cookieSincronizado`: indica se o cookie de tema acompanha o modo ativo
+- `atributoDocumentoSincronizado`: indica se `document.documentElement.dataset.theme`
+  acompanha o modo ativo
 
 **Relationships**:
 
@@ -40,17 +49,21 @@
 
 - o modo ativo apos salvar deve ser igual ao modo ativo antes de iniciar a acao
 - falhas operacionais nao podem redefinir a preferencia para light por padrao
+- `localStorage` deve prevalecer sobre cookie e atributo do documento em caso de
+  restauracao do estado
 
 ## RetornoPosSalvamento
 
 **Description**: Contexto de navegacao que define para onde o usuario volta apos
-salvar ou fechar a janela de ajustes.
+salvar, falhar ou fechar a janela de ajustes.
 
 **Fields**:
 
 - `rotaProtegidaAtual`: tela autenticada de origem
-- `resultadoDaAcao`: sucesso, falha ou cancelamento
+- `resultadoDaAcao`: sucesso, falha, cancelamento ou descarte-confirmado
 - `redirecionamentoPermitido`: identifica se ha navegacao legitima fora da origem
+- `feedbackSucessoVisivel`: indica se a mensagem de sucesso foi entregue no contexto
+  protegido
 
 **Relationships**:
 
@@ -60,5 +73,7 @@ salvar ou fechar a janela de ajustes.
 **Validation Rules**:
 
 - sucesso no salvamento nao pode enviar o usuario para a tela inicial por padrao
+- sucesso deve manter a rota protegida de origem e exibir feedback no mesmo contexto
+- falha deve manter a rota protegida de origem e a janela aberta
 - cancelamento deve retornar o usuario ao contexto protegido anterior sem efeitos
   colaterais

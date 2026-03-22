@@ -117,6 +117,10 @@
   feedback, information, warning, and error states.
 - **NFR-010**: User-facing changes MUST define Design System constraints, including
   reusable components, design tokens, documentation, and allowed variations.
+- **NFR-010b**: User-facing changes MUST include reuse validation showing whether
+  existing shadcn/ui and local components in `frontend/src/components/ui` satisfy
+  the need before proposing new UI components; exceptions MUST include functional
+  gap, ownership, state coverage, maintenance plan, and PR rationale.
 - **NFR-011**: User-facing changes MUST define accessibility expectations aligned with
   applicable WCAG criteria and assistive technology support needs.
 - **NFR-012**: Web UI changes MUST define the implementation stack and boundaries for

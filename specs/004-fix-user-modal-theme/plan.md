@@ -5,50 +5,53 @@
 
 ## Summary
 
-Corrigir o fluxo da janela de ajustes da conta para garantir um fechamento
-explicito, preservar o modo visual previamente escolhido e evitar redirecionamento
-indevido para a tela inicial apos salvar email ou senha. A implementacao deve
-reutilizar a stack atual, respeitar a navegacao protegida existente e nao adicionar
-dependencias novas.
+Corrigir o fluxo de ajustes da conta para adicionar fechamento explicito com
+confirmacao de descarte quando houver alteracoes pendentes, fechar a janela
+automaticamente apos salvamento bem-sucedido e preservar contexto protegido e
+tema ativo usando `localStorage` como fonte primaria, com sincronizacao do
+atributo visual do documento e do cookie.
 
 ## Technical Context
 
-**Language/Version**: Java 21 no backend e TypeScript 5 / React 19 / Next.js 15 no frontend  
-**Primary Dependencies**: Spring Boot 3.3, Spring Security, Spring HATEOAS, JPA/Hibernate, Bean Validation, Flyway, Log4j2/SLF4J, React, Next.js, shadcn/ui, Tailwind CSS, Vitest, Testing Library  
-**Storage**: PostgreSQL para dados de conta; cookie HTTP-only para sessao autenticada; `localStorage` e atributo visual do documento para persistencia de tema; arquivos Markdown em `specs/004-fix-user-modal-theme/` para artefatos da feature  
-**Testing**: JUnit e testes de integracao/contrato no backend quando houver impacto de conta; Vitest e Testing Library no frontend; validacao guiada do fluxo de ajustes, tema e navegacao protegida  
-**Target Platform**: Aplicacao web containerizada para Linux com uso via navegador moderno  
-**Project Type**: Aplicacao web com backend REST e frontend Next.js  
-**Performance Goals**: Fechamento da janela e retorno apos salvar devem ocorrer sem atraso perceptivel; usuario nao deve perder o contexto protegido nem o tema ativo durante o fluxo; ajuste de conta deve ser concluido em uma unica tentativa na maior parte dos casos  
-**Constraints**: Manter a stack atual do projeto; nao adicionar dependencias sem consulta previa; reutilizar o fluxo de conta, tema e autenticacao existentes; preservar o modo visual anteriormente selecionado; nao alterar regras de permissao nem perfis seedados; manter alinhamento com Design System e RFC 9457 onde houver erros de conta  
-**Scale/Scope**: Correcao concentrada na janela de ajustes da conta, na persistencia do tema visual e na navegacao apos salvar email ou senha nas telas protegidas existentes
+**Language/Version**: Java 21 no backend; TypeScript 5 / React 19 / Next.js 15 no frontend  
+**Primary Dependencies**: Spring Boot 3.3, Spring Security, React, Next.js, Tailwind CSS, Vitest, Testing Library  
+**Storage**: PostgreSQL para dados de conta; `localStorage` como fonte primaria da preferencia visual; cookie HTTP-only para sessao autenticada; cookie de tema e atributo `data-theme` do documento sincronizados a partir de `localStorage`  
+**Testing**: JUnit e testes de integracao no backend quando necessario; Vitest e Testing Library no frontend; validacao guiada do fluxo de dialogo, descarte, sucesso e falha  
+**Target Platform**: Aplicacao web interna executada em navegador desktop moderno e ambiente local via Docker Compose  
+**Project Type**: Web application com `backend/` e `frontend/`  
+**Performance Goals**: Fechamento da janela, exibicao da confirmacao de descarte e retorno visual apos salvamento em ate 1 segundo em uso local; feedback de sucesso ou falha visivel no mesmo fluxo do usuario  
+**Constraints**: A feature MUST migrar o fluxo de ajustes da conta para componentes aderentes ao padrao tecnico definido na constituicao; nao e permitido reutilizar componentes locais fora desse padrao mesmo com custo adicional; manter contratos de backend existentes; evitar redirecionamento para `/`; preservar uma unica fonte primaria de verdade para tema  
+**Scale/Scope**: Correcao localizada no fluxo de conta autenticada, concentrada em dialogo, estado visual e navegacao protegida
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Simplicity gate: aprovado. A feature corrige comportamento existente e reaproveita
-  o fluxo atual de dialogo, tema e navegação, sem introduzir camadas ou dependencias.
-- Architecture gate: aprovado. O plano separa claramente apresentacao da janela,
-  persistencia de preferencia visual e redirecionamento apos acoes de conta.
-- API design gate: aprovado. Nao ha necessidade de nova superficie REST; qualquer
-  ajuste em chamadas existentes permanece nos endpoints de conta ja estabelecidos.
-- API versioning gate: aprovado. Como nao ha contrato REST novo, a politica atual de
-  versionamento segue inalterada.
-- Hypermedia gate: aprovado. Nao ha novo requisito de navegacao dinamica via API.
-- API error contract gate: aprovado. Erros de salvamento de conta permanecem sob RFC
-  9457 e nao exigem alteracao estrutural de contrato.
-- Maintainability/scalability gate: aprovado. A correcao deve centralizar as regras
-  de tema e retorno de navegacao para evitar duplicacao futura.
-- Security/compliance gate: aprovado. A feature nao amplia superficie de acesso e
-  apenas preserva o comportamento seguro do fluxo autenticado existente.
-- Observability gate: aprovado. O plano considera rastreabilidade suficiente para
-  detectar falha de salvamento e redirecionamento indevido.
-- UX/performance gate: aprovado. A feature reforca controle do usuario, foco visivel,
-  consistencia de tema e ausencia de saltos inesperados de navegacao.
-- Frontend implementation gate: aprovado. A correcao permanece em React, Next.js,
-  TypeScript, shadcn/ui como base estrutural e Design System existente como fonte
-  normativa de comportamento visual.
+- Simplicity gate: aprovado. A correcao permanece no fluxo atual de dialogo e nao
+  introduz novo endpoint, nova tela ou nova camada de persistencia.
+- Architecture gate: aprovado. O desenho separa dialogo, persistencia de tema,
+  acao de conta e navegacao protegida sem duplicar regras.
+- API design gate: aprovado. Nao ha nova API REST nem alteracao de URIs.
+- API versioning gate: nao aplicavel. Nao ha mudanca de superficie publica de API.
+- Hypermedia gate: nao aplicavel. A feature nao introduz navegacao dinamica por API.
+- API error contract gate: aprovado sem mudancas. O backend permanece com contratos
+  existentes; o frontend so consome sucesso e falha ja suportados.
+- Maintainability/scalability gate: aprovado. A feature explicita uma unica fonte
+  primaria para tema e evita espalhar persistencia entre formularios.
+- Security/compliance gate: aprovado. Nao amplia escopo de credenciais ou permissoes;
+  apenas preserva sessao e contexto protegido ja existentes.
+- Observability gate: aprovado. O plano exige sinais para sucesso, falha,
+  cancelamento de descarte e deteccao de redirecionamento indevido.
+- UX/performance gate: aprovado. O fluxo define confirmacao de descarte, fechamento
+  automatico apos sucesso, feedback na tela protegida, operacao por teclado e foco
+  visivel.
+- Frontend implementation gate: reprovado no desenho anterior e ajustado neste plano.
+  A implementacao nao pode depender da reutilizacao de componentes locais fora do
+  padrao tecnico exigido pela constituicao. O fluxo de ajustes deve ser migrado para
+  componentes aderentes antes da implementacao da feature.
+- Component governance gate: pendente de execucao e aprovado apenas com migracao.
+  O plano deve identificar quais componentes do fluxo de ajustes serao substituidos
+  por componentes aderentes ao padrao constitucional, sem abrir excecao.
 
 ## Project Structure
 
@@ -69,132 +72,101 @@ specs/004-fix-user-modal-theme/
 
 ```text
 backend/
-├── src/main/java/com/fidc/cdc/kogito/
-│   ├── api/security/
-│   ├── application/security/
-│   ├── infrastructure/audit/
-│   └── security/
-└── src/test/java/com/fidc/cdc/kogito/
-    ├── integration/security/
-    └── integration/api/
+└── src/
+    ├── main/
+    └── test/
 
 frontend/
-├── src/app/
-│   ├── layout.tsx
-│   ├── page.tsx
-│   └── cessoes/
-├── src/components/ui/
-│   ├── account-settings-dialog.tsx
-│   ├── dialog.tsx
-│   ├── theme-toggle.tsx
-│   └── topbar-user-menu.tsx
-├── src/features/security/
-│   ├── actions.ts
-│   └── user-account-types.ts
-└── src/lib/
-    ├── auth.ts
-    └── api-client.ts
+└── src/
+    ├── app/
+    │   ├── layout.tsx
+    │   └── page.tsx
+    ├── components/
+    │   └── ui/
+    │       ├── account-settings-dialog.tsx
+    │       ├── theme-toggle.tsx
+    │       └── topbar-user-menu.tsx
+    ├── features/
+    │   └── security/
+    │       └── actions.ts
+    └── lib/
+        └── auth.ts
 ```
 
-**Structure Decision**: A implementacao permanece concentrada na aplicacao web ja
-existente. O backend so sera tocado se o fluxo corrigido exigir ajuste minimo de
-contrato ou auditoria; o foco principal desta feature esta no frontend e no
-encadeamento entre `layout.tsx`, `account-settings-dialog.tsx`, `theme-toggle.tsx`
-e `actions.ts`.
+**Structure Decision**: Manter a correcao concentrada no frontend em torno do
+fluxo de ajustes, bootstrap de tema e actions de conta, mas substituir no proprio
+fluxo os componentes nao aderentes pelo padrao tecnico exigido pela constituicao.
+O backend permanece inalterado salvo necessidade minima descoberta na implementacao.
 
-## Phase 0: Research Outcomes
+## Phase 0: Outline & Research
 
-As decisoes consolidadas em
+As decisoes de pesquisa desta feature foram consolidadas em
 [research.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/research.md)
-resolvem os pontos necessarios para implementacao:
+e resolvem os pontos criticos:
 
-- reutilizar o dialogo de ajustes de conta existente e adicionar fechamento explicito
-  consistente para todo o fluxo;
-- preservar o tema a partir da fonte de verdade ja adotada pelo produto em vez de
-  reinicializar a interface no modo light;
-- manter o usuario na rota protegida de origem apos salvar email ou senha, evitando
-  retorno indevido ao fluxo da tela inicial;
-- concentrar a correcao no frontend, sem expandir desnecessariamente o contrato do
-  backend.
+- migrar o fluxo de ajustes para componentes aderentes ao padrao tecnico exigido
+  pela constituicao;
+- usar `localStorage` como fonte primaria da preferencia visual e sincronizar
+  atributo do documento e cookie;
+- fechar a janela automaticamente apos sucesso e exibir feedback na tela
+  protegida;
+- confirmar descarte apenas quando houver alteracoes nao salvas;
+- documentar seguranca de sessao e dados sensiveis no fluxo de conta;
+- medir a experiencia de fechamento e retorno com meta de ate 1 segundo em uso local.
 
-Nao ha pendencias abertas de esclarecimento para a fase de desenho.
+## Phase 1: Design & Contracts
 
-## Phase 1: Design Artifacts
+### Data Model
 
-### Data model
-
-O modelo de dados detalhado esta em
+O modelo funcional desta feature esta descrito em
 [data-model.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/data-model.md)
-e define:
-
-- `JanelaAjustesConta` como estado visivel/oculto e origem de navegacao;
-- `PreferenciaTemaVisual` como estado a ser preservado no fluxo;
-- `RetornoPosSalvamento` como contexto protegido para reentrada apos sucesso ou
-  falha.
-
-### Contracts
-
-O contrato definido para a fase atual e:
-
-- [account-settings-flow.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/contracts/account-settings-flow.md):
-  contrato funcional da janela de ajustes, incluindo fechamento, salvamento,
-  preservacao de tema e manutencao da rota protegida.
-
-### Operational bootstrap
-
-O fluxo minimo de inicializacao e validacao esta em
-[quickstart.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/quickstart.md)
 e cobre:
 
-- abrir a janela de ajustes a partir de uma tela protegida;
-- fechar a janela sem salvar;
-- salvar email preservando tema e contexto;
-- salvar senha preservando tema e contexto;
-- validar que falhas nao resetam tema nem expulsam o usuario do fluxo atual.
+- estado da janela de ajustes, incluindo `dirty`, confirmacao de descarte e
+  fechamento automatico no sucesso;
+- preferencia visual com `localStorage` como fonte primaria e sincronizacao para
+  cookie e atributo do documento;
+- retorno pos-salvamento com feedback de sucesso na tela protegida e manutencao
+  de contexto em falhas.
 
-## Phase 2: Implementation Direction
+### Interface Contracts
 
-### Frontend
+O contrato funcional do fluxo esta documentado em
+[account-settings-flow.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/contracts/account-settings-flow.md)
+e explicita:
 
-- Ajustar `account-settings-dialog.tsx` para oferecer uma acao de fechamento
-  consistente em toda a janela, nao apenas em parte do fluxo.
-- Corrigir o encadeamento entre `account-settings-dialog.tsx`, `actions.ts` e
-  `layout.tsx` para que o tema previamente selecionado permaneça ativo apos salvar.
-- Garantir que a navegacao apos salvar reutilize a rota protegida de origem e nao
-  recaia no redirecionamento padrao da tela inicial.
-- Preservar feedback de sucesso e falha na propria experiencia protegida do usuario,
-  sem desmontar o contexto visual.
-- Validar foco visivel, acessibilidade por teclado e consistencia do dialogo com os
-  componentes existentes de UI.
+- estados do dialogo;
+- confirmacao de descarte para alteracoes nao salvas;
+- sucesso com fechamento automatico da janela;
+- falha com permanencia da janela aberta;
+- preservacao de tema e contexto protegido;
+- obrigacao de migrar o fluxo para componentes aderentes ao padrao tecnico da
+  constituicao.
 
-### Backend
+### Quickstart
 
-- Reutilizar os endpoints de conta e credenciais ja existentes.
-- Tocar o backend apenas se algum ajuste minimo de resposta, auditoria ou contrato
-  for necessario para sustentar o comportamento corrigido sem gambiarra no frontend.
+O roteiro de validacao manual esta em
+[quickstart.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/quickstart.md)
+e cobre descarte cancelado, sucesso de email, sucesso de senha e falha sem perda
+de contexto.
 
-### Theme and navigation behavior
+## Post-Design Constitution Check
 
-- Tratar a preferencia de tema como estado persistente do usuario durante a sessao.
-- Tratar a rota protegida de origem como fonte de retorno apos sucesso no salvamento.
-- Evitar qualquer redirecionamento implicito para `/` quando a operacao de conta
-  terminar com sucesso.
-
-## Post-Design Constitution Re-Check
-
-- Simplicidade: mantida. A correcao reaproveita estruturas existentes e foca no
-  comportamento defeituoso identificado.
-- Arquitetura e coesao: mantidas. Tema, navegacao e dialogo permanecem com
-  responsabilidades claras.
-- Seguranca e compliance: mantidas. Nenhuma regra de acesso ou dado sensivel e
-  ampliado alem do fluxo ja autenticado.
-- Observabilidade: mantida. O desenho preserva espaco para diagnosticar falhas de
-  salvamento e retorno incorreto.
-- UX e frontend: fortalecidos. A feature devolve controle explicito ao usuario e
-  preserva consistencia visual e contextual.
+- Simplicity gate: mantido. A correcao continua localizada em arquivos existentes.
+- Architecture gate: mantido. Persistencia de tema e navegacao continuam
+  centralizadas em `frontend/src/lib/auth.ts`, `frontend/src/app/layout.tsx` e
+  `frontend/src/features/security/actions.ts`.
+- Security/compliance gate: mantido. Nenhuma nova superficie de dados sensiveis.
+- Observability gate: mantido. O design exige validacao de sucesso, falha,
+  cancelamento e ausencia de redirecionamento indevido.
+- UX/performance gate: mantido. Estados de dialogo, foco, descarte, sucesso e
+  falha ficaram testaveis com meta local de ate 1 segundo.
+- Component governance gate: mantido somente com substituicao dos componentes nao
+  aderentes no fluxo de ajustes; o catalogo local atual nao pode ser reutilizado como
+  base desta feature.
 
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| None | N/A | N/A |
+| Migracao de componentes do fluxo de ajustes | A constituicao 1.9.0 exige base tecnica aderente ao padrao definido e o reuso atual nao e aceito | Reutilizar o catalogo local foi rejeitado por conflito direto com a constituicao |

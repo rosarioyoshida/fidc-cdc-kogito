@@ -5,6 +5,15 @@
 **Status**: Draft  
 **Input**: User description: "A tela de ajuste de dados do usuario loga precisa de um botao para fechar a janela. Ao clicar em salvar email ou senha o usuario é redirecionado para a tela inicial com o modo light selecionado. o comportamente deveria manter o modo selecionado anteriormente."
 
+## Clarifications
+
+### Session 2026-03-22
+
+- Q: Ao fechar a janela com alteracoes nao salvas, o sistema deve fechar imediatamente, confirmar descarte ou bloquear fechamento? → A: Confirmar descarte apenas se houver alteracoes nao salvas.
+- Q: A janela de ajustes deve fechar automaticamente apos salvamento bem-sucedido? → A: Fechar a janela automaticamente apos sucesso.
+- Q: Qual deve ser a fonte primaria da preferencia visual durante esse fluxo? → A: `localStorage` como fonte primaria, com sincronizacao do atributo visual do documento e do cookie.
+- Q: Onde o feedback de sucesso deve aparecer quando a janela fecha automaticamente apos salvar? → A: Na tela protegida apos o fechamento da janela.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Fechar a janela de ajustes (Priority: P1)
@@ -25,7 +34,8 @@ mudancas nao confirmadas.
    acionar o botao de fechar, **Then** a janela e encerrada e a tela protegida
    anterior permanece visivel.
 2. **Given** um usuario autenticado com campos alterados e ainda nao salvos, **When**
-   ele fechar a janela, **Then** nenhuma alteracao e aplicada automaticamente.
+   ele fechar a janela, **Then** o sistema solicita confirmacao de descarte antes de
+   encerrar a janela.
 
 ---
 
@@ -45,10 +55,12 @@ no mesmo modo visual apos o fluxo.
 
 1. **Given** um usuario autenticado com um modo visual ja selecionado, **When** ele
    salvar a alteracao do proprio email, **Then** o sistema preserva o modo visual
-   anteriormente ativo.
+   anteriormente ativo, encerra a janela de ajustes e exibe feedback de sucesso na
+   tela protegida.
 2. **Given** um usuario autenticado com um modo visual ja selecionado, **When** ele
    salvar a alteracao da propria senha, **Then** o sistema preserva o modo visual
-   anteriormente ativo.
+   anteriormente ativo, encerra a janela de ajustes e exibe feedback de sucesso na
+   tela protegida.
 
 ---
 
@@ -68,10 +80,10 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
 
 1. **Given** um usuario autenticado em uma tela protegida, **When** ele salvar a
    alteracao do proprio email, **Then** o sistema conclui a acao sem redireciona-lo
-   para a tela inicial.
+   para a tela inicial e fecha a janela de ajustes.
 2. **Given** um usuario autenticado em uma tela protegida, **When** ele salvar a
    alteracao da propria senha, **Then** o sistema conclui a acao sem resetar o tema
-   visual e sem perder o contexto protegido anterior.
+   visual, sem perder o contexto protegido anterior e fecha a janela de ajustes.
 
 ---
 
@@ -79,10 +91,14 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
 
 - Usuario fecha a janela de ajustes logo apos abrir, sem interagir com nenhum campo
 - Usuario tenta fechar a janela apos editar campos nao salvos
+- Usuario tenta fechar a janela com alteracoes nao salvas e cancela a confirmacao de
+  descarte
 - Usuario salva email ou senha enquanto o modo light esta ativo
 - Usuario salva email ou senha enquanto um modo visual diferente do light esta ativo
 - Salvamento falha e o sistema deve manter a janela aberta, o contexto atual e o modo
   visual selecionado anteriormente
+- Salvamento conclui com sucesso e o sistema deve fechar a janela sem redirecionar o
+  usuario nem redefinir o tema ativo
 - Usuario conclui salvamento a partir de uma tela protegida interna e nao deve ser
   levado para a tela inicial por efeito colateral do fluxo
 
@@ -94,6 +110,10 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
   fechamento visivel ao usuario autenticado.
 - **FR-002**: O acionamento da acao de fechamento MUST encerrar a janela de ajustes
   sem aplicar automaticamente alteracoes ainda nao salvas.
+- **FR-002a**: O sistema MUST solicitar confirmacao de descarte apenas quando o
+  usuario tentar fechar a janela com alteracoes ainda nao salvas.
+- **FR-002b**: O sistema MUST manter a janela aberta e preservar os valores em edicao
+  quando o usuario cancelar a confirmacao de descarte.
 - **FR-003**: O sistema MUST permitir que o usuario autenticado permaneca na mesma
   area protegida apos salvar a alteracao do proprio email.
 - **FR-004**: O sistema MUST permitir que o usuario autenticado permaneca na mesma
@@ -102,12 +122,18 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
   usuario apos o salvamento bem-sucedido de email.
 - **FR-006**: O sistema MUST preservar o modo visual previamente selecionado pelo
   usuario apos o salvamento bem-sucedido de senha.
+- **FR-006a**: O sistema MUST encerrar automaticamente a janela de ajustes apos o
+  salvamento bem-sucedido de email ou senha.
 - **FR-007**: O sistema MUST evitar redirecionamento automatico para a tela inicial
   como efeito colateral do salvamento de dados da conta.
-- **FR-008**: O sistema MUST exibir feedback claro de sucesso ou falha na propria
-  experiencia protegida do usuario, sem redefinir o modo visual anteriormente ativo.
+- **FR-008**: O sistema MUST exibir feedback de sucesso na tela protegida apos o
+  fechamento automatico da janela e feedback de falha na propria janela de ajustes,
+  sem redefinir o modo visual anteriormente ativo.
 - **FR-009**: O sistema MUST manter a janela de ajustes e o contexto atual quando o
   salvamento nao for concluido com sucesso.
+- **FR-010**: O sistema MUST tratar `localStorage` como fonte primaria da preferencia
+  visual durante o fluxo de ajustes da conta, sincronizando o atributo visual do
+  documento e o cookie sem redefinir o tema ativo.
 
 ### Non-Functional Requirements *(mandatory)*
 
@@ -121,8 +147,12 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
   conta.
 - **NFR-004**: O fluxo corrigido MUST manter separacao clara entre comportamento da
   janela de ajustes, persistencia de preferencia visual e navegacao protegida.
-- **NFR-005**: O fechamento da janela e o retorno apos salvamento MUST ocorrer de
-  forma imediata em condicoes normais de uso, sem exigir repeticao manual do fluxo.
+- **NFR-004a**: A persistencia de tema MUST manter uma unica fonte primaria de
+  verdade para evitar divergencia entre `localStorage`, cookie, estado de interface e
+  atributo visual do documento.
+- **NFR-005**: O fechamento da janela, a abertura da confirmacao de descarte e o
+  retorno visual apos salvamento MUST ocorrer em ate 1 segundo em condicoes normais
+  de uso local, sem exigir repeticao manual do fluxo.
 - **NFR-006**: A janela de ajustes MUST oferecer operacao por teclado, foco visivel e
   acao de fechamento perceptivel e consistente com o restante da interface.
 - **NFR-007**: A experiencia corrigida MUST manter consistencia visual e semantica de
@@ -130,13 +160,18 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
 - **NFR-008**: A correcao MUST manter a capacidade de evolucao do fluxo de conta sem
   duplicar regras de navegacao ou persistencia de preferencia visual em pontos
   dispersos da interface.
+- **NFR-008a**: A correcao MUST ser implementada com componentes aderentes ao padrao
+  tecnico definido na constituicao, mesmo que isso exija substituir componentes
+  locais existentes no fluxo de ajustes da conta.
 
 ### Key Entities *(include if feature involves data)*
 
 - **Janela de Ajustes da Conta**: Superficie de interacao onde o usuario autenticado
   altera email, altera senha ou encerra o fluxo sem salvar.
 - **Preferencia de Tema Visual**: Estado de apresentacao previamente selecionado pelo
-  usuario e que deve permanecer consistente durante e apos o fluxo de ajuste.
+  usuario, persistido primariamente em `localStorage`, e que deve permanecer
+  consistente durante e apos o fluxo de ajuste enquanto sincroniza cookie e atributo
+  visual do documento.
 - **Contexto Protegido Atual**: Tela autenticada de origem a partir da qual o usuario
   abriu a janela de ajustes e para a qual deve retornar apos fechar ou salvar.
 
@@ -171,3 +206,5 @@ permanece na mesma area funcional, com o mesmo tema visual ativo.
 - Redesenho completo do fluxo de autenticacao ou do menu superior
 - Alteracao das regras de permissao, perfis seedados ou politicas de acesso
 - Introducao de novos modos visuais ou revisao ampla do sistema de temas
+- Revisao ampla do design system alem da substituicao tecnica necessaria para aderir
+  a constituicao no fluxo de ajustes da conta
