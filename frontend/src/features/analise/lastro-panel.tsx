@@ -2,7 +2,14 @@ import React from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import type { LastroAnalise } from "@/features/analise/types";
 
 type LastroPanelProps = {
@@ -95,24 +102,24 @@ export function LastroPanel({
         />
       ) : (
         <Table>
-          <thead className="bg-surface">
-            <tr>
-              <th className="px-4 py-3">Documento</th>
-              <th className="px-4 py-3">Origem</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Recebido em</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader className="bg-surface">
+            <TableRow>
+              <TableHead>Documento</TableHead>
+              <TableHead>Origem</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Recebido em</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {lastros.map((lastro) => (
-              <tr key={lastro.id} className="border-t">
-                <td className="px-4 py-3 font-semibold">{lastro.tipoDocumento}</td>
-                <td className="px-4 py-3">{lastro.origem}</td>
-                <td className="px-4 py-3">{lastro.statusValidacao}</td>
-                <td className="px-4 py-3 text-text-subtle">{lastro.recebidoEm ?? "Agora"}</td>
-              </tr>
+              <TableRow key={lastro.id}>
+                <TableCell className="font-semibold">{lastro.tipoDocumento}</TableCell>
+                <TableCell>{lastro.origem}</TableCell>
+                <TableCell>{lastro.statusValidacao}</TableCell>
+                <TableCell className="text-text-subtle">{lastro.recebidoEm ?? "Agora"}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       )}
     </section>

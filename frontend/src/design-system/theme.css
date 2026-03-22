@@ -2,12 +2,14 @@
 html[data-theme="light"] {
   --ds-surface: #f7f8fa;
   --ds-surface-raised: #ffffff;
+  --ds-surface-muted: #f1f3f5;
   --ds-text: #172b4d;
   --ds-text-subtle: #5e6c84;
   --ds-brand: #0c66e4;
   --ds-success: #216e4e;
   --ds-warning: #a54800;
   --ds-danger: #c9372c;
+  --ds-info: #0c66e4;
   --ds-border: #dfe1e6;
   --ds-radius-md: 12px;
   --ds-radius-lg: 18px;
@@ -17,12 +19,14 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   --ds-surface: #0f172a;
   --ds-surface-raised: #111827;
+  --ds-surface-muted: #172033;
   --ds-text: #e5e7eb;
   --ds-text-subtle: #94a3b8;
   --ds-brand: #85b8ff;
   --ds-success: #7ee2b8;
   --ds-warning: #f5cd47;
   --ds-danger: #fd9891;
+  --ds-info: #85b8ff;
   --ds-border: #334155;
   --ds-shadow-soft: 0 16px 44px rgba(15, 23, 42, 0.28);
 }

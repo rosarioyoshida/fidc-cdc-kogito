@@ -19,10 +19,10 @@ verificacao tecnica direcionadas.
 
 **Purpose**: Consolidar escopo, catalogo local e pontos tecnicos de migracao
 
-- [ ] T001 Review feature scope and migration criteria in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\spec.md
-- [ ] T002 Review constitutional migration constraints and target structure in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\plan.md
-- [ ] T003 [P] Review the migration decisions and equivalence rationale in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
-- [ ] T004 [P] Review the current UI catalog in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui
+- [x] T001 Review feature scope and migration criteria in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\spec.md
+- [x] T002 Review constitutional migration constraints and target structure in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\plan.md
+- [x] T003 [P] Review the migration decisions and equivalence rationale in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
+- [x] T004 [P] Review the current UI catalog in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui
 
 ---
 
@@ -32,11 +32,11 @@ verificacao tecnica direcionadas.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Add the minimum shadcn/ui adoption dependencies in D:\desenv\fidc-cdc-kogito\frontend\package.json, including required Radix UI packages, `class-variance-authority`, `tailwind-merge`, and icon support needed by the migrated primitives
-- [ ] T006 [P] Align shared class-composition utilities for shadcn-based primitives in D:\desenv\fidc-cdc-kogito\frontend\src\lib\cn.ts
-- [ ] T007 [P] Align Tailwind and token-driven global styling for migrated primitives in D:\desenv\fidc-cdc-kogito\frontend\src\app\globals.css
-- [ ] T008 [P] Preserve token and semantic-color mappings used by migrated components in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\theme.css
-- [ ] T009 Register the initial component equivalence inventory and migration scope in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
+- [x] T005 Add the minimum shadcn/ui adoption dependencies in D:\desenv\fidc-cdc-kogito\frontend\package.json, including required Radix UI packages, `class-variance-authority`, `tailwind-merge`, and icon support needed by the migrated primitives
+- [x] T006 [P] Align shared class-composition utilities for shadcn-based primitives in D:\desenv\fidc-cdc-kogito\frontend\src\lib\cn.ts
+- [x] T007 [P] Align Tailwind and token-driven global styling for migrated primitives in D:\desenv\fidc-cdc-kogito\frontend\src\app\globals.css
+- [x] T008 [P] Preserve token and semantic-color mappings used by migrated components in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\theme.css
+- [x] T009 Register the initial component equivalence inventory and migration scope in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -50,20 +50,20 @@ verificacao tecnica direcionadas.
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Replace the local button primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\button.tsx
-- [ ] T011 [US1] Replace the local input primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\input.tsx
-- [ ] T012 [US1] Replace the local dialog primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\dialog.tsx
-- [ ] T013 [US1] Replace the local table primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\table.tsx
-- [ ] T014 [P] [US1] Align migrated primitive variants and state APIs with project token usage in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\color-semantics.ts
-- [ ] T015 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.tsx to the migrated button, input, and dialog primitives without breaking current interaction states
-- [ ] T016 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\security\login-panel.tsx to the migrated button and input primitives without losing authentication feedback
-- [ ] T017 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.tsx to the migrated button and input primitives while preserving form semantics
-- [ ] T018 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.tsx to the migrated button and table primitives while preserving action and status behavior
-- [ ] T019 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.tsx to the migrated button and table primitives without changing result communication
-- [ ] T020 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.tsx to the migrated table primitive while preserving data readability
-- [ ] T021 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.tsx to the migrated button and table primitives while preserving eligibility feedback
-- [ ] T022 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.tsx to the migrated button, input, and table primitives while preserving validation flow feedback
-- [ ] T023 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.tsx to the migrated button primitive while preserving submission semantics
+- [x] T010 [US1] Replace the local button primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\button.tsx
+- [x] T011 [US1] Replace the local input primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\input.tsx
+- [x] T012 [US1] Replace the local dialog primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\dialog.tsx
+- [x] T013 [US1] Replace the local table primitive with a shadcn-based implementation in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\table.tsx
+- [x] T014 [P] [US1] Align migrated primitive variants and state APIs with project token usage in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\color-semantics.ts
+- [x] T015 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.tsx to the migrated button, input, and dialog primitives without breaking current interaction states
+- [x] T016 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\security\login-panel.tsx to the migrated button and input primitives without losing authentication feedback
+- [x] T017 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.tsx to the migrated button and input primitives while preserving form semantics
+- [x] T018 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.tsx to the migrated button and table primitives while preserving action and status behavior
+- [x] T019 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.tsx to the migrated button and table primitives without changing result communication
+- [x] T020 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.tsx to the migrated table primitive while preserving data readability
+- [x] T021 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.tsx to the migrated button and table primitives while preserving eligibility feedback
+- [x] T022 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.tsx to the migrated button, input, and table primitives while preserving validation flow feedback
+- [x] T023 [US1] Adapt D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.tsx to the migrated button primitive while preserving submission semantics
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -77,19 +77,19 @@ verificacao tecnica direcionadas.
 
 ### Implementation for User Story 2
 
-- [ ] T024 [US2] Update the theme toggle to consume migrated primitives without losing labels, theme feedback, or semantic clarity in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\theme-toggle.tsx
-- [ ] T025 [US2] Update the topbar user menu to consume migrated primitives while preserving notification emphasis and semantic colors in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\topbar-user-menu.tsx
-- [ ] T026 [US2] Update account settings forms and feedback states to consume migrated primitives without communication regressions in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.tsx
-- [ ] T027 [P] [US2] Preserve semantic color and feedback mappings used by the migrated consumers in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\color-semantics.ts
-- [ ] T028 [P] [US2] Validate route-level rendering stability for migrated UI flows in D:\desenv\fidc-cdc-kogito\frontend\src\app\layout.tsx
-- [ ] T029 [US2] Validate home and authenticated entry rendering after primitive migration in D:\desenv\fidc-cdc-kogito\frontend\src\app\page.tsx
-- [ ] T030 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.tsx
-- [ ] T031 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.tsx
-- [ ] T032 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.tsx
-- [ ] T033 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.tsx
-- [ ] T034 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.tsx
-- [ ] T035 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.tsx
-- [ ] T036 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.tsx
+- [x] T024 [US2] Update the theme toggle to consume migrated primitives without losing labels, theme feedback, or semantic clarity in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\theme-toggle.tsx
+- [x] T025 [US2] Update the topbar user menu to consume migrated primitives while preserving notification emphasis and semantic colors in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\topbar-user-menu.tsx
+- [x] T026 [US2] Update account settings forms and feedback states to consume migrated primitives without communication regressions in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.tsx
+- [x] T027 [P] [US2] Preserve semantic color and feedback mappings used by the migrated consumers in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\color-semantics.ts
+- [x] T028 [P] [US2] Validate route-level rendering stability for migrated UI flows in D:\desenv\fidc-cdc-kogito\frontend\src\app\layout.tsx
+- [x] T029 [US2] Validate home and authenticated entry rendering after primitive migration in D:\desenv\fidc-cdc-kogito\frontend\src\app\page.tsx
+- [x] T030 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.tsx
+- [x] T031 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.tsx
+- [x] T032 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.tsx
+- [x] T033 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.tsx
+- [x] T034 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.tsx
+- [x] T035 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.tsx
+- [x] T036 [US2] Validate semantic feedback, focus visibility, and user-facing communication in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.tsx
 
 **Checkpoint**: At this point, User Stories 1 and 2 should both work independently
 
@@ -103,22 +103,22 @@ verificacao tecnica direcionadas.
 
 ### Implementation for User Story 3
 
-- [ ] T037 [P] [US3] Add technical validation coverage for the migrated theme toggle in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\theme-toggle.test.tsx
-- [ ] T038 [P] [US3] Add technical validation coverage for the migrated account settings dialog in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.test.tsx
-- [ ] T039 [P] [US3] Add technical validation coverage for the migrated topbar user menu in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\topbar-user-menu.test.tsx
-- [ ] T040 [US3] Document and validate security, sensitive-data, and authorization impact across migrated UI flows in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
-- [ ] T041 [US3] Define and validate technical observability signals for migrated UI flows in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\contracts\ui-migration-contract.md
-- [ ] T042 [US3] Record migrated components, out-of-scope components, and audit evidence in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
-- [ ] T043 [US3] Finalize the validation contract for migration traceability and technical checks in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\contracts\ui-migration-contract.md
-- [ ] T044 [US3] Capture final validation scenarios for accessibility, observability, and semantic feedback in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\quickstart.md
-- [ ] T045 [US3] Add technical validation coverage for the migrated login panel in D:\desenv\fidc-cdc-kogito\frontend\src\features\security\login-panel.test.tsx
-- [ ] T046 [US3] Add technical validation coverage for the migrated cession list flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.test.tsx
-- [ ] T047 [US3] Add technical validation coverage for the migrated cession detail flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.test.tsx
-- [ ] T048 [US3] Add technical validation coverage for the migrated analysis calculation flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.test.tsx
-- [ ] T049 [US3] Add technical validation coverage for the migrated contracts flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.test.tsx
-- [ ] T050 [US3] Add technical validation coverage for the migrated eligibility flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.test.tsx
-- [ ] T051 [US3] Add technical validation coverage for the migrated collateral flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.test.tsx
-- [ ] T052 [US3] Add technical validation coverage for the migrated registry flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.test.tsx
+- [x] T037 [P] [US3] Add technical validation coverage for the migrated theme toggle in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\theme-toggle.test.tsx
+- [x] T038 [P] [US3] Add technical validation coverage for the migrated account settings dialog in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\account-settings-dialog.test.tsx
+- [x] T039 [P] [US3] Add technical validation coverage for the migrated topbar user menu in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\topbar-user-menu.test.tsx
+- [x] T040 [US3] Document and validate security, sensitive-data, and authorization impact across migrated UI flows in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
+- [x] T041 [US3] Define and validate technical observability signals for migrated UI flows in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\contracts\ui-migration-contract.md
+- [x] T042 [US3] Record migrated components, out-of-scope components, and audit evidence in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\research.md
+- [x] T043 [US3] Finalize the validation contract for migration traceability and technical checks in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\contracts\ui-migration-contract.md
+- [x] T044 [US3] Capture final validation scenarios for accessibility, observability, and semantic feedback in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\quickstart.md
+- [x] T045 [US3] Add technical validation coverage for the migrated login panel in D:\desenv\fidc-cdc-kogito\frontend\src\features\security\login-panel.test.tsx
+- [x] T046 [US3] Add technical validation coverage for the migrated cession list flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-list.test.tsx
+- [x] T047 [US3] Add technical validation coverage for the migrated cession detail flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\cessao\cessao-detail.test.tsx
+- [x] T048 [US3] Add technical validation coverage for the migrated analysis calculation flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\calculo-panel.test.tsx
+- [x] T049 [US3] Add technical validation coverage for the migrated contracts flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\contratos-panel.test.tsx
+- [x] T050 [US3] Add technical validation coverage for the migrated eligibility flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\elegibilidade-panel.test.tsx
+- [x] T051 [US3] Add technical validation coverage for the migrated collateral flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\lastro-panel.test.tsx
+- [x] T052 [US3] Add technical validation coverage for the migrated registry flow in D:\desenv\fidc-cdc-kogito\frontend\src\features\analise\registradora-panel.test.tsx
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -128,10 +128,10 @@ verificacao tecnica direcionadas.
 
 **Purpose**: Consolidar o modelo final, validar regressao e fechar guardrails tecnicos
 
-- [ ] T053 Update final migration statuses and component relationships in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\data-model.md
-- [ ] T054 Validate accessibility, focus visibility, and keyboard behavior in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\dialog.tsx
-- [ ] T055 Validate semantic color, contrast, and feedback consistency across migrated primitives in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\theme.css
-- [ ] T056 Validate the full migrated frontend surface against the quickstart in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\quickstart.md
+- [x] T053 Update final migration statuses and component relationships in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\data-model.md
+- [x] T054 Validate accessibility, focus visibility, and keyboard behavior in D:\desenv\fidc-cdc-kogito\frontend\src\components\ui\dialog.tsx
+- [x] T055 Validate semantic color, contrast, and feedback consistency across migrated primitives in D:\desenv\fidc-cdc-kogito\frontend\src\design-system\theme.css
+- [x] T056 Validate the full migrated frontend surface against the quickstart in D:\desenv\fidc-cdc-kogito\specs\005-global-shadcn-migration\quickstart.md
 
 ---
 

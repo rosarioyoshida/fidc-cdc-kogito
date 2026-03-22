@@ -1,7 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Table } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import { CessaoStatusPanel } from "@/features/cessao/cessao-status-panel";
 import type { Cessao } from "@/features/cessao/types";
 import { PermissionGuard } from "@/features/security/permission-guard";
@@ -66,25 +73,25 @@ export function CessaoDetail({
         </div>
 
         <Table>
-          <thead className="bg-surface">
-            <tr>
-              <th className="px-4 py-3">Ordem</th>
-              <th className="px-4 py-3">Etapa</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Responsavel</th>
-              <th className="px-4 py-3 text-right">Acao</th>
-            </tr>
-          </thead>
-          <tbody>
+          <TableHeader className="bg-surface">
+            <TableRow>
+              <TableHead>Ordem</TableHead>
+              <TableHead>Etapa</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Responsavel</TableHead>
+              <TableHead className="text-right">Acao</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {(cessao.etapas ?? []).map((etapa) => (
-              <tr key={etapa.nomeEtapa} className="border-t">
-                <td className="px-4 py-3">{etapa.ordem}</td>
-                <td className="px-4 py-3 font-semibold">{etapa.nomeEtapa}</td>
-                <td className="px-4 py-3 text-text-subtle">{etapa.statusEtapa}</td>
-                <td className="px-4 py-3 text-text-subtle">
+              <TableRow key={etapa.nomeEtapa}>
+                <TableCell>{etapa.ordem}</TableCell>
+                <TableCell className="font-semibold">{etapa.nomeEtapa}</TableCell>
+                <TableCell className="text-text-subtle">{etapa.statusEtapa}</TableCell>
+                <TableCell className="text-text-subtle">
                   {etapa.responsavelId ?? "Nao atribuido"}
-                </td>
-                <td className="px-4 py-3 text-right">
+                </TableCell>
+                <TableCell className="text-right">
                   {etapa.statusEtapa === "EM_EXECUCAO" ? (
                     <PermissionGuard
                       allowed={
@@ -107,10 +114,10 @@ export function CessaoDetail({
                   ) : (
                     <span className="text-sm text-text-subtle">Sem acao</span>
                   )}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       </section>
     </div>

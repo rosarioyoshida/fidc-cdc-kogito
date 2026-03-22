@@ -42,10 +42,33 @@
 
 ## Initial Scope Mapping
 
-- `button.tsx` -> equivalente oficial `button`
-- `input.tsx` -> equivalente oficial `input`
-- `dialog.tsx` -> equivalente oficial `dialog`
-- `table.tsx` -> equivalente oficial `table`
-- `theme-toggle.tsx` -> consumidor composto
-- `topbar-user-menu.tsx` -> consumidor composto
-- `account-settings-dialog.tsx` -> consumidor composto
+- `button.tsx` -> equivalente oficial `button` -> `migrationStatus: migrated`
+- `input.tsx` -> equivalente oficial `input` -> `migrationStatus: migrated`
+- `dialog.tsx` -> equivalente oficial `dialog` -> `migrationStatus: migrated`
+- `table.tsx` -> equivalente oficial `table` -> `migrationStatus: migrated`
+- `theme-toggle.tsx` -> consumidor composto -> `validationStatus: validated`
+- `topbar-user-menu.tsx` -> consumidor composto -> `validationStatus: validated`
+- `account-settings-dialog.tsx` -> consumidor composto -> `validationStatus: validated`
+- `login-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+- `cessao-list.tsx` -> consumidor composto -> `validationStatus: validated`
+- `cessao-detail.tsx` -> consumidor composto -> `validationStatus: validated`
+- `calculo-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+- `contratos-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+- `elegibilidade-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+- `lastro-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+- `registradora-panel.tsx` -> consumidor composto -> `validationStatus: validated`
+
+## Final Validation Signals
+
+- `theme-toggle.test.tsx` -> validated
+- `account-settings-dialog.test.tsx` -> validated
+- `topbar-user-menu.test.tsx` -> validated
+- `login-panel.test.tsx` -> validated
+- `cessao-list.test.tsx` -> validated
+- `cessao-detail.test.tsx` -> validated
+- `calculo-panel.test.tsx` -> validated
+- `contratos-panel.test.tsx` -> validated
+- `elegibilidade-panel.test.tsx` -> validated
+- `lastro-panel.test.tsx` -> validated
+- `registradora-panel.test.tsx` -> validated
+- `dialog.test.tsx` -> validated

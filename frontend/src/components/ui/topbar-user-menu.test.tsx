@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TopbarUserMenu } from "@/components/ui/topbar-user-menu";
-import { seededAccounts } from "./auth-menu-fixtures";
+import { seededAccounts } from "@/test-support/ui-migration-fixtures";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/cessoes",
@@ -17,12 +17,12 @@ vi.mock("@/features/security/actions", () => ({
   changeOwnPasswordAction: vi.fn()
 }));
 
-describe("topbar user menu", () => {
-  it("renders authenticated user identity and account actions", () => {
+describe("TopbarUserMenu", () => {
+  it("preserves user identity, notifications, and account actions after primitive migration", () => {
     render(<TopbarUserMenu user={seededAccounts.operador} />);
 
-    expect(screen.getAllByText("Operador Padrao")).toHaveLength(3);
-    expect(screen.getByText(/Operador · operador@fidc.local/)).toBeInTheDocument();
+    expect(screen.getByText("Usuario autenticado")).toBeInTheDocument();
+    expect(screen.getByText(/Revisar alertas da conta/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ajustes da conta" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
   });

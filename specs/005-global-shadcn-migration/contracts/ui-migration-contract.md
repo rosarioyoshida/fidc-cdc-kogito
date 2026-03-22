@@ -33,3 +33,19 @@
     - preservacao de feedback de sucesso e erro nos fluxos priorizados;
     - preservacao de foco visivel e navegacao por teclado;
     - ausencia de regressao estrutural nos consumidores reais mapeados.
+12. Os consumidores priorizados para evidencias tecnicas sao:
+    - `theme-toggle`
+    - `topbar-user-menu`
+    - `account-settings-dialog`
+    - `login-panel`
+    - `cessao-list`
+    - `cessao-detail`
+    - `calculo-panel`
+    - `contratos-panel`
+    - `elegibilidade-panel`
+    - `lastro-panel`
+    - `registradora-panel`
+13. A validacao tecnica registrada deve combinar:
+    - testes de renderizacao e interacao das primitives migradas;
+    - testes de consumidores priorizados;
+    - verificacao documental de componentes migrados e componentes compostos fora do escopo estrutural.

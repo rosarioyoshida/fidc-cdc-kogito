@@ -11,6 +11,7 @@
 1. Abrir uma tela que renderize botoes, inputs, tabela e dialogo.
 2. Confirmar que os componentes renderizam sem erro.
 3. Confirmar foco visivel, estados hover/active/disabled e semantica basica.
+4. Confirmar que login, lista de cessoes, detalhe da cessao e paineis de analise continuam renderizando com as primitives migradas.
 
 ## Scenario 2: Validar comunicacao visual e tema
 
@@ -36,3 +37,9 @@
 1. Conferir a lista de componentes migrados e fora do escopo.
 2. Executar as verificacoes tecnicas definidas para observabilidade e auditoria.
 3. Confirmar que a migracao deixa evidencias suficientes para detectar regressao.
+
+## Scenario 6: Validar consumidores priorizados
+
+1. Executar a suite de testes tecnica dos consumidores priorizados.
+2. Confirmar cobertura para `theme-toggle`, `topbar-user-menu`, `account-settings-dialog`, `login-panel`, `cessao-list`, `cessao-detail`, `calculo-panel`, `contratos-panel`, `elegibilidade-panel`, `lastro-panel` e `registradora-panel`.
+3. Confirmar que nenhum desses fluxos perdeu semantica visual, foco visivel ou comunicacao textual relevante.

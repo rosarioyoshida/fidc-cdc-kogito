@@ -64,3 +64,42 @@
   fluxos autenticados e nao autenticados;
 - qualquer regressao de semantica visual em mensagens de erro de autenticacao ou conta
   deve ser tratada como falha de migracao.
+
+## Component Equivalence Inventory
+
+| Local component | Official equivalent | Status | Notes |
+|----------------|---------------------|--------|-------|
+| `frontend/src/components/ui/button.tsx` | `button` | migrated | Rewritten with `cva`, `Slot`, and project token variants |
+| `frontend/src/components/ui/input.tsx` | `input` | migrated | Rewritten with shadcn input structure and tokenized focus ring |
+| `frontend/src/components/ui/dialog.tsx` | `dialog` | migrated | Rewritten on top of `@radix-ui/react-dialog` |
+| `frontend/src/components/ui/table.tsx` | `table` | migrated | Rewritten with shadcn table API (`TableHeader`, `TableRow`, `TableCell`) |
+| `frontend/src/components/ui/theme-toggle.tsx` | none | out_of_scope | Composite consumer adapted to migrated button primitive |
+| `frontend/src/components/ui/topbar-user-menu.tsx` | none | out_of_scope | Composite consumer preserved for user communication and notifications |
+| `frontend/src/components/ui/account-settings-dialog.tsx` | none | out_of_scope | Composite consumer adapted to migrated dialog, input, and button primitives |
+
+## Composite Consumers Validated
+
+- `frontend/src/components/ui/theme-toggle.tsx`
+- `frontend/src/components/ui/topbar-user-menu.tsx`
+- `frontend/src/components/ui/account-settings-dialog.tsx`
+- `frontend/src/features/security/login-panel.tsx`
+- `frontend/src/features/cessao/cessao-list.tsx`
+- `frontend/src/features/cessao/cessao-detail.tsx`
+- `frontend/src/features/analise/calculo-panel.tsx`
+- `frontend/src/features/analise/contratos-panel.tsx`
+- `frontend/src/features/analise/elegibilidade-panel.tsx`
+- `frontend/src/features/analise/lastro-panel.tsx`
+- `frontend/src/features/analise/registradora-panel.tsx`
+
+## Technical Observability Signals
+
+- `render-smoke`: component-level Vitest rendering for migrated primitives and prioritized consumers
+- `semantic-feedback-check`: assertions for preserved success, error, warning, and informational copy in login, account, cession, and analysis flows
+- `focus-accessibility-check`: dialog and consumer-level verification of accessible roles, visible labels, and keyboard-close behavior
+- `traceability-audit-check`: inventory and contract updates that record migrated primitives and justified out-of-scope composites
+
+## Audit Evidence Summary
+
+- Technical validation coverage was added for migrated primitives and all prioritized consumers.
+- Existing integration coverage for authenticated flows, cession flow, account actions, and analysis workspace remains passing after migration.
+- No backend authorization contract changed; the validation scope remained on frontend rendering, interaction semantics, and communication safety.
