@@ -61,14 +61,12 @@ public class TaskAssignmentService {
                         "Cessao nao encontrada para consulta de task context."
                 ));
         PermissionSnapshot snapshot = stageAuthorizationService.describePermissions(actorHint);
-        KogitoProcessSnapshot runtimeSnapshot = workflowRuntimeService.getProcessByBusinessKey(businessKey);
-        KogitoTaskSnapshot currentTask = runtimeSnapshot.activeTask();
         Optional<EtapaCessao> currentStage = findCurrentStage(cessao);
-        String currentStageName = currentTask != null
-                ? currentTask.etapaNome().name()
-                : currentStage.map(etapa -> etapa.getNomeEtapa().name()).orElse("SEM_ETAPA_ATIVA");
+        String currentStageName = currentStage.map(etapa -> etapa.getNomeEtapa().name())
+                .or(() -> findLastCompletedStage(cessao).map(etapa -> etapa.getNomeEtapa().name()))
+                .orElse("SEM_ETAPA_ATIVA");
 
-        if (currentTask == null || !isHumanTaskStage(currentTask.etapaNome())) {
+        if (currentStage.isEmpty() || !isHumanTaskStage(currentStage.get().getNomeEtapa())) {
             return new TaskAssignmentContext(
                     businessKey,
                     cessao.getWorkflowInstanceId(),
@@ -86,19 +84,13 @@ public class TaskAssignmentService {
             );
         }
 
-        EtapaCessaoNome etapaNome = currentTask.etapaNome();
+        EtapaCessaoNome etapaNome = currentStage.get().getNomeEtapa();
         List<String> candidateGroups = permissaoEtapaRepository.findByNomeEtapa(etapaNome)
                 .stream()
                 .map(permissao -> permissao.getPerfilAcesso().getNome())
                 .distinct()
                 .sorted()
                 .toList();
-        if (currentTask.groupId() != null && !currentTask.groupId().isBlank() && !candidateGroups.contains(currentTask.groupId())) {
-            candidateGroups = java.util.stream.Stream.concat(candidateGroups.stream(), java.util.stream.Stream.of(currentTask.groupId()))
-                    .distinct()
-                    .sorted(Comparator.naturalOrder())
-                    .toList();
-        }
         List<String> candidateUsers = usuarioRepository.findDistinctByPerfisPermissoesNomeEtapaAndAtivoTrue(
                         etapaNome
                 )
@@ -116,8 +108,8 @@ public class TaskAssignmentService {
                 true,
                 actorAuthorized,
                 etapaNome.name(),
-                currentTask.description(),
-                currentTask.actualOwner(),
+                null,
+                currentStage.get().getResponsavelId(),
                 candidateGroups,
                 candidateUsers,
                 List.of("AUDITOR"),
@@ -133,5 +125,11 @@ public class TaskAssignmentService {
         return cessao.getEtapas().stream()
                 .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
                 .min(Comparator.comparingInt(EtapaCessao::getOrdem));
+    }
+
+    private Optional<EtapaCessao> findLastCompletedStage(Cessao cessao) {
+        return cessao.getEtapas().stream()
+                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.CONCLUIDA)
+                .max(Comparator.comparingInt(EtapaCessao::getOrdem));
     }
 }

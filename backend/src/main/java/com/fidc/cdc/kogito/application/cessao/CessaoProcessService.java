@@ -8,9 +8,11 @@ import com.fidc.cdc.kogito.application.audit.AuditTrailService;
 import com.fidc.cdc.kogito.application.process.KogitoProcessSnapshot;
 import com.fidc.cdc.kogito.application.process.KogitoTaskSnapshot;
 import com.fidc.cdc.kogito.application.process.KogitoWorkflowRuntimeService;
+import com.fidc.cdc.kogito.application.process.RegistradoraWorkflowHandler;
 import com.fidc.cdc.kogito.application.process.TimerSchedulingService;
 import com.fidc.cdc.kogito.application.security.AuthorizationDecision;
 import com.fidc.cdc.kogito.application.security.StageAuthorizationService;
+import com.fidc.cdc.kogito.application.documental.ResultadoValidacaoLastro;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.CessaoStatus;
@@ -40,6 +42,7 @@ public class CessaoProcessService {
     private final TimerSchedulingService timerSchedulingService;
     private final StageAuthorizationService stageAuthorizationService;
     private final KogitoWorkflowRuntimeService workflowRuntimeService;
+    private final RegistradoraWorkflowHandler registradoraWorkflowHandler;
 
     public CessaoProcessService(
             CessaoRepository cessaoRepository,
@@ -51,7 +54,8 @@ public class CessaoProcessService {
             ProcessMetricsService processMetricsService,
             TimerSchedulingService timerSchedulingService,
             StageAuthorizationService stageAuthorizationService,
-            KogitoWorkflowRuntimeService workflowRuntimeService
+            KogitoWorkflowRuntimeService workflowRuntimeService,
+            RegistradoraWorkflowHandler registradoraWorkflowHandler
     ) {
         this.cessaoRepository = cessaoRepository;
         this.etapaCessaoRepository = etapaCessaoRepository;
@@ -63,6 +67,7 @@ public class CessaoProcessService {
         this.timerSchedulingService = timerSchedulingService;
         this.stageAuthorizationService = stageAuthorizationService;
         this.workflowRuntimeService = workflowRuntimeService;
+        this.registradoraWorkflowHandler = registradoraWorkflowHandler;
     }
 
     @Transactional
@@ -86,9 +91,7 @@ public class CessaoProcessService {
     @Transactional(readOnly = true)
     public List<Cessao> list(CessaoStatus status, String businessKey) {
         if (businessKey != null && !businessKey.isBlank()) {
-            return cessaoRepository.findByBusinessKey(businessKey)
-                    .map(List::of)
-                    .orElse(List.of());
+            return List.of(getByBusinessKey(businessKey));
         }
         if (status != null) {
             return cessaoRepository.findByStatus(status);
@@ -126,6 +129,8 @@ public class CessaoProcessService {
         if (completedTask == null || completedTask.etapaNome() != etapaNome) {
             throw new BusinessConflictException("A etapa ativa no runtime nao corresponde a etapa solicitada.");
         }
+
+        validateStageBusinessRules(businessKey, etapaNome);
 
         KogitoProcessSnapshot afterSnapshot = workflowRuntimeService.completeActiveHumanTask(
                 businessKey,
@@ -323,6 +328,23 @@ public class CessaoProcessService {
     private void ensureExists(String businessKey) {
         if (!cessaoRepository.existsByBusinessKey(businessKey)) {
             throw new ResourceNotFoundException("Cessao nao encontrada para o businessKey informado.");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void assertExists(String businessKey) {
+        ensureExists(businessKey);
+    }
+
+    private void validateStageBusinessRules(String businessKey, EtapaCessaoNome etapaNome) {
+        if (etapaNome != EtapaCessaoNome.VALIDAR_LASTROS) {
+            return;
+        }
+        ResultadoValidacaoLastro resultado = registradoraWorkflowHandler.validarLastros(businessKey);
+        if (resultado.bloqueiaAceiteFinal()) {
+            throw new BusinessConflictException(
+                    "Existem lastros rejeitados. Corrija os documentos pendentes antes de concluir VALIDAR_LASTROS."
+            );
         }
     }
 }

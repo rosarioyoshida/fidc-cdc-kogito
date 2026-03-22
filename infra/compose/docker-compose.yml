@@ -183,7 +183,7 @@ services:
   frontend:
     build:
       context: ../../frontend
-    mem_limit: 384m
+    mem_limit: 768m
     ports:
       - "3000:3000"
     depends_on:
@@ -194,6 +194,7 @@ services:
       NEXT_PUBLIC_FIDC_API_URL: http://localhost:8080/api/v1
       NEXT_PUBLIC_FIDC_API_USERNAME: operador
       NEXT_PUBLIC_FIDC_API_PASSWORD: operador123
+      NODE_OPTIONS: --max-old-space-size=512
 
 volumes:
   postgres-data:

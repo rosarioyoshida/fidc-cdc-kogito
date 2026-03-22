@@ -89,4 +89,83 @@ class CessaoFlowIntegrationTest extends ApiContractTestBase {
                 .andExpect(jsonPath("$.etapas[8].nomeEtapa").value("AGUARDAR_CONFIRMACAO_REGISTRADORA"))
                 .andExpect(jsonPath("$.etapas[8].statusEtapa").value("EM_EXECUCAO"));
     }
+
+    @Test
+    void shouldAdvanceFromValidarLastrosToAutorizarPagamentoWhenLastrosAreValid() throws Exception {
+        CessaoRequest request = new CessaoRequest("BK-003", "CED-01", "CESS-01");
+
+        mockMvc.perform(post("/api/v1/cessoes")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-003/etapas/IMPORTAR_CARTEIRA/acoes/avancar")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"operador","justificativa":"importacao concluida"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-003/etapas/VALIDAR_CEDENTE/acoes/avancar")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"operador","justificativa":"cedente validado"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        String workflowInstanceId = mockMvc.perform(post("/api/v1/cessoes/BK-003/etapas/ANALISAR_ELEGIBILIDADE/acoes/avancar")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"analista","justificativa":"elegibilidade aprovada"}
+                                """))
+                .andExpect(status().isAccepted())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        String processInstanceId = objectMapper.readTree(workflowInstanceId).path("workflowInstanceId").asText();
+
+        mockMvc.perform(post("/api/v1/process/jobs/callbacks/test-bk-003")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"businessKey":"BK-003","processInstanceId":"%s"}
+                                """.formatted(processInstanceId)))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.resumed").value(true));
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-003/etapas/COLETAR_TERMO_ACEITE/acoes/avancar")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"analista","justificativa":"termo coletado"}
+                                """))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.etapas[10].nomeEtapa").value("VALIDAR_LASTROS"))
+                .andExpect(jsonPath("$.etapas[10].statusEtapa").value("EM_EXECUCAO"));
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-003/analise/lastros")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"contratoId":null,"parcelaId":null,"tipoDocumento":"NF-E","origem":"cedente"}
+                                """))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.statusValidacao").value("PENDENTE"));
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-003/etapas/VALIDAR_LASTROS/acoes/avancar")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"analista","justificativa":"lastros validados"}
+                                """))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.etapas[10].nomeEtapa").value("VALIDAR_LASTROS"))
+                .andExpect(jsonPath("$.etapas[10].statusEtapa").value("CONCLUIDA"))
+                .andExpect(jsonPath("$.etapas[11].nomeEtapa").value("AUTORIZAR_PAGAMENTO"))
+                .andExpect(jsonPath("$.etapas[11].statusEtapa").value("EM_EXECUCAO"));
+    }
 }

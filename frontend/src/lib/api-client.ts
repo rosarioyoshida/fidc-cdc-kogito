@@ -17,16 +17,26 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      Accept: "application/json",
-      Authorization: getBasicAuthHeader(),
-      "Content-Type": "application/json",
-      ...init?.headers
-    },
-    cache: "no-store"
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      headers: {
+        Accept: "application/json",
+        Authorization: getBasicAuthHeader(),
+        "Content-Type": "application/json",
+        ...init?.headers
+      },
+      cache: "no-store"
+    });
+  } catch (error) {
+    throw new ApiError(
+      "O backend de cessao nao esta acessivel no momento.",
+      503,
+      error
+    );
+  }
 
   if (!response.ok) {
     const problem = await parseProblemDetails(response);

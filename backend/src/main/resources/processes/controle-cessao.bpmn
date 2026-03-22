@@ -80,9 +80,9 @@
   <bpmn2:itemDefinition id="_task-01_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
   <bpmn2:signal id="_-1857756468" name="registradora-confirmada"/>
   <bpmn2:collaboration id="_C815EF3A-CE6D-4CA3-907B-D846B424F38C" name="Default Collaboration">
-    <bpmn2:participant id="_BAC65D7E-B46F-4A8C-905C-9FE768425A4B" name="Pool Participant" processRef="controle_cessao"/>
+    <bpmn2:participant id="_BAC65D7E-B46F-4A8C-905C-9FE768425A4B" name="Pool Participant" processRef="controle-cessao"/>
   </bpmn2:collaboration>
-  <bpmn2:process id="controle_cessao" drools:packageName="com.fidc.cdc.kogito.processes" drools:version="1.0" drools:adHoc="false" name="Controle de Cessao" isExecutable="true" processType="Public">
+  <bpmn2:process id="controle-cessao" drools:packageName="com.fidc.cdc.kogito.processes" drools:version="1.0" drools:adHoc="false" name="Controle de Cessao" isExecutable="true" processType="Public">
     <bpmn2:sequenceFlow id="flow-1" sourceRef="start-cessao" targetRef="task-01"/>
     <bpmn2:sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
     <bpmn2:sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
@@ -401,7 +401,7 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
     </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="gateway-lastros" name="Lastros validados?" gatewayDirection="Diverging">
+    <bpmn2:exclusiveGateway id="gateway-lastros" name="Lastros validados?" gatewayDirection="Diverging" default="flow-12a">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Lastros validados?]]></drools:metaValue>
@@ -487,7 +487,7 @@
     </bpmn2:endEvent>
   </bpmn2:process>
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="controle_cessao">
+    <bpmndi:BPMNPlane bpmnElement="controle-cessao">
       <bpmndi:BPMNShape id="shape_end-cessao" bpmnElement="end-cessao">
         <dc:Bounds height="56" width="56" x="1380" y="172"/>
       </bpmndi:BPMNShape>

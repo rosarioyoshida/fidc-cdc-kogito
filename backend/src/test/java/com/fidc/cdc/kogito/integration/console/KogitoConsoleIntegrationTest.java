@@ -48,4 +48,92 @@ class KogitoConsoleIntegrationTest extends ApiContractTestBase {
                 .andExpect(jsonPath("$.taskContext.workflowInstanceId", not(startsWith("workflow-"))))
                 .andExpect(jsonPath("$.managementContext.workflowInstanceId", not(startsWith("workflow-"))));
     }
+
+    @Test
+    void shouldReturnPermissionContextForCompletedCessao() throws Exception {
+        mockMvc.perform(post("/api/v1/cessoes")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CessaoRequest("BK-CONSOLE-002", "CED-01", "CESS-01"))))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/IMPORTAR_CARTEIRA/acoes/avancar")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"operador","justificativa":"avanco operacional"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/VALIDAR_CEDENTE/acoes/avancar")
+                        .with(httpBasic("operador", "operador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"operador","justificativa":"cedente validado"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        String processInstanceId = objectMapper.readTree(
+                        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/ANALISAR_ELEGIBILIDADE/acoes/avancar")
+                                        .with(httpBasic("analista", "analista123"))
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content("""
+                                                {"responsavelId":"analista","justificativa":"elegibilidade aprovada"}
+                                                """))
+                                .andExpect(status().isAccepted())
+                                .andReturn()
+                                .getResponse()
+                                .getContentAsString()
+                )
+                .path("workflowInstanceId")
+                .asText();
+
+        mockMvc.perform(post("/api/v1/process/jobs/callbacks/test-console-002")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"businessKey":"BK-CONSOLE-002","processInstanceId":"%s"}
+                                """.formatted(processInstanceId)))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.resumed").value(true));
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/COLETAR_TERMO_ACEITE/acoes/avancar")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"analista","justificativa":"termo coletado"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/analise/lastros")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"contratoId":null,"parcelaId":null,"tipoDocumento":"NF-E","origem":"cedente"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/VALIDAR_LASTROS/acoes/avancar")
+                        .with(httpBasic("analista", "analista123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"analista","justificativa":"lastros validados"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(post("/api/v1/cessoes/BK-CONSOLE-002/etapas/AUTORIZAR_PAGAMENTO/acoes/avancar")
+                        .with(httpBasic("aprovador", "aprovador123"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"responsavelId":"aprovador","justificativa":"pagamento autorizado"}
+                                """))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(get("/api/v1/cessoes/BK-CONSOLE-002/permissoes")
+                        .with(httpBasic("operador", "operador123")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskContext.humanTaskPending").value(false))
+                .andExpect(jsonPath("$.taskContext.currentStage").value("ENCERRAR_CESSAO"))
+                .andExpect(jsonPath("$.managementContext.processStatus").value("CONCLUIDA"))
+                .andExpect(jsonPath("$.managementContext.currentStage").value("ENCERRAR_CESSAO"));
+    }
 }

@@ -1,6 +1,7 @@
 package com.fidc.cdc.kogito.api.analise;
 
 import com.fidc.cdc.kogito.application.analise.ResultadoAvaliacaoElegibilidade;
+import com.fidc.cdc.kogito.application.cessao.CessaoProcessService;
 import com.fidc.cdc.kogito.application.documental.LastroDraft;
 import com.fidc.cdc.kogito.application.documental.ResultadoValidacaoLastro;
 import com.fidc.cdc.kogito.application.financeiro.ResultadoCalculoValorPagar;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/cessoes/{businessKey}/analise")
 public class AnaliseController {
 
+    private final CessaoProcessService cessaoProcessService;
     private final RegraElegibilidadeRepository regraElegibilidadeRepository;
     private final ContratoRepository contratoRepository;
     private final ParcelaRepository parcelaRepository;
@@ -41,6 +43,7 @@ public class AnaliseController {
     private final RegistradoraWorkflowHandler workflowHandler;
 
     public AnaliseController(
+            CessaoProcessService cessaoProcessService,
             RegraElegibilidadeRepository regraElegibilidadeRepository,
             ContratoRepository contratoRepository,
             ParcelaRepository parcelaRepository,
@@ -48,6 +51,7 @@ public class AnaliseController {
             LastroRepository lastroRepository,
             RegistradoraWorkflowHandler workflowHandler
     ) {
+        this.cessaoProcessService = cessaoProcessService;
         this.regraElegibilidadeRepository = regraElegibilidadeRepository;
         this.contratoRepository = contratoRepository;
         this.parcelaRepository = parcelaRepository;
@@ -58,6 +62,7 @@ public class AnaliseController {
 
     @GetMapping("/regras")
     public ResponseEntity<List<Map<String, Object>>> listRegras(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         return ResponseEntity.ok(regraElegibilidadeRepository.findByCessaoBusinessKeyOrderByAvaliadaEmAsc(businessKey)
                 .stream()
                 .map(this::toRegra)
@@ -66,6 +71,7 @@ public class AnaliseController {
 
     @GetMapping("/contratos")
     public ResponseEntity<List<Map<String, Object>>> listContratos(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         return ResponseEntity.ok(contratoRepository.findByCessaoBusinessKeyOrderByIdentificadorExternoAsc(businessKey)
                 .stream()
                 .map(this::toContrato)
@@ -74,6 +80,7 @@ public class AnaliseController {
 
     @GetMapping("/parcelas")
     public ResponseEntity<List<Map<String, Object>>> listParcelas(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         return ResponseEntity.ok(parcelaRepository.findByContratoCessaoBusinessKeyOrderByNumeroParcelaAsc(businessKey)
                 .stream()
                 .map(this::toParcela)
@@ -82,6 +89,7 @@ public class AnaliseController {
 
     @GetMapping("/pagamentos")
     public ResponseEntity<List<Map<String, Object>>> listPagamentos(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         return ResponseEntity.ok(pagamentoRepository.findByCessaoBusinessKeyOrderByCreatedAtAsc(businessKey)
                 .stream()
                 .map(this::toPagamento)
@@ -90,6 +98,7 @@ public class AnaliseController {
 
     @GetMapping("/lastros")
     public ResponseEntity<List<Map<String, Object>>> listLastros(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         return ResponseEntity.ok(lastroRepository.findByCessaoBusinessKeyOrderByRecebidoEmAsc(businessKey)
                 .stream()
                 .map(this::toLastro)
@@ -103,6 +112,7 @@ public class AnaliseController {
 
     @PostMapping("/elegibilidade/avaliar")
     public ResponseEntity<Map<String, Object>> avaliarElegibilidade(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         ResultadoAvaliacaoElegibilidade resultado = workflowHandler.avaliarElegibilidade(businessKey);
         return ResponseEntity.accepted().body(Map.of(
                 "possuiBloqueios", resultado.possuiBloqueios(),
@@ -112,6 +122,7 @@ public class AnaliseController {
 
     @PostMapping("/calculo/apurar")
     public ResponseEntity<Map<String, Object>> apurarValor(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         ResultadoCalculoValorPagar resultado = workflowHandler.apurarValorPagar(businessKey);
         return ResponseEntity.accepted().body(Map.of(
                 "valorCalculado", resultado.valorCalculado(),
@@ -125,6 +136,7 @@ public class AnaliseController {
             @PathVariable String businessKey,
             @Valid @RequestBody LastroRequest request
     ) {
+        cessaoProcessService.assertExists(businessKey);
         Lastro lastro = workflowHandler.receberLastro(
                 businessKey,
                 new LastroDraft(request.contratoId(), request.parcelaId(), request.tipoDocumento(), request.origem())
@@ -134,6 +146,7 @@ public class AnaliseController {
 
     @PostMapping("/lastros/validar")
     public ResponseEntity<Map<String, Object>> validarLastros(@PathVariable String businessKey) {
+        cessaoProcessService.assertExists(businessKey);
         ResultadoValidacaoLastro resultado = workflowHandler.validarLastros(businessKey);
         return ResponseEntity.accepted().body(Map.of(
                 "bloqueiaAceiteFinal", resultado.bloqueiaAceiteFinal(),
@@ -148,6 +161,7 @@ public class AnaliseController {
             @PathVariable String businessKey,
             @PathVariable TipoOperacaoRegistradora tipoOperacao
     ) {
+        cessaoProcessService.assertExists(businessKey);
         RegistradoraResult resultado = workflowHandler.executarOperacaoRegistradora(businessKey, tipoOperacao);
         return ResponseEntity.accepted().body(Map.of(
                 "requestId", resultado.requestId(),

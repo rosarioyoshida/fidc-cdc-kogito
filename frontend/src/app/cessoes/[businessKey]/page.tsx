@@ -3,6 +3,7 @@ type CessaoDetailPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
+import { notFound } from "next/navigation";
 import { CessaoDetail } from "@/features/cessao/cessao-detail";
 import {
   advanceEtapaAction,
@@ -10,6 +11,7 @@ import {
   refreshCessaoAction
 } from "@/features/cessao/actions";
 import { getPermissionContext } from "@/features/security/actions";
+import { ApiError } from "@/lib/api-client";
 
 export default async function CessaoDetailPage({
   params,
@@ -19,20 +21,27 @@ export default async function CessaoDetailPage({
   const query = (await searchParams) ?? {};
   const errorMessage =
     typeof query.error === "string" ? decodeURIComponent(query.error) : undefined;
-  const [cessao, permissionContext] = await Promise.all([
-    getCessao(businessKey),
-    getPermissionContext(businessKey)
-  ]);
+  try {
+    const [cessao, permissionContext] = await Promise.all([
+      getCessao(businessKey),
+      getPermissionContext(businessKey)
+    ]);
 
-  return (
-    <main>
-      <CessaoDetail
-        cessao={cessao}
-        permissionContext={permissionContext}
-        errorMessage={errorMessage}
-        advanceAction={advanceEtapaAction}
-        refreshAction={refreshCessaoAction}
-      />
-    </main>
-  );
+    return (
+      <main>
+        <CessaoDetail
+          cessao={cessao}
+          permissionContext={permissionContext}
+          errorMessage={errorMessage}
+          advanceAction={advanceEtapaAction}
+          refreshAction={refreshCessaoAction}
+        />
+      </main>
+    );
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      notFound();
+    }
+    throw error;
+  }
 }

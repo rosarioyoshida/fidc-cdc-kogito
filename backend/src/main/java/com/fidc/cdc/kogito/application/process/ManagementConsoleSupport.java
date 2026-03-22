@@ -5,10 +5,13 @@ import com.fidc.cdc.kogito.application.readmodel.CessaoReadModelDocument;
 import com.fidc.cdc.kogito.application.readmodel.CessaoReadModelRepository;
 import com.fidc.cdc.kogito.domain.cessao.Cessao;
 import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
+import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
+import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,18 +53,16 @@ public class ManagementConsoleSupport {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cessao nao encontrada para consulta de management context."
                 ));
-        KogitoProcessSnapshot runtimeSnapshot = workflowRuntimeService.getProcessByBusinessKey(businessKey);
-        String currentStage = runtimeSnapshot.activeTask() != null
-                ? runtimeSnapshot.activeTask().etapaNome().name()
-                : cessao.getEtapas().stream()
-                        .filter(etapa -> etapa.getStatusEtapa().name().equals("EM_EXECUCAO"))
-                        .map(etapa -> etapa.getNomeEtapa().name())
-                        .findFirst()
-                        .orElse("SEM_ETAPA_ATIVA");
+        Optional<EtapaCessao> currentStageEntity = cessao.getEtapas().stream()
+                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
+                .findFirst();
+        String currentStage = currentStageEntity.map(etapa -> etapa.getNomeEtapa().name())
+                .or(() -> findLastCompletedStage(cessao).map(etapa -> etapa.getNomeEtapa().name()))
+                .orElse("SEM_ETAPA_ATIVA");
         Optional<CessaoReadModelDocument> readModel = cessaoReadModelRepository.findById(businessKey);
 
-        boolean humanTaskPending = runtimeSnapshot.activeTask() != null
-                && taskAssignmentService.isHumanTaskStage(runtimeSnapshot.activeTask().etapaNome());
+        boolean humanTaskPending = currentStageEntity.isPresent()
+                && taskAssignmentService.isHumanTaskStage(currentStageEntity.get().getNomeEtapa());
         boolean waitingForTimerJob = EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA.name().equals(currentStage);
 
         List<String> availableAdminActions = new ArrayList<>();
@@ -82,7 +83,7 @@ public class ManagementConsoleSupport {
         return new ManagementConsoleContext(
                 businessKey,
                 cessao.getWorkflowInstanceId(),
-                runtimeSnapshot.isCompleted() ? "CONCLUIDA" : cessao.getStatus().name(),
+                cessao.getStatus().name(),
                 currentStage,
                 humanTaskPending,
                 waitingForTimerJob,
@@ -96,5 +97,11 @@ public class ManagementConsoleSupport {
                 dataIndexUrl,
                 jobsServiceUrl
         );
+    }
+
+    private Optional<EtapaCessao> findLastCompletedStage(Cessao cessao) {
+        return cessao.getEtapas().stream()
+                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.CONCLUIDA)
+                .max(Comparator.comparingInt(EtapaCessao::getOrdem));
     }
 }
