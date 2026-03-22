@@ -1,41 +1,22 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { LoginPanel } from "@/features/security/login-panel";
+import { getCurrentUserOptional, signInAction } from "@/features/security/actions";
 
-export default function HomePage() {
-  return (
-    <main className="grid gap-8">
-      <section className="rounded-lg border bg-surface-raised p-8 shadow-soft">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
-          Controle de Cessao de FIDC
-        </p>
-        <h1 className="mb-4 text-4xl font-semibold text-text">
-          Runtime transacional, consulta operacional e governanca visual alinhados.
-        </h1>
-        <p className="max-w-3xl text-base leading-7 text-text-subtle">
-          Esta base inicial organiza o frontend operacional em Next.js com tokens visuais
-          alinhados ao Design System da Atlassian, suporte a tema claro/escuro e integrações
-          preparadas para a API versionada do backend.
-        </p>
-      </section>
+type HomePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <Link
-          className="rounded-lg border bg-surface p-6 transition hover:-translate-y-0.5 hover:shadow-soft"
-          href="/cessoes"
-        >
-          <h2 className="mb-2 text-xl font-semibold">Operacao de cessoes</h2>
-          <p className="text-sm leading-6 text-text-subtle">
-            Lista operacional, detalhe do fluxo, estados de carregamento e falhas RFC 9457.
-          </p>
-        </Link>
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = (await searchParams) ?? {};
+  const user = await getCurrentUserOptional();
+  if (user) {
+    redirect("/cessoes");
+  }
 
-        <div className="rounded-lg border bg-surface p-6">
-          <h2 className="mb-2 text-xl font-semibold">Consoles Kogito</h2>
-          <p className="text-sm leading-6 text-text-subtle">
-            O plano mantem Task Console e Management Console como canais especializados,
-            distintos do frontend de negocio.
-          </p>
-        </div>
-      </section>
-    </main>
-  );
+  const errorMessage =
+    typeof params.error === "string" ? decodeURIComponent(params.error) : undefined;
+  const lastUsername =
+    typeof params.username === "string" ? decodeURIComponent(params.username) : undefined;
+
+  return <LoginPanel errorMessage={errorMessage} lastUsername={lastUsername} signInAction={signInAction} />;
 }

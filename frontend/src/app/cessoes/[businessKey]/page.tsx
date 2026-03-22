@@ -3,7 +3,7 @@ type CessaoDetailPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { CessaoDetail } from "@/features/cessao/cessao-detail";
 import {
   advanceEtapaAction,
@@ -39,6 +39,9 @@ export default async function CessaoDetailPage({
       </main>
     );
   } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      redirect(`/?error=${encodeURIComponent(error.message)}`);
+    }
     if (error instanceof ApiError && error.status === 404) {
       notFound();
     }

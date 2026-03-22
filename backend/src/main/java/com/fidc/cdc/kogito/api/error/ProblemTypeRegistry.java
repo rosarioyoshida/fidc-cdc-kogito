@@ -28,6 +28,11 @@ public class ProblemTypeRegistry {
                     "Operacao nao autorizada",
                     HttpStatus.FORBIDDEN
             ),
+            "authentication-failed", new ProblemTypeDefinition(
+                    "https://fidc-cdc-kogito.local/problems/authentication-failed",
+                    "Autenticacao obrigatoria",
+                    HttpStatus.UNAUTHORIZED
+            ),
             "external-service-error", new ProblemTypeDefinition(
                     "https://fidc-cdc-kogito.local/problems/external-service-error",
                     "Falha de servico externo",

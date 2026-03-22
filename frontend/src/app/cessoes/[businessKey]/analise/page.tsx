@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { AnaliseDashboard } from "@/features/analise/analise-dashboard";
 import {
   apurarValorAction,
@@ -9,6 +10,7 @@ import {
   validarLastrosAction
 } from "@/features/analise/actions";
 import { getCessao } from "@/features/cessao/actions";
+import { ApiError } from "@/lib/api-client";
 
 type AnalisePageProps = {
   params: Promise<{ businessKey: string }>;
@@ -23,25 +25,32 @@ export default async function AnalisePage({ params, searchParams }: AnalisePageP
   const successMessage =
     typeof query.message === "string" ? decodeURIComponent(query.message) : undefined;
 
-  const [cessao, snapshot] = await Promise.all([
-    getCessao(businessKey),
-    getAnaliseSnapshot(businessKey)
-  ]);
+  try {
+    const [cessao, snapshot] = await Promise.all([
+      getCessao(businessKey),
+      getAnaliseSnapshot(businessKey)
+    ]);
 
-  return (
-    <main>
-      <AnaliseDashboard
-        cessao={cessao}
-        snapshot={snapshot}
-        errorMessage={errorMessage}
-        successMessage={successMessage}
-        avaliarElegibilidadeAction={avaliarElegibilidadeAction}
-        apurarValorAction={apurarValorAction}
-        registrarLastroAction={registrarLastroAction}
-        validarLastrosAction={validarLastrosAction}
-        executarRegistradoraAction={executarRegistradoraAction}
-        refreshAction={refreshAnaliseAction}
-      />
-    </main>
-  );
+    return (
+      <main>
+        <AnaliseDashboard
+          cessao={cessao}
+          snapshot={snapshot}
+          errorMessage={errorMessage}
+          successMessage={successMessage}
+          avaliarElegibilidadeAction={avaliarElegibilidadeAction}
+          apurarValorAction={apurarValorAction}
+          registrarLastroAction={registrarLastroAction}
+          validarLastrosAction={validarLastrosAction}
+          executarRegistradoraAction={executarRegistradoraAction}
+          refreshAction={refreshAnaliseAction}
+        />
+      </main>
+    );
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      redirect(`/?error=${encodeURIComponent(error.message)}`);
+    }
+    throw error;
+  }
 }

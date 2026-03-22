@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-controle-cessao-fidc`  
 **Created**: 2026-03-20  
-**Status**: Draft  
+**Status**: Closed  
 **Input**: User description: "Crie a especificacao com base no conteudo do arquivo
 specs_001-controle-cessao-fidcspec.md"
 

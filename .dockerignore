@@ -6,9 +6,12 @@ backend/target/
 frontend/.next/
 frontend/node_modules/
 frontend/coverage/
+frontend/dist/
+frontend/build/
 *.log
 *.tmp
 .env
 .env.*
+*.jar
 Dockerfile*
 specs/

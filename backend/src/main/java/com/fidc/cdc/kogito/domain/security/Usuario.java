@@ -21,6 +21,12 @@ public class Usuario extends BaseEntity {
     @Column(name = "nome_exibicao", nullable = false, length = 160)
     private String nomeExibicao;
 
+    @Column(nullable = false, unique = true, length = 160)
+    private String email;
+
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
+
     @Column(nullable = false)
     private boolean ativo;
 
@@ -46,6 +52,22 @@ public class Usuario extends BaseEntity {
 
     public void setNomeExibicao(String nomeExibicao) {
         this.nomeExibicao = nomeExibicao;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public boolean isAtivo() {

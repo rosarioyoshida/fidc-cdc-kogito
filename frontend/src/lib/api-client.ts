@@ -1,4 +1,4 @@
-import { getBasicAuthHeader } from "@/lib/auth";
+import { buildBasicAuthHeader, deserializeAuthSession, getBrowserAuthHeader } from "@/lib/auth";
 import { parseProblemDetails } from "@/lib/problem-details";
 
 const API_BASE_URL =
@@ -18,14 +18,15 @@ export class ApiError extends Error {
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
+  const authorization = await resolveAuthorizationHeader(init?.headers);
 
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
       headers: {
         Accept: "application/json",
-        Authorization: getBasicAuthHeader(),
         "Content-Type": "application/json",
+        ...(authorization ? { Authorization: authorization } : {}),
         ...init?.headers
       },
       cache: "no-store"
@@ -48,4 +49,24 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   }
 
   return (await response.json()) as T;
+}
+
+async function resolveAuthorizationHeader(headers?: HeadersInit) {
+  const explicitHeader = new Headers(headers ?? {}).get("Authorization");
+  if (explicitHeader) {
+    return explicitHeader;
+  }
+
+  if (typeof window !== "undefined") {
+    return getBrowserAuthHeader();
+  }
+
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const session = deserializeAuthSession(cookieStore.get("fidc_auth")?.value);
+    return session ? buildBasicAuthHeader(session.username, session.password) : null;
+  } catch {
+    return null;
+  }
 }
