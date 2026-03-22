@@ -6,9 +6,18 @@ type DialogProps = {
   open?: boolean;
   children: ReactNode;
   className?: string;
+  onClose?: () => void;
+  closeLabel?: string;
 };
 
-export function Dialog({ title, open = true, children, className }: DialogProps) {
+export function Dialog({
+  title,
+  open = true,
+  children,
+  className,
+  onClose,
+  closeLabel = "Fechar janela"
+}: DialogProps) {
   if (!open) {
     return null;
   }
@@ -21,7 +30,19 @@ export function Dialog({ title, open = true, children, className }: DialogProps)
         aria-labelledby="dialog-title"
         className={cn("w-full max-w-2xl rounded-lg border bg-surface-raised p-6 shadow-soft", className)}
       >
-        <h2 id="dialog-title" className="mb-4 text-xl font-semibold">{title}</h2>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <h2 id="dialog-title" className="text-xl font-semibold">{title}</h2>
+          {onClose ? (
+            <button
+              type="button"
+              aria-label={closeLabel}
+              className="rounded-md border px-3 py-1 text-sm font-medium text-text transition hover:bg-surface"
+              onClick={onClose}
+            >
+              Fechar
+            </button>
+          ) : null}
+        </div>
         {children}
       </section>
     </div>

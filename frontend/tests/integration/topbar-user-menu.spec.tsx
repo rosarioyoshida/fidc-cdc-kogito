@@ -4,6 +4,13 @@ import { describe, expect, it, vi } from "vitest";
 import { TopbarUserMenu } from "@/components/ui/topbar-user-menu";
 import { seededAccounts } from "./auth-menu-fixtures";
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/cessoes",
+  useRouter: () => ({
+    refresh: vi.fn()
+  })
+}));
+
 vi.mock("@/features/security/actions", () => ({
   logoutAction: vi.fn(),
   updateOwnEmailAction: vi.fn(),
