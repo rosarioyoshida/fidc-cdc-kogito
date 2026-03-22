@@ -39,3 +39,5 @@ export type PermissionContext = {
   taskContext: TaskAssignmentContext;
   managementContext: ManagementConsoleContext;
 };
+
+export { PROFILE_LABELS, toProfileLabel } from "@/features/security/user-account-types";

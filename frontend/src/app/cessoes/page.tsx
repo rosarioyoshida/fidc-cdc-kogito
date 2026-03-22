@@ -1,6 +1,8 @@
+import { redirect } from "next/navigation";
 import { CessaoList } from "@/features/cessao/cessao-list";
 import { createCessaoAction, listCessoes } from "@/features/cessao/actions";
 import type { Cessao } from "@/features/cessao/types";
+import { ApiError } from "@/lib/api-client";
 
 type CessoesPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -17,6 +19,9 @@ export default async function CessoesPage({ searchParams }: CessoesPageProps) {
   try {
     items = await listCessoes();
   } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      redirect(`/?error=${encodeURIComponent(error.message)}`);
+    }
     if (!queryError) {
       queryError = error instanceof Error ? error.message : "Falha ao consultar cessoes.";
     }
