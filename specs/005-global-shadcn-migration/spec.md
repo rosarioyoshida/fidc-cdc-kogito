@@ -2,7 +2,7 @@
 
 **Feature Branch**: `005-global-shadcn-migration`  
 **Created**: 2026-03-22  
-**Status**: Draft  
+**Status**: Closed  
 **Input**: User description: "Migrar todos os componentes equivalentes do frontend para shadcn/ui e preservar feedback, comunicacao visual e cores semanticas em todo o projeto"
 
 ## User Scenarios & Testing *(mandatory)*

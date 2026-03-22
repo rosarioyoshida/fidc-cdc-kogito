@@ -3,6 +3,10 @@
 **Branch**: `004-fix-user-modal-theme` | **Date**: 2026-03-22 | **Spec**: [spec.md](D:/desenv/fidc-cdc-kogito/specs/004-fix-user-modal-theme/spec.md)
 **Input**: Feature specification from `/specs/004-fix-user-modal-theme/spec.md`
 
+> Plano encerrado por substituicao de escopo. A implementacao isolada desta
+> feature nao sera executada porque os objetivos e restricoes constitucionais
+> foram absorvidos pela feature `005-global-shadcn-migration`.
+
 ## Summary
 
 Corrigir o fluxo de ajustes da conta para adicionar fechamento explicito com

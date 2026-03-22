@@ -3,6 +3,11 @@
 **Input**: Design documents from `/specs/004-fix-user-modal-theme/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
+> Execucao cancelada por substituicao de escopo. Estas tarefas foram mantidas
+> apenas como registro historico do planejamento original. A implementacao ativa
+> seguiu pela feature `005-global-shadcn-migration`, e por isso este backlog nao
+> deve ser tratado como trabalho pendente.
+
 **Tests**: A feature nao exige TDD, entao as tarefas priorizam implementacao e validacao guiada proporcional ao risco.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.

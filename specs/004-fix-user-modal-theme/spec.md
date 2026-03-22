@@ -2,8 +2,13 @@
 
 **Feature Branch**: `004-fix-user-modal-theme`  
 **Created**: 2026-03-22  
-**Status**: Draft  
+**Status**: Closed (Superseded by `005-global-shadcn-migration`)  
 **Input**: User description: "A tela de ajuste de dados do usuario loga precisa de um botao para fechar a janela. Ao clicar em salvar email ou senha o usuario é redirecionado para a tela inicial com o modo light selecionado. o comportamente deveria manter o modo selecionado anteriormente."
+
+> Esta especificacao foi encerrada sem implementacao isolada. O escopo foi
+> absorvido e substituido pela feature
+> `005-global-shadcn-migration`, que passou a tratar a aderencia constitucional
+> de componentes e a migracao estrutural do frontend como prioridade superior.
 
 ## Clarifications
 
