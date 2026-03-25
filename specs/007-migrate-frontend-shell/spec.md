@@ -2,7 +2,7 @@
 
 **Feature Branch**: `007-migrate-frontend-shell`  
 **Created**: 2026-03-25  
-**Status**: Draft  
+**Status**: Closed  
 **Input**: User description: "Migre a interface atual do frontend para uma interface estruturada como um painel web com forte organização horizontal, com header global de largura total, navegação principal central, ações do usuário no topo, barra secundária contextual, conteúdo em seções com linhas horizontais e reaproveitamento do conteúdo já existente das páginas atuais."
 
 ## Clarifications
