@@ -11,8 +11,11 @@ html[data-theme="light"] {
   --ds-danger: #c9372c;
   --ds-info: #0c66e4;
   --ds-border: #dfe1e6;
+  --ds-shell-header: rgba(255, 255, 255, 0.88);
+  --ds-shell-accent: rgba(12, 102, 228, 0.12);
   --ds-radius-md: 12px;
   --ds-radius-lg: 18px;
+  --ds-radius-xl: 28px;
   --ds-shadow-soft: 0 12px 40px rgba(15, 23, 42, 0.08);
 }
 
@@ -28,5 +31,7 @@ html[data-theme="dark"] {
   --ds-danger: #fd9891;
   --ds-info: #85b8ff;
   --ds-border: #334155;
+  --ds-shell-header: rgba(17, 24, 39, 0.9);
+  --ds-shell-accent: rgba(133, 184, 255, 0.16);
   --ds-shadow-soft: 0 16px 44px rgba(15, 23, 42, 0.28);
 }

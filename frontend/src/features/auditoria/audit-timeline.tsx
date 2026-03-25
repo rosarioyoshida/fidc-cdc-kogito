@@ -1,5 +1,8 @@
 import React from "react";
+import { DataRowCard } from "@/components/layout/data-row-card";
+import { PageSection } from "@/components/layout/page-section";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { Badge } from "@/components/ui/badge";
 import type { AuditEvent } from "@/features/auditoria/types";
 
 type AuditTimelineProps = {
@@ -28,54 +31,26 @@ export function AuditTimeline({ items }: AuditTimelineProps) {
   }
 
   return (
-    <section className="rounded-lg border bg-surface-raised p-6 shadow-soft">
-      <div className="mb-5">
-        <h2 className="text-xl font-semibold">Linha do tempo auditavel</h2>
-        <p className="text-sm leading-6 text-text-subtle">
-          Evidencias imutaveis por ator, perfil, correlacao e resultado operacional.
-        </p>
-      </div>
-
-      <ol className="grid gap-4">
-        {items.map((item) => (
-          <li key={item.id} className="rounded-lg border bg-surface p-4">
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
-                    {item.tipoEvento}
-                  </span>
-                  <span className="rounded-full bg-surface-raised px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-text-subtle">
-                    {item.resultado}
-                  </span>
-                  {item.etapa ? (
-                    <span className="text-xs font-medium text-text-subtle">{item.etapa}</span>
-                  ) : null}
-                </div>
-                <p className="text-sm text-text">
-                  <span className="font-semibold">{item.atorId}</span>
-                  {" · "}
-                  <span className="text-text-subtle">{item.perfil}</span>
-                </p>
-                {item.detalheRef ? (
-                  <p className="text-sm leading-6 text-text-subtle">{item.detalheRef}</p>
-                ) : null}
-              </div>
-
-              <dl className="grid gap-1 text-sm text-text-subtle md:text-right">
-                <div>
-                  <dt className="font-semibold text-text">Ocorrido em</dt>
-                  <dd>{formatDateTime(item.ocorridoEm)}</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold text-text">Correlation ID</dt>
-                  <dd className="break-all">{item.correlationId}</dd>
-                </div>
-              </dl>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </section>
+    <PageSection
+      title="Linha do tempo auditavel"
+      description="Evidencias imutaveis por ator, perfil, correlacao e resultado operacional."
+    >
+      {items.map((item) => (
+        <DataRowCard
+          key={item.id}
+          leading={<Badge variant="brand">{item.tipoEvento}</Badge>}
+          primary={`${item.atorId} · ${item.perfil}`}
+          secondary={item.detalheRef ?? "Sem detalhe adicional"}
+          columns={[
+            <Badge key="resultado" variant={item.resultado === "SUCESSO" ? "success" : "warning"}>
+              {item.resultado}
+            </Badge>,
+            <span key="etapa">{item.etapa ?? "Sem etapa"}</span>,
+            <span key="ocorrido">{formatDateTime(item.ocorridoEm)}</span>
+          ]}
+          primaryAction={<span className="text-sm text-text-subtle">{item.correlationId}</span>}
+        />
+      ))}
+    </PageSection>
   );
 }

@@ -1,7 +1,14 @@
 import { redirect } from "next/navigation";
+import { AppShell } from "@/components/layout/app-shell";
 import { CessaoList } from "@/features/cessao/cessao-list";
 import { createCessaoAction, listCessoes } from "@/features/cessao/actions";
 import type { Cessao } from "@/features/cessao/types";
+import {
+  buildCessoesSecondaryNavigation,
+  buildPrimaryAction,
+  primaryNavigation
+} from "@/features/navigation/shell-config";
+import { getCurrentUser } from "@/features/security/actions";
 import { ApiError } from "@/lib/api-client";
 
 type CessoesPageProps = {
@@ -15,9 +22,10 @@ export default async function CessoesPage({ searchParams }: CessoesPageProps) {
 
   let items: Cessao[] = [];
   let queryError = errorMessage;
+  let user;
 
   try {
-    items = await listCessoes();
+    [user, items] = await Promise.all([getCurrentUser(), listCessoes()]);
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       redirect(`/?error=${encodeURIComponent(error.message)}`);
@@ -25,20 +33,17 @@ export default async function CessoesPage({ searchParams }: CessoesPageProps) {
     if (!queryError) {
       queryError = error instanceof Error ? error.message : "Falha ao consultar cessoes.";
     }
+    user = await getCurrentUser();
   }
 
   return (
-    <main className="grid gap-6">
-      <header className="flex items-center justify-between rounded-lg border bg-surface-raised p-6 shadow-soft">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
-            Operacao
-          </p>
-          <h1 className="text-3xl font-semibold">Cessoes</h1>
-        </div>
-      </header>
-
+    <AppShell
+      user={user}
+      navigation={primaryNavigation}
+      primaryAction={buildPrimaryAction()}
+      secondaryNav={buildCessoesSecondaryNavigation()}
+    >
       <CessaoList items={items} errorMessage={queryError} createAction={createCessaoAction} />
-    </main>
+    </AppShell>
   );
 }

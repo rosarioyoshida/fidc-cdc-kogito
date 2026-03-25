@@ -1,6 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { DataRowCard } from "@/components/layout/data-row-card";
+import { PageSection } from "@/components/layout/page-section";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Cessao } from "@/features/cessao/types";
@@ -14,23 +17,18 @@ type CessaoListProps = {
 export function CessaoList({ items, errorMessage, createAction }: CessaoListProps) {
   return (
     <div className="grid gap-6">
-      <section className="rounded-lg border bg-surface-raised p-6 shadow-soft">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
-              Nova cessao
-            </p>
-            <h2 className="text-2xl font-semibold">Registrar operacao</h2>
-          </div>
-        </div>
-
-        <form action={createAction} className="grid gap-4 md:grid-cols-4">
+      <PageSection
+        title="Registrar operacao"
+        description="Inicie uma nova cessao sem sair do shell compartilhado."
+        className="rounded-[32px] border border-border/80 bg-surface-raised p-6 shadow-soft"
+      >
+        <form action={createAction} className="grid gap-4 md:grid-cols-4" id="nova-cessao">
           <Input name="businessKey" placeholder="Business key" required />
           <Input name="cedenteId" placeholder="Cedente" required />
           <Input name="cessionariaId" placeholder="Cessionaria" required />
           <Button type="submit">Iniciar cessao</Button>
         </form>
-      </section>
+      </PageSection>
 
       {errorMessage ? (
         <EmptyState title="Falha ao consultar cessoes" description={errorMessage} />
@@ -42,28 +40,29 @@ export function CessaoList({ items, errorMessage, createAction }: CessaoListProp
           description="Registre a primeira operacao para iniciar a jornada operacional da US1."
         />
       ) : (
-        <section className="grid gap-4">
+        <PageSection
+          title="Cessoes ativas"
+          description="Acompanhe status, participantes e acesso rapido ao detalhe de cada operacao."
+        >
           {items.map((item) => (
-            <Link
+            <DataRowCard
               key={item.businessKey}
-              href={`/cessoes/${item.businessKey}`}
-              className="rounded-lg border bg-surface p-5 transition hover:-translate-y-0.5 hover:shadow-soft"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-text-subtle">
-                    {item.status}
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold">{item.businessKey}</h3>
-                  <p className="mt-1 text-sm text-text-subtle">
-                    Cedente {item.cedenteId} • Cessionaria {item.cessionariaId}
-                  </p>
-                </div>
-                <span className="text-sm font-semibold text-brand">Abrir detalhe</span>
-              </div>
-            </Link>
+              leading={<Badge variant="brand">{item.status}</Badge>}
+              primary={item.businessKey}
+              secondary={`Cedente ${item.cedenteId} • Cessionaria ${item.cessionariaId}`}
+              columns={[
+                <span key="workflow">{item.workflowInstanceId ?? "Workflow pendente"}</span>,
+                <span key="importacao">{item.dataImportacao ?? "Sem data de importacao"}</span>,
+                <span key="encerramento">{item.dataEncerramento ?? "Em andamento"}</span>
+              ]}
+              primaryAction={
+                <Button asChild variant="secondary">
+                  <Link href={`/cessoes/${item.businessKey}`}>Abrir detalhe</Link>
+                </Button>
+              }
+            />
           ))}
-        </section>
+        </PageSection>
       )}
     </div>
   );

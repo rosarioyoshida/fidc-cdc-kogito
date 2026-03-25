@@ -83,11 +83,10 @@ describe("analise workspace", () => {
         registrarLastroAction={vi.fn()}
         validarLastrosAction={vi.fn()}
         executarRegistradoraAction={vi.fn()}
-        refreshAction={vi.fn()}
       />
     );
 
-    expect(screen.getByText("Analise da cessao")).toBeInTheDocument();
+    expect(screen.getByText("Analise BK-ANA-001")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Avaliar agora" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Apurar valor" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Registrar lastro" })).toBeInTheDocument();

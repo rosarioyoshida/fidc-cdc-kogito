@@ -74,16 +74,12 @@ describe("cessao flow views", () => {
         cessao={sampleCessao}
         permissionContext={allowedPermissionContext}
         advanceAction={vi.fn()}
-        refreshAction={vi.fn()}
       />
     );
 
     expect(screen.getByText("workflow-BK-UI-001")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Avancar etapa" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Atualizar status" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Abrir auditoria" })).toHaveAttribute(
-      "href",
-      "/cessoes/BK-UI-001/auditoria"
-    );
+    expect(screen.getByText("Etapas operacionais")).toBeInTheDocument();
+    expect(screen.getAllByText("VALIDAR_CEDENTE").length).toBeGreaterThan(0);
   });
 });

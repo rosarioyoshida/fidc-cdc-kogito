@@ -9,7 +9,8 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { CurrentUserAccount } from "@/features/security/user-account-types";
@@ -21,9 +22,17 @@ import { INITIAL_ACCOUNT_ACTION_STATE } from "@/features/security/account-action
 
 type AccountSettingsDialogProps = {
   user: CurrentUserAccount;
+  triggerClassName?: string;
+  triggerLabel?: string;
+  triggerVariant?: "primary" | "secondary" | "subtle";
 };
 
-export function AccountSettingsDialog({ user }: AccountSettingsDialogProps) {
+export function AccountSettingsDialog({
+  user,
+  triggerClassName,
+  triggerLabel = "Ajustes da conta",
+  triggerVariant = "secondary"
+}: AccountSettingsDialogProps) {
   const [open, setOpen] = useState(false);
   const [account, setAccount] = useState(user);
   const [emailState, emailAction, emailPending] = useActionState(
@@ -72,12 +81,13 @@ export function AccountSettingsDialog({ user }: AccountSettingsDialogProps) {
   }, [passwordState, router]);
 
   return (
-    <>
-      <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
-        Ajustes da conta
-      </Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button type="button" variant={triggerVariant} className={triggerClassName} onClick={() => setOpen(true)}>
+          {triggerLabel}
+        </Button>
+      </DialogTrigger>
 
-      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent closeLabel="Fechar ajustes da conta">
           <DialogHeader>
             <DialogTitle>Ajustes da conta</DialogTitle>
@@ -148,7 +158,6 @@ export function AccountSettingsDialog({ user }: AccountSettingsDialogProps) {
             </form>
           </div>
         </DialogContent>
-      </Dialog>
-    </>
+    </Dialog>
   );
 }
