@@ -13,5 +13,8 @@ public interface CessaoRepository extends JpaRepository<Cessao, UUID> {
     @EntityGraph(attributePaths = "etapas")
     Optional<Cessao> findByBusinessKey(String businessKey);
 
+    @EntityGraph(attributePaths = "etapas")
+    Optional<Cessao> findByWorkflowInstanceId(String workflowInstanceId);
+
     List<Cessao> findByStatus(CessaoStatus status);
 }

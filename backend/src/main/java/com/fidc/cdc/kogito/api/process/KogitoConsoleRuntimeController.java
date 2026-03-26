@@ -29,12 +29,17 @@ public class KogitoConsoleRuntimeController {
         this.consoleRuntimeEndpointService = consoleRuntimeEndpointService;
     }
 
+    @GetMapping(path = "/svg/processes/{processId}", produces = "image/svg+xml")
+    public ResponseEntity<String> processDiagram(@PathVariable String processId) {
+        return ResponseEntity.ok(consoleRuntimeEndpointService.processDiagram(processId));
+    }
+
     @GetMapping(path = "/svg/processes/{processId}/instances/{processInstanceId}", produces = "image/svg+xml")
-    public ResponseEntity<String> processDiagram(
+    public ResponseEntity<String> processInstanceDiagram(
             @PathVariable String processId,
             @PathVariable String processInstanceId
     ) {
-        return ResponseEntity.ok(consoleRuntimeEndpointService.processDiagram(processId, processInstanceId));
+        return ResponseEntity.ok(consoleRuntimeEndpointService.processInstanceDiagram(processId, processInstanceId));
     }
 
     @GetMapping(path = "/management/processes/{processId}/source", produces = MediaType.APPLICATION_XML_VALUE)

@@ -3,7 +3,9 @@ package com.fidc.cdc.kogito.integration.console;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +44,12 @@ class KogitoConsoleIntegrationTest extends ApiContractTestBase {
                 .andExpect(jsonPath("$.taskContext.taskConsoleUrl").value("http://localhost:8280"))
                 .andExpect(jsonPath("$.managementContext.processStatus").value("EM_ANDAMENTO"))
                 .andExpect(jsonPath("$.managementContext.currentStage").value("VALIDAR_CEDENTE"))
+                .andExpect(jsonPath("$.managementContext.currentStageLabel").value("02 Validar cedente"))
+                .andExpect(jsonPath("$.managementContext.currentStageSource").value("ACTIVE_STAGE"))
+                .andExpect(jsonPath("$.managementContext.processEndedWithoutActiveStage").value(false))
+                .andExpect(jsonPath("$.managementContext.processSvgAvailable").value(true))
+                .andExpect(jsonPath("$.managementContext.processSvgAuthorized").value(true))
+                .andExpect(jsonPath("$.managementContext.processSvgAvailabilityReason").value("available"))
                 .andExpect(jsonPath("$.managementContext.availableAdminActions", hasItem("INSPECT_HUMAN_TASK")))
                 .andExpect(jsonPath("$.managementContext.managementConsoleUrl").value("http://localhost:8380"))
                 .andExpect(jsonPath("$.managementContext.dataIndexUrl").value("http://localhost:8180/graphql"))
@@ -134,6 +142,38 @@ class KogitoConsoleIntegrationTest extends ApiContractTestBase {
                 .andExpect(jsonPath("$.taskContext.humanTaskPending").value(false))
                 .andExpect(jsonPath("$.taskContext.currentStage").value("ENCERRAR_CESSAO"))
                 .andExpect(jsonPath("$.managementContext.processStatus").value("CONCLUIDA"))
-                .andExpect(jsonPath("$.managementContext.currentStage").value("ENCERRAR_CESSAO"));
+                .andExpect(jsonPath("$.managementContext.currentStage").value("ENCERRAR_CESSAO"))
+                .andExpect(jsonPath("$.managementContext.currentStageLabel").value("Encerrar cessao"))
+                .andExpect(jsonPath("$.managementContext.currentStageSource").value("LAST_COMPLETED_STAGE"))
+                .andExpect(jsonPath("$.managementContext.processEndedWithoutActiveStage").value(true))
+                .andExpect(jsonPath("$.managementContext.processSvgAvailable").value(true))
+                .andExpect(jsonPath("$.managementContext.processSvgAvailabilityReason").value("available"));
+    }
+
+    @Test
+    void shouldAcceptKeycloakJwtOnProtectedManagementMutation() throws Exception {
+        mockMvc.perform(delete("/management/processes/controle-cessao/instances/11111111-1111-1111-1111-111111111111")
+                        .with(jwt().jwt(jwt -> jwt.claim("preferred_username", "kogito-admin"))))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldAbortExistingProcessInstanceWithKeycloakJwt() throws Exception {
+        String workflowInstanceId = objectMapper.readTree(
+                        mockMvc.perform(post("/api/v1/cessoes")
+                                        .with(httpBasic("operador", "operador123"))
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(new CessaoRequest("BK-CONSOLE-ABORT", "CED-01", "CESS-01"))))
+                                .andExpect(status().isCreated())
+                                .andReturn()
+                                .getResponse()
+                                .getContentAsString()
+                )
+                .path("workflowInstanceId")
+                .asText();
+
+        mockMvc.perform(delete("/management/processes/controle-cessao/instances/{processInstanceId}", workflowInstanceId)
+                        .with(jwt().jwt(jwt -> jwt.claim("preferred_username", "kogito-admin"))))
+                .andExpect(status().isOk());
     }
 }

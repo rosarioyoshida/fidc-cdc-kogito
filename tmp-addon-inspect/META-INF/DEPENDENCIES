@@ -1,0 +1,346 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+KIE :: Add-Ons :: Process Management :: Spring Boot Addon
+
+
+From: 'an unknown organization'
+
+  - javaparser-core (https://github.com/javaparser/javaparser-core) com.github.javaparser:javaparser-core:jar:3.26.1
+    License: GNU Lesser General Public License  (http://www.gnu.org/licenses/lgpl-3.0.html)
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - FindBugs-jsr305 (http://findbugs.sourceforge.net/) com.google.code.findbugs:jsr305:jar:3.0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Gson (https://github.com/google/gson/gson) com.google.code.gson:gson:jar:2.10.1
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Guava InternalFutureFailureAccess and InternalFutures (https://github.com/google/guava/failureaccess) com.google.guava:failureaccess:bundle:1.0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Guava: Google Core Libraries for Java (https://github.com/google/guava) com.google.guava:guava:bundle:33.0.0-jre
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Guava ListenableFuture only (https://github.com/google/guava/listenablefuture) com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - J2ObjC Annotations (https://github.com/google/j2objc/) com.google.j2objc:j2objc-annotations:jar:2.8
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Protocol Buffers [Core] (https://developers.google.com/protocol-buffers/protobuf-java/) com.google.protobuf:protobuf-java:jar:3.25.5
+    License: BSD-3-Clause  (https://opensource.org/licenses/BSD-3-Clause)
+
+  - Protocol Buffers [Util] (https://developers.google.com/protocol-buffers/protobuf-java-util/) com.google.protobuf:protobuf-java-util:jar:3.25.5
+    License: BSD-3-Clause  (https://opensource.org/licenses/BSD-3-Clause)
+
+  - CloudEvents - API (https://cloudevents.github.io/sdk-java/cloudevents-api/) io.cloudevents:cloudevents-api:jar:2.3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - CloudEvents - Core (https://cloudevents.github.io/sdk-java/cloudevents-core/) io.cloudevents:cloudevents-core:jar:2.3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - CloudEvents - JSON Jackson (https://cloudevents.github.io/sdk-java/cloudevents-json-jackson/) io.cloudevents:cloudevents-json-jackson:jar:2.3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - micrometer-commons (https://github.com/micrometer-metrics/micrometer) io.micrometer:micrometer-commons:jar:1.14.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - micrometer-observation (https://github.com/micrometer-metrics/micrometer) io.micrometer:micrometer-observation:jar:1.14.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - tomcat-embed-core (https://tomcat.apache.org/) org.apache.tomcat.embed:tomcat-embed-core:jar:10.1.36
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - tomcat-embed-el (https://tomcat.apache.org/) org.apache.tomcat.embed:tomcat-embed-el:jar:10.1.36
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - tomcat-embed-websocket (https://tomcat.apache.org/) org.apache.tomcat.embed:tomcat-embed-websocket:jar:10.1.36
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Checker Qual (https://checkerframework.org/) org.checkerframework:checker-qual:jar:3.41.0
+    License: The MIT License  (http://opensource.org/licenses/MIT)
+
+  - SnakeYAML (https://bitbucket.org/snakeyaml/snakeyaml) org.yaml:snakeyaml:bundle:2.3
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'ANTLR' (http://www.antlr.org)
+
+  - ANTLR 3 Runtime (http://www.antlr.org) org.antlr:antlr-runtime:jar:3.5.2
+    License: BSD licence  (http://antlr.org/license.html)
+
+  - ANTLR 4 Runtime (http://www.antlr.org/antlr4-runtime) org.antlr:antlr4-runtime:jar:4.10.1
+    License: The BSD License  (http://www.antlr.org/license.html)
+
+
+From: 'Eclipse Foundation' (https://www.eclipse.org)
+
+  - Jakarta Annotations API (https://projects.eclipse.org/projects/ee4j.ca) jakarta.annotation:jakarta.annotation-api:jar:2.1.1
+    License: EPL 2.0  (http://www.eclipse.org/legal/epl-2.0)
+    License: GPL2 w/ CPE  (https://www.gnu.org/software/classpath/license.html)
+
+
+From: 'Eclipse Foundation' (https://www.eclipse.org/)
+
+  - Eclipse Compiler for Java(TM) (https://projects.eclipse.org/projects/eclipse.jdt) org.eclipse.jdt:ecj:jar:3.33.0
+    License: Eclipse Public License - v 2.0  (https://www.eclipse.org/legal/epl-2.0/)
+
+
+From: 'FasterXML' (http://fasterxml.com/)
+
+  - Jackson-annotations (https://github.com/FasterXML/jackson) com.fasterxml.jackson.core:jackson-annotations:jar:2.17.2
+    License: The Apache Software License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Jackson-core (https://github.com/FasterXML/jackson-core) com.fasterxml.jackson.core:jackson-core:jar:2.17.2
+    License: The Apache Software License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - jackson-databind (https://github.com/FasterXML/jackson) com.fasterxml.jackson.core:jackson-databind:jar:2.17.2
+    License: The Apache Software License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Jackson datatype: jdk8 (https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8) com.fasterxml.jackson.datatype:jackson-datatype-jdk8:bundle:2.17.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Jackson datatype: JSR310 (https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310) com.fasterxml.jackson.datatype:jackson-datatype-jsr310:bundle:2.17.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Jackson-module-parameter-names (https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names) com.fasterxml.jackson.module:jackson-module-parameter-names:bundle:2.17.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'Google LLC' (http://www.google.com)
+
+  - error-prone annotations (https://errorprone.info/error_prone_annotations) com.google.errorprone:error_prone_annotations:jar:2.18.0
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'JBoss by Red Hat' (http://www.jboss.org)
+
+  - JBoss Logging 3 (http://www.jboss.org) org.jboss.logging:jboss-logging:jar:3.6.1.Final
+    License: Apache License 2.0  (https://repository.jboss.org/licenses/apache-2.0.txt)
+
+
+From: 'JBoss by Red Hat' (http://www.jboss.org/)
+
+  - mvel (http://mvel.codehaus.org/) org.mvel:mvel2:jar:2.5.2.Final
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'JBoss, a division of Red Hat' (http://www.jboss.org)
+
+  - ProtoStream - core (https://github.com/infinispan/protostream) org.infinispan.protostream:protostream:jar:5.0.8.Final
+    License: Apache License 2.0  (https://apache.org/licenses/LICENSE-2.0)
+
+
+From: 'QOS.ch' (http://www.qos.ch)
+
+  - JUL to SLF4J bridge (http://www.slf4j.org) org.slf4j:jul-to-slf4j:jar:2.0.16
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+
+  - SLF4J API Module (http://www.slf4j.org) org.slf4j:slf4j-api:jar:2.0.6
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+
+
+From: 'Spring IO' (https://spring.io/projects/spring-framework)
+
+  - Spring AOP (https://github.com/spring-projects/spring-framework) org.springframework:spring-aop:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Beans (https://github.com/spring-projects/spring-framework) org.springframework:spring-beans:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Context (https://github.com/spring-projects/spring-framework) org.springframework:spring-context:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Core (https://github.com/spring-projects/spring-framework) org.springframework:spring-core:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Expression Language (SpEL) (https://github.com/spring-projects/spring-framework) org.springframework:spring-expression:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Commons Logging Bridge (https://github.com/spring-projects/spring-framework) org.springframework:spring-jcl:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Web (https://github.com/spring-projects/spring-framework) org.springframework:spring-web:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - Spring Web MVC (https://github.com/spring-projects/spring-framework) org.springframework:spring-webmvc:jar:6.2.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+
+From: 'The Apache Software Foundation' (https://apache.org/)
+
+  - Drools :: base (http://www.drools.org/drools-build-parent/drools-base) org.drools:drools-base:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Canonical Model (http://www.drools.org/drools-build-parent/drools-model/drools-canonical-model) org.drools:drools-canonical-model:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Codegen :: Common (http://www.drools.org/drools-build-parent/drools-model/drools-codegen-common) org.drools:drools-codegen-common:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Compiler (http://www.drools.org/drools-build-parent/drools-compiler) org.drools:drools-compiler:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Core (http://www.drools.org/drools-build-parent/drools-core) org.drools:drools-core:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: DRL AST (http://www.drools.org/drools-build-parent/drools-drl/drools-drl-ast) org.drools:drools-drl-ast:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: DRL :: Extensions (http://www.drools.org/drools-build-parent/drools-drl/drools-drl-extensions) org.drools:drools-drl-extensions:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: DRL :: Parser (http://www.drools.org/drools-build-parent/drools-drl/drools-drl-parser) org.drools:drools-drl-parser:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: ECJ (http://www.drools.org/drools-build-parent/drools-ecj) org.drools:drools-ecj:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: IO (http://www.drools.org/drools-build-parent/drools-io) org.drools:drools-io:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: KieSession (http://www.drools.org/drools-build-parent/drools-kiesession) org.drools:drools-kiesession:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Model :: Codegen (http://www.drools.org/drools-build-parent/drools-model/drools-model-codegen) org.drools:drools-model-codegen:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Model :: Compiler (http://www.drools.org/drools-build-parent/drools-model/drools-model-compiler) org.drools:drools-model-compiler:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Canonical Model :: Prototype (http://www.drools.org/drools-build-parent/drools-model/drools-model-prototype) org.drools:drools-model-prototype:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: MVEL (http://www.drools.org/drools-build-parent/drools-mvel) org.drools:drools-mvel:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: MVEL Compiler (http://www.drools.org/drools-build-parent/drools-model/drools-mvel-compiler) org.drools:drools-mvel-compiler:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: MVEL Parser (http://www.drools.org/drools-build-parent/drools-model/drools-mvel-parser) org.drools:drools-mvel-parser:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Rule Units :: API (http://www.drools.org/drools-build-parent/drools-ruleunits/drools-ruleunits-api) org.drools:drools-ruleunits-api:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Rule Units :: Implementation (http://www.drools.org/drools-build-parent/drools-ruleunits/drools-ruleunits-impl) org.drools:drools-ruleunits-impl:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Util (http://www.drools.org/drools-build-parent/drools-util) org.drools:drools-util:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Wiring :: API (http://www.drools.org/drools-build-parent/drools-wiring/drools-wiring-api) org.drools:drools-wiring-api:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Drools :: Wiring :: Static (http://www.drools.org/drools-build-parent/drools-wiring/drools-wiring-static) org.drools:drools-wiring-static:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Add-Ons :: Process Management :: Common (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-addons/kogito-addons-common-parent/kie-addons-process-management) org.kie:kie-addons-process-management:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Rest Exception Handler :: Common (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-addons/kogito-addons-common-parent/kie-addons-rest-exception-handler) org.kie:kie-addons-rest-exception-handler:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Rest Exception Handler:: Spring Boot (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/springboot/kogito-addons-springboot-parent/kie-addons-springboot-rest-exception-handler) org.kie:kie-addons-springboot-rest-exception-handler:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Public API (http://www.drools.org/drools-build-parent/kie-api) org.kie:kie-api:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Internal (http://www.drools.org/drools-build-parent/kie-internal) org.kie:kie-internal:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Memory Compiler (http://www.drools.org/drools-build-parent/kie-memory-compiler) org.kie:kie-memory-compiler:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Util :: Maven Support (http://www.drools.org/drools-build-parent/kie-util/kie-util-maven-support) org.kie:kie-util-maven-support:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - KIE :: Util :: XML supposrt (http://www.drools.org/drools-build-parent/kie-util/kie-util-xml) org.kie:kie-util-xml:jar:10.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: jBPM :: Dependencies Groups :: Engine (http://www.jbpm.org/jbpm-deps-groups/jbpm-deps-group-engine) org.kie.kogito:jbpm-deps-group-engine:pom:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: jBPM :: Flow (http://www.jbpm.org/jbpm-flow) org.kie.kogito:jbpm-flow:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - jbpm-flow-migration (http://www.jbpm.org/jbpm-flow-migration) org.kie.kogito:jbpm-flow-migration:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: jBPM :: User Task (http://www.jbpm.org/jbpm-usertask) org.kie.kogito:jbpm-usertask:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: jBPM :: User Task WorkItem (http://www.jbpm.org/jbpm-usertask-workitem) org.kie.kogito:jbpm-usertask-workitem:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: API :: Public API (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-api-parent/kogito-api) org.kie.kogito:kogito-api:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: Drools :: Kogito Drools (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/drools/kogito-drools) org.kie.kogito:kogito-drools:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: API :: Events (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-api-parent/kogito-events-api) org.kie.kogito:kogito-events-api:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: API :: Events (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-api-parent/kogito-events-core) org.kie.kogito:kogito-events-core:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: Workitems :: Jackson utils (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-workitems/kogito-jackson-utils) org.kie.kogito:kogito-jackson-utils:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: API :: Services (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-api-parent/kogito-services) org.kie.kogito:kogito-services:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: API :: Timer (http://kogito.kie.org/kogito-build/kogito-dependencies-bom/kogito-build-no-bom-parent/kogito-build-parent/kogito-api-parent/kogito-timer) org.kie.kogito:kogito-timer:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: Process :: Protobuf Serialization (http://www.jbpm.org/process-serialization-protobuf) org.kie.kogito:process-serialization-protobuf:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Kogito :: jBPM :: WorkItems (http://www.jbpm.org/process-workitems) org.kie.kogito:process-workitems:jar:10.1.0
+    License: Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'The Apache Software Foundation' (https://www.apache.org/)
+
+  - Apache Commons Codec (https://commons.apache.org/proper/commons-codec/) commons-codec:commons-codec:jar:1.17.2
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Apache Log4j API (https://logging.apache.org/log4j/2.x/log4j/log4j-api/) org.apache.logging.log4j:log4j-api:jar:2.24.3
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+  - Log4j API to SLF4J Adapter (https://logging.apache.org/log4j/2.x/log4j/log4j-to-slf4j/) org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+
+From: 'VMware, Inc.' (https://spring.io)
+
+  - spring-boot (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-autoconfigure (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-autoconfigure:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-starter (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-starter:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-starter-json (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-starter-json:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-starter-logging (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-starter-logging:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-starter-tomcat (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-starter-tomcat:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+  - spring-boot-starter-web (https://spring.io/projects/spring-boot) org.springframework.boot:spring-boot-starter-web:jar:3.4.3
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+
+
+
+

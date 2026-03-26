@@ -99,6 +99,42 @@ public class CessaoEventPublisher {
         readModelProjector.projectCurrentState(cessao.getBusinessKey(), "TIMER_AGENDADO");
     }
 
+    public void publishProcessAborted(
+            Cessao cessao,
+            KogitoProcessSnapshot snapshot,
+            KogitoTaskSnapshot abortedTask,
+            String actorId
+    ) {
+        domainEventPublisher.publishKogitoProcessVariables(cessao, snapshot);
+        domainEventPublisher.publishProcessEvent(
+                cessao.getBusinessKey(),
+                "PROCESSO_ABORTADO",
+                Map.of(
+                        "businessKey", cessao.getBusinessKey(),
+                        "status", cessao.getStatus().name(),
+                        "workflowInstanceId", cessao.getWorkflowInstanceId()
+                )
+        );
+        domainEventPublisher.publishKogitoProcessState(
+                cessao,
+                snapshot,
+                actorId,
+                org.kie.kogito.event.process.ProcessInstanceStateEventBody.EVENT_TYPE_ENDED
+        );
+        if (abortedTask != null) {
+            domainEventPublisher.publishKogitoProcessNodeExited(cessao, snapshot, abortedTask, actorId);
+            domainEventPublisher.publishKogitoUserTaskState(
+                    cessao,
+                    snapshot,
+                    abortedTask,
+                    actorId,
+                    "Aborted",
+                    "ABORTED"
+            );
+        }
+        readModelProjector.projectCurrentState(cessao.getBusinessKey(), "PROCESSO_ABORTADO");
+    }
+
     private void publishCurrentTask(Cessao cessao, KogitoProcessSnapshot snapshot, String eventType, String actorId) {
         if (snapshot.activeTask() != null) {
             domainEventPublisher.publishKogitoProcessNodeEntered(cessao, snapshot, snapshot.activeTask(), actorId);

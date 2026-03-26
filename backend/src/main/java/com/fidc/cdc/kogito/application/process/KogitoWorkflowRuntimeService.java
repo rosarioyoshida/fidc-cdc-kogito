@@ -5,35 +5,15 @@ import com.fidc.cdc.kogito.api.error.BusinessConflictException;
 import com.fidc.cdc.kogito.api.error.ResourceNotFoundException;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import java.util.EnumMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import org.kie.kogito.Addons;
-import org.kie.kogito.StaticApplication;
-import org.kie.kogito.StaticConfig;
-import org.kie.kogito.auth.IdentityProviders;
-import org.kie.kogito.jobs.JobDescription;
-import org.kie.kogito.jobs.JobsService;
 import org.kie.kogito.process.bpmn2.BpmnProcess;
-import org.kie.kogito.process.bpmn2.BpmnProcesses;
 import org.kie.kogito.process.bpmn2.BpmnVariables;
-import org.kie.kogito.process.impl.StaticProcessConfig;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.Signal;
 import org.kie.kogito.process.WorkItem;
 import org.kie.kogito.usertask.UserTask;
-import org.kie.kogito.usertask.impl.DefaultUserTaskAssignmentStrategyConfig;
-import org.kie.kogito.usertask.impl.DefaultUserTaskConfig;
-import org.kie.kogito.usertask.impl.DefaultUserTaskEventListenerConfig;
-import org.kie.kogito.usertask.impl.DefaultUserTask;
-import org.kie.kogito.usertask.impl.DefaultUserTasks;
-import org.kie.kogito.usertask.impl.InMemoryUserTaskInstances;
-import org.kie.kogito.usertask.impl.lifecycle.DefaultUserTaskLifeCycle;
-import org.kie.kogito.services.uow.CollectingUnitOfWorkFactory;
-import org.kie.kogito.services.uow.DefaultUnitOfWorkManager;
-import org.kie.internal.io.ResourceFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -52,20 +32,8 @@ public class KogitoWorkflowRuntimeService {
 
     private final BpmnProcess process;
 
-    public KogitoWorkflowRuntimeService() {
-        BpmnProcess parsedProcess = BpmnProcess.from(ResourceFactory.newClassPathResource("processes/controle-cessao.bpmn"))
-                .stream()
-                .filter(candidate -> PROCESS_ID.equals(candidate.id()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Processo BPMN controle-cessao nao encontrado."));
-
-        StaticProcessConfig processConfig = new StaticProcessConfig();
-        RuntimeApplication application = new RuntimeApplication(buildConfig(processConfig));
-        application.register(new BpmnProcesses());
-        application.register(new DefaultUserTasks(application, buildUserTasks(application)));
-
-        this.process = new BpmnProcess(parsedProcess.process(), processConfig, application);
-        this.process.activate();
+    public KogitoWorkflowRuntimeService(BpmnProcess process) {
+        this.process = process;
     }
 
     public KogitoProcessSnapshot startProcess(CessaoRequest request) {
@@ -130,6 +98,14 @@ public class KogitoWorkflowRuntimeService {
         return toSnapshot(instance);
     }
 
+    public KogitoProcessSnapshot abortProcess(String processInstanceId) {
+        ProcessInstance<BpmnVariables> instance = process.instances()
+                .findById(processInstanceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Instancia do processo Kogito nao encontrada."));
+        instance.abort();
+        return toSnapshot(instance);
+    }
+
     private KogitoProcessSnapshot toSnapshot(ProcessInstance<BpmnVariables> instance) {
         KogitoTaskSnapshot activeTask = instance.workItems()
                 .stream()
@@ -180,32 +156,6 @@ public class KogitoWorkflowRuntimeService {
         return value == null ? null : value.toString();
     }
 
-    private UserTask[] buildUserTasks(RuntimeApplication application) {
-        List<UserTask> tasks = new ArrayList<>();
-        tasks.add(createUserTask(application, "task-01", "IMPORTAR_CARTEIRA", "OPERADOR", "AUDITOR"));
-        tasks.add(createUserTask(application, "task-02", "VALIDAR_CEDENTE", "OPERADOR", "AUDITOR"));
-        tasks.add(createUserTask(application, "task-03", "ANALISAR_ELEGIBILIDADE", "ANALISTA", "AUDITOR"));
-        tasks.add(createUserTask(application, "task-10", "COLETAR_TERMO_ACEITE", "ANALISTA", "AUDITOR"));
-        tasks.add(createUserTask(application, "task-11", "VALIDAR_LASTROS", "ANALISTA", "AUDITOR"));
-        tasks.add(createUserTask(application, "task-12", "AUTORIZAR_PAGAMENTO", "APROVADOR", "AUDITOR"));
-        return tasks.toArray(UserTask[]::new);
-    }
-
-    private UserTask createUserTask(
-            RuntimeApplication application,
-            String id,
-            String referenceName,
-            String groupId,
-            String adminGroupId
-    ) {
-        DefaultUserTask task = new DefaultUserTask(application, id, referenceName);
-        task.setTaskName(referenceName);
-        task.setReferenceName(referenceName);
-        task.setPotentialGroups(groupId);
-        task.setAdminGroups(adminGroupId);
-        return task;
-    }
-
     public static String nodeIdFor(EtapaCessaoNome etapa) {
         return NODE_IDS.get(etapa);
     }
@@ -224,19 +174,6 @@ public class KogitoWorkflowRuntimeService {
 
     public static Set<String> consoleAdminUsers() {
         return CONSOLE_ADMIN_USERS;
-    }
-
-    private StaticConfig buildConfig(StaticProcessConfig processConfig) {
-        DefaultUserTaskConfig userTaskConfig = new DefaultUserTaskConfig(
-                new DefaultUserTaskEventListenerConfig(),
-                new DefaultUnitOfWorkManager(new CollectingUnitOfWorkFactory()),
-                new NoOpJobsService(),
-                IdentityProviders.of("workflow-engine", "SYSTEM"),
-                new DefaultUserTaskLifeCycle(),
-                new DefaultUserTaskAssignmentStrategyConfig(),
-                new InMemoryUserTaskInstances()
-        );
-        return new StaticConfig(Addons.EMTPY, userTaskConfig, processConfig);
     }
 
     private static Map<EtapaCessaoNome, String> buildNodeIds() {
@@ -281,30 +218,6 @@ public class KogitoWorkflowRuntimeService {
         mapping.put(EtapaCessaoNome.VALIDAR_LASTROS, "AUDITOR");
         mapping.put(EtapaCessaoNome.AUTORIZAR_PAGAMENTO, "AUDITOR");
         return mapping;
-    }
-
-    private static final class RuntimeApplication extends StaticApplication {
-
-        private RuntimeApplication(StaticConfig config) {
-            super(config);
-        }
-
-        private void register(org.kie.kogito.KogitoEngine engine) {
-            loadEngine(engine);
-        }
-    }
-
-    private static final class NoOpJobsService implements JobsService {
-
-        @Override
-        public String scheduleJob(JobDescription jobDescription) {
-            return UUID.randomUUID().toString();
-        }
-
-        @Override
-        public boolean cancelJob(String id) {
-            return true;
-        }
     }
 
     private record RuntimeSignal<T>(String channel, T payload, String referenceId) implements Signal<T> {

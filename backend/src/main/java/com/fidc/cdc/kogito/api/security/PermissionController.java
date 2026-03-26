@@ -42,6 +42,10 @@ public class PermissionController {
         ManagementConsoleContext managementContext = managementConsoleSupport.describeProcessContext(businessKey);
         processMetricsService.registerConsoleAccess("task-console", "context-served");
         processMetricsService.registerConsoleAccess("management-console", "context-served");
+        processMetricsService.registerConsoleAccess(
+                "management-console",
+                managementContext.processSvgAvailable() ? "process-svg-eligible" : managementContext.processSvgAvailabilityReason()
+        );
 
         return ResponseEntity.ok(Map.of(
                 "actorId", snapshot.actorId(),

@@ -33,20 +33,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DomainEventPublisher {
+    private static final Set<String> KOGITO_ADDONS = Set.of(
+            "persistence",
+            "monitoring",
+            "jobs-service",
+            "task-console",
+            "management-console",
+            "process-management",
+            "process-svg"
+    );
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final KafkaTopicsProperties topicsProperties;
-    private final String runtimePublicServiceUrl;
+    private final String runtimeInternalServiceUrl;
     private final AtomicBoolean processDefinitionPublished = new AtomicBoolean();
 
     public DomainEventPublisher(
             KafkaTemplate<String, Object> kafkaTemplate,
             KafkaTopicsProperties topicsProperties,
-            @Value("${fidc.runtime.public-service-url}") String runtimePublicServiceUrl
+            @Value("${fidc.runtime.internal-service-url}") String runtimeInternalServiceUrl
     ) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicsProperties = topicsProperties;
-        this.runtimePublicServiceUrl = trimTrailingSlash(runtimePublicServiceUrl);
+        this.runtimeInternalServiceUrl = trimTrailingSlash(runtimeInternalServiceUrl);
     }
 
     public void publishProcessEvent(String businessKey, String eventType, Map<String, ?> attributes) {
@@ -88,8 +97,8 @@ public class DomainEventPublisher {
                 .setVersion(KogitoWorkflowRuntimeService.PROCESS_VERSION)
                 .setType(KogitoWorkflowRuntimeService.PROCESS_TYPE)
                 .setRoles(Set.of("OPERADOR", "ANALISTA", "APROVADOR", "AUDITOR", "INTEGRACAO"))
-                .setAddons(Set.of("persistence", "monitoring", "jobs-service", "task-console", "management-console"))
-                .setEndpoint(publicRuntimeBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID))
+                .setAddons(KOGITO_ADDONS)
+                .setEndpoint(runtimeServiceBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID))
                 .setSource("fidc-cdc-kogito")
                 .setDescription("Fluxo operacional de cessao de FIDC.")
                 .setAnnotations(Set.of())
@@ -135,6 +144,7 @@ public class DomainEventPublisher {
                 processMetadata(snapshot),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(processRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         kafkaTemplate.send(topicsProperties.getKogitoProcessInstances(), snapshot.processInstanceId(), event);
@@ -173,6 +183,7 @@ public class DomainEventPublisher {
                 processMetadata(snapshot),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(processRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         kafkaTemplate.send(topicsProperties.getKogitoProcessInstances(), snapshot.processInstanceId(), event);
@@ -204,6 +215,7 @@ public class DomainEventPublisher {
                 processMetadata(snapshot),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(processRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         kafkaTemplate.send(topicsProperties.getKogitoProcessInstances(), snapshot.processInstanceId(), event);
@@ -243,6 +255,7 @@ public class DomainEventPublisher {
                 userTaskMetadata(snapshot, task, state),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(taskRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         kafkaTemplate.send(topicsProperties.getKogitoUserTaskInstances(), task.id(), event);
@@ -312,6 +325,7 @@ public class DomainEventPublisher {
                 processMetadata(snapshot),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(processRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         event.setKogitoVariableName(variableName);
@@ -346,6 +360,7 @@ public class DomainEventPublisher {
                 userTaskMetadata(snapshot, task, task.state()),
                 body
         );
+        event.setKogitoAddons(String.join(",", KOGITO_ADDONS));
         event.setSource(URI.create(taskRuntimeEndpoint(cessao)));
         event.setKogitoBusinessKey(snapshot.businessKey());
         kafkaTemplate.send(topicsProperties.getKogitoUserTaskInstances(), task.id(), event);
@@ -372,15 +387,15 @@ public class DomainEventPublisher {
     }
 
     private String processRuntimeEndpoint(Cessao cessao) {
-        return publicRuntimeBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID + "/" + cessao.getBusinessKey());
+        return runtimeServiceBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID + "/" + cessao.getBusinessKey());
     }
 
     private String taskRuntimeEndpoint(Cessao cessao) {
-        return publicRuntimeBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID + "/" + cessao.getBusinessKey());
+        return runtimeServiceBase("/" + KogitoWorkflowRuntimeService.PROCESS_ID + "/" + cessao.getBusinessKey());
     }
 
-    private String publicRuntimeBase(String path) {
-        return runtimePublicServiceUrl + path;
+    private String runtimeServiceBase(String path) {
+        return runtimeInternalServiceUrl + path;
     }
 
     private String trimTrailingSlash(String url) {
