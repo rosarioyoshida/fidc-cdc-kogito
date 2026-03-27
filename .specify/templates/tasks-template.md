@@ -71,10 +71,6 @@ Examples of foundational tasks (adjust based on your project):
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
-Foundation MUST include the cross-cutting controls required by the constitution when
-applicable: security controls, compliance evidence, observability, audit trails, UX
-guardrails, maintainability constraints, scalability readiness, and performance baselines.
-
 ---
 
 ## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
@@ -156,24 +152,9 @@ guardrails, maintainability constraints, scalability readiness, and performance 
 
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Maintainability improvements and dependency boundary review
-- [ ] TXXX Scalability validation and capacity bottleneck review
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening
-- [ ] TXXX Compliance and audit trail validation
-- [ ] TXXX [P] Observability and alerting verification
-- [ ] TXXX REST resource naming and URI convention validation
-- [ ] TXXX REST API versioning and deprecation policy validation
-- [ ] TXXX HATEOAS link relation and hypermedia response validation
-- [ ] TXXX RFC 9457 problem details contract validation
-- [ ] TXXX Validate reuse of existing shadcn/ui and `frontend/src/components/ui` components before creating new ones
-- [ ] TXXX Registrar justificativa de excecao de novo componente no template de revisao do PR e obter aprovacao de arquitetura
-- [ ] TXXX UI/UX and accessibility refinements
-- [ ] TXXX Semantic color and visual hierarchy validation
-- [ ] TXXX Design System token/component alignment and documentation updates
-- [ ] TXXX React/Next.js/TypeScript component implementation and frontend architecture alignment
-- [ ] TXXX shadcn/ui adaptation to adopted Design System tokens, variants, and states
 - [ ] TXXX Run quickstart.md validation
 
 ---
@@ -268,23 +249,3 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
-- Include explicit tasks for security, compliance, observability, auditability,
-  maintainability, scalability, performance, and UI/UX whenever the feature scope
-  requires them
-- Include explicit tasks for semantic color mapping, contrast, hierarchy of
-  information, and consistency of interaction patterns whenever the feature has UI
-- Include explicit tasks for Design System compliance, token reuse, component
-  documentation, and accessibility validation whenever the feature has UI
-- Include explicit tasks for component reuse checks and PR component-exception
-  justification when new UI components are proposed, including review of
-  `frontend/src/components/ui`
-- Include explicit tasks for React, Next.js, TypeScript, shadcn/ui adaptation, and
-  Atlassian-aligned component states/variants whenever the feature has web UI
-- Include explicit tasks for REST resource naming, URI hierarchy, query parameter
-  conventions, and HTTP method alignment whenever the feature exposes REST APIs
-- Include explicit tasks for REST API versioning, breaking-change policy, and
-  deprecation or compatibility handling whenever the feature exposes REST APIs
-- Include explicit tasks for HATEOAS link modeling, `rel` semantics, and hypermedia
-  response validation whenever the feature requires dynamic REST navigation
-- Include explicit tasks for RFC 9457 error payloads, problem type URIs, and
-  extension member validation whenever the feature exposes REST APIs

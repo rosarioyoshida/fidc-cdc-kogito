@@ -2,7 +2,7 @@
 
 **Feature Branch**: `008-management-process-svg`  
 **Created**: 2026-03-25  
-**Status**: Draft  
+**Status**: Closed  
 **Input**: User description: "adicionar no management console o addon Process SVG para exibicao do fluxo em formato svg e a indicacao de qual etapa o fluxo se encontrada."
 
 ## Clarifications
