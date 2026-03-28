@@ -1,20 +1,20 @@
 package com.fidc.cdc.kogito.application.process;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.kie.kogito.process.ProcessInstance;
+import org.kie.kogito.process.Signal;
+import org.kie.kogito.process.WorkItem;
+import org.kie.kogito.process.bpmn2.BpmnProcess;
+import org.kie.kogito.process.bpmn2.BpmnVariables;
+import org.springframework.stereotype.Service;
+
 import com.fidc.cdc.kogito.api.cessao.CessaoRequest;
 import com.fidc.cdc.kogito.api.error.BusinessConflictException;
 import com.fidc.cdc.kogito.api.error.ResourceNotFoundException;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.kie.kogito.process.bpmn2.BpmnProcess;
-import org.kie.kogito.process.bpmn2.BpmnVariables;
-import org.kie.kogito.process.ProcessInstance;
-import org.kie.kogito.process.Signal;
-import org.kie.kogito.process.WorkItem;
-import org.kie.kogito.usertask.UserTask;
-import org.springframework.stereotype.Service;
 
 @Service
 public class KogitoWorkflowRuntimeService {
