@@ -74,6 +74,8 @@
 
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
+- If Java APIs are affected, how are `null`, empty collections, invalid ranges,
+  ordering, ownership, and documented exceptions represented in Javadoc?
 
 ## Requirements *(mandatory)*
 
@@ -89,59 +91,18 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-006**: If the feature introduces or changes Java classes, each affected
+  class MUST include Javadoc written as an API contract, including relevant
+  `@param`, `@return`, `@throws`, nullability, limits, side effects, and
+  thread-safety guarantees when applicable.
+- **FR-007**: If the feature introduces or changes Java classes, generated
+  Javadoc MUST be validated before completion, including DocLint checks and a
+  review of the rendered output for invalid markup or broken references.
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
-
-### Non-Functional Requirements *(mandatory)*
-
-- **NFR-001**: The solution MUST document security controls, sensitive data handling,
-  and authorization expectations for the feature.
-- **NFR-002**: The solution MUST document applicable compliance, retention, and audit
-  trail requirements.
-- **NFR-003**: The solution MUST define required observability signals, including logs,
-  metrics, tracing/correlation, or equivalent operational telemetry.
-- **NFR-004**: The solution MUST define maintainability expectations, including module
-  boundaries, ownership, change impact, or equivalent evolution constraints.
-- **NFR-005**: The solution MUST define scalability expectations, expected growth, and
-  relevant capacity or bottleneck assumptions.
-- **NFR-006**: The solution MUST define measurable performance expectations for the
-  primary workflows.
-- **NFR-007**: User-facing changes MUST define usability, accessibility, and UI/UX
-  expectations proportional to the feature scope.
-- **NFR-008**: User-facing changes MUST define visual hierarchy, spacing,
-  consistency/repetition of patterns, and contrast expectations.
-- **NFR-009**: User-facing changes MUST define semantic color usage for status,
-  feedback, information, warning, and error states.
-- **NFR-010**: User-facing changes MUST define Design System constraints, including
-  reusable components, design tokens, documentation, and allowed variations.
-- **NFR-010b**: User-facing changes MUST include reuse validation showing whether
-  existing shadcn/ui and local components in `frontend/src/components/ui` satisfy
-  the need before proposing new UI components; exceptions MUST include functional
-  gap, ownership, state coverage, maintenance plan, and PR rationale.
-- **NFR-011**: User-facing changes MUST define accessibility expectations aligned with
-  applicable WCAG criteria and assistive technology support needs.
-- **NFR-012**: Web UI changes MUST define the implementation stack and boundaries for
-  React, Next.js, TypeScript, shadcn/ui, and the adopted Design System source of truth.
-- **NFR-013**: Web UI component work MUST define required variants, states, keyboard
-  accessibility, focus visibility, and token-driven styling rules.
-- **NFR-014**: REST API changes MUST define resource naming conventions, URI structure,
-  pluralization rules, and the separation between HTTP methods and resource paths.
-- **NFR-015**: REST API collection endpoints MUST define how filtering, sorting,
-  pagination, and sub-resource hierarchies are represented.
-- **NFR-016**: REST API changes MUST define the versioning strategy, trigger for major
-  version changes, and how breaking versus non-breaking changes are classified.
-- **NFR-017**: REST API changes MUST define deprecation, compatibility, and migration
-  expectations for existing consumers.
-- **NFR-018**: REST API changes MUST define whether HATEOAS applies, which hypermedia
-  format is used, and how link relations and next actions are represented.
-- **NFR-019**: REST API error responses MUST define whether RFC 9457 applies, which
-  problem types exist, and how `type`, `title`, `status`, `detail`, and `instance`
-  are populated.
-- **NFR-020**: REST API error responses MUST define allowed extension members and how
-  sensitive implementation details are excluded from problem payloads.
+- **FR-008**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-009**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
 ### Key Entities *(include if feature involves data)*
 
@@ -161,3 +122,16 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+
+## Assumptions
+
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right assumptions based on reasonable defaults
+  chosen when the feature description did not specify certain details.
+-->
+
+- [Assumption about target users, e.g., "Users have stable internet connectivity"]
+- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
+- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
+- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]

@@ -9,6 +9,11 @@ import com.fidc.cdc.kogito.infrastructure.messaging.DomainEventPublisher;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
+/**
+ * Publica eventos relacionados a cessao event.
+ *
+ * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Service
 public class CessaoEventPublisher {
 
@@ -97,6 +102,42 @@ public class CessaoEventPublisher {
                 )
         );
         readModelProjector.projectCurrentState(cessao.getBusinessKey(), "TIMER_AGENDADO");
+    }
+
+    public void publishProcessAborted(
+            Cessao cessao,
+            KogitoProcessSnapshot snapshot,
+            KogitoTaskSnapshot abortedTask,
+            String actorId
+    ) {
+        domainEventPublisher.publishKogitoProcessVariables(cessao, snapshot);
+        domainEventPublisher.publishProcessEvent(
+                cessao.getBusinessKey(),
+                "PROCESSO_ABORTADO",
+                Map.of(
+                        "businessKey", cessao.getBusinessKey(),
+                        "status", cessao.getStatus().name(),
+                        "workflowInstanceId", cessao.getWorkflowInstanceId()
+                )
+        );
+        domainEventPublisher.publishKogitoProcessState(
+                cessao,
+                snapshot,
+                actorId,
+                org.kie.kogito.event.process.ProcessInstanceStateEventBody.EVENT_TYPE_ENDED
+        );
+        if (abortedTask != null) {
+            domainEventPublisher.publishKogitoProcessNodeExited(cessao, snapshot, abortedTask, actorId);
+            domainEventPublisher.publishKogitoUserTaskState(
+                    cessao,
+                    snapshot,
+                    abortedTask,
+                    actorId,
+                    "Aborted",
+                    "ABORTED"
+            );
+        }
+        readModelProjector.projectCurrentState(cessao.getBusinessKey(), "PROCESSO_ABORTADO");
     }
 
     private void publishCurrentTask(Cessao cessao, KogitoProcessSnapshot snapshot, String eventType, String actorId) {

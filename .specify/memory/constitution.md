@@ -1,16 +1,21 @@
 <!--
 Sync Impact Report
-Version change: 1.8.0 -> 1.9.0
+Version change: 1.9.0 -> 1.10.0
 Modified principles:
 - VI. Experiencia, Performance e Qualidade de Entrega
 Added sections:
 - Governança de componentes de UI (Reuso, controle de duplicação e exceções)
+- Governanca de Javadoc para classes Java
 Removed sections:
 - None
 Templates requiring updates:
 - ✅ updated: .specify/templates/plan-template.md
 - ✅ updated: .specify/templates/spec-template.md
 - ✅ updated: .specify/templates/tasks-template.md
+- ✅ reviewed, no change needed: AGENTS.md
+- ✅ reviewed, no change needed: .specify/templates/agent-file-template.md
+- ✅ reviewed, no change needed: .specify/templates/constitution-template.md
+- ✅ not present in repo: .specify/templates/commands/*.md
 Follow-up TODOs:
 - Nenhum
 -->
@@ -171,7 +176,32 @@ da Atlassian.
 Performance MUST ser tratada como requisito funcional: tempos de resposta, consumo de
 recursos e fluidez de interface precisam de metas explicitas e verificaveis. Mudancas
 MUST incluir validacao proporcional ao risco, cobrindo comportamento funcional,
-seguranca, observabilidade e desempenho.
+seguranca, observabilidade e desempenho. Toda classe Java MUST conter Javadoc.
+Javadocs MUST ser escritos como contrato de API, descrevendo comportamento
+observavel, pre-condicoes, pos-condicoes, nulidade, limites, corner cases,
+efeitos colaterais e garantias de thread-safety quando relevantes ao consumidor
+da API. Javadocs MUST NOT descrever detalhes internos que nao facam parte do
+contrato; quando houver comportamento especifico de plataforma ou da
+implementacao, isso MUST aparecer em paragrafo separado e claramente marcado.
+Autores MUST registrar apenas o que puder ser sustentado pelo codigo,
+assinatura, especificacao e contexto disponivel, sem inventar regras. Em
+metodos, a primeira frase MUST comecar com verbo na terceira pessoa; em
+classes, interfaces e campos, a abertura SHOULD ser uma frase nominal
+descritiva. Comentarios tradicionais `/** ... */` MUST separar paragrafos com
+`<p>` e manter uma linha em branco antes das tags; `///` com doclet moderno MAY
+ser usado quando o projeto o adotar. Tags `@param`, `@param <T>`, `@return`,
+`@throws` e `@deprecated` MUST documentar o contrato util ao chamador sem
+duplicar informacao obvia da assinatura. Em metodos sobrescritos, o time SHOULD
+reusar documentacao herdada via ausencia de texto adicional ou `{@inheritDoc}`
+quando isso ja cobrir o contrato. Documentacao de pacote SHOULD ficar em
+`package-info.java`. APIs depreciadas MUST usar `@Deprecated` no codigo e
+`@deprecated` no Javadoc com substituicao recomendada e motivo quando util. O
+time SHOULD usar recursos modernos como `{@snippet}`, `@implSpec` e `@implNote`
+apenas quando ajudarem a separar contrato, detalhes de implementacao e notas
+operacionais. Antes de considerar uma entrega Java concluida, a documentacao
+MUST ser gerada e validada com revisao do HTML gerado e DocLint habilitado.
+Boas praticas de referencia para esse padrao: Oracle, "How to Write Doc Comments
+for the Javadoc Tool" (`https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html`).
 
 Rationale: software correto, mas lento, confuso ou opaco, falha em entregar valor
 real ao usuario e ao negocio.
@@ -203,7 +233,10 @@ Especificacoes e planos MUST registrar explicitamente:
   houver frontend web, incluindo React, Next.js, TypeScript, shadcn/ui e aderencia
   normativa ao Design System da Atlassian;
 - decisoes de arquitetura que introduzam complexidade, com justificativa objetiva;
-- estrategia de testes proporcional ao risco, cobrindo fluxos criticos e regressao.
+- estrategia de testes proporcional ao risco, cobrindo fluxos criticos e regressao;
+- estrategia de Javadoc para classes Java afetadas, incluindo contrato de API,
+  nulidade, corner cases, tags obrigatorias e validacao com geracao de
+  documentacao e DocLint.
 
 ### Governança de componentes de UI (Reuso, controle de duplicação e exceções)
 
@@ -236,6 +269,32 @@ Solucoes que aumentem acoplamento, multipliquem pontos de configuracao ou criem
 abstracoes sem caso concreto SHOULD ser rejeitadas em revisao. Reuso MUST priorizar
 componentes e padroes existentes do repositorio antes de novas implementacoes.
 
+### Governanca de Javadoc para classes Java
+
+Toda classe Java do repositorio MUST conter Javadoc aderente ao contrato da API
+que ela expoe. A documentacao MUST seguir esta ordem: frase-resumo inicial,
+descricao complementar e depois block tags; a descricao principal MUST NOT
+continuar apos o inicio das tags. O Javadoc MUST acrescentar semantica que nao
+esteja obvia na assinatura, cobrindo comportamento com `null`, unidades, faixa
+valida, ordenacao, ownership, colecoes vazias versus `null`, efeitos
+colaterais, garantias de concorrencia e condicoes de erro quando isso fizer
+parte util do contrato.
+
+Em `@param`, todos os parametros MUST ser documentados na ordem da assinatura,
+sem repetir o tipo e sem prefixos manuais artificiais. Metodos genericos MUST
+documentar parametros de tipo com `@param <T>`. Em `@return`, todo metodo que
+nao retorna `void` MUST explicar o valor devolvido e os casos especiais
+relevantes. Em `@throws`, o contrato MUST cobrir checked exceptions e unchecked
+exceptions uteis ao chamador; detalhes acidentais da implementacao MUST NOT ser
+elevados a contrato. Em APIs sobrescritas, o time SHOULD herdar a documentacao
+existente e complementar apenas quando houver restricoes ou comportamento
+adicional.
+
+O gate de qualidade para Java MUST incluir verificacao de presenca e qualidade
+de Javadocs em classes novas ou alteradas, geracao da documentacao e validacao
+com DocLint. A fonte de boas praticas adotada por esta constituicao e a Oracle:
+`https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html`.
+
 ## Fluxo de Entrega e Quality Gates
 
 Toda entrega MUST passar por revisao de codigo com verificacao explicita desta
@@ -262,6 +321,9 @@ constituicao. O fluxo de desenvolvimento MUST validar:
   e componentes locais antes de criar novos componentes;
 - aderencia da implementacao frontend a React, Next.js, TypeScript, shadcn/ui como
   base tecnica e Atlassian como contrato visual e comportamental;
+- presenca e qualidade de Javadocs nas classes Java alteradas, com foco em
+  contrato de API, tags obrigatorias, ausencia de internals desnecessarios e
+  validacao com geracao de documentacao e DocLint;
 - metas de performance e ausencia de degradacao critica;
 - cobertura de testes e plano de rollback quando o risco operacional justificar.
 
@@ -280,4 +342,4 @@ para clarificacoes sem impacto de governanca. Revisoes de conformidade com esta
 constituicao MUST ocorrer em especificacoes, planos, tarefas e revisoes de codigo.
 Excecoes MUST ser temporarias, documentadas e com prazo de remediacao definido.
 
-**Version**: 1.9.0 | **Ratified**: 2026-03-20 | **Last Amended**: 2026-03-22
+**Version**: 1.10.0 | **Ratified**: 2026-03-20 | **Last Amended**: 2026-03-29

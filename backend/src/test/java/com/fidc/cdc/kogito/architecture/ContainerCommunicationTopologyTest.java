@@ -37,6 +37,8 @@ class ContainerCommunicationTopologyTest {
         assertThat(dependsOn(services, "backend")).containsKey("postgres");
 
         assertThat(env(services, "backend", "SPRING_KAFKA_BOOTSTRAP_SERVERS")).isEqualTo("kafka:9092");
+        assertThat(env(services, "backend", "FIDC_TASK_CONSOLE_URL")).isEqualTo("http://localhost:8280");
+        assertThat(env(services, "backend", "FIDC_MANAGEMENT_CONSOLE_URL")).isEqualTo("http://localhost:8380");
 
         assertThat(map(services.get("data-index")).get("image"))
                 .isEqualTo("apache/incubator-kie-kogito-data-index-postgresql:10.1.0");

@@ -8,16 +8,23 @@ import com.fidc.cdc.kogito.domain.cessao.CessaoRepository;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessao;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoStatus;
+import com.fidc.cdc.kogito.observability.ProcessMetricsService;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Representa management console support no backend de cessao.
+ *
+ * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Service
 public class ManagementConsoleSupport {
 
@@ -25,6 +32,7 @@ public class ManagementConsoleSupport {
     private final CessaoReadModelRepository cessaoReadModelRepository;
     private final TaskAssignmentService taskAssignmentService;
     private final KogitoWorkflowRuntimeService workflowRuntimeService;
+    private final ProcessMetricsService processMetricsService;
     private final String managementConsoleUrl;
     private final String dataIndexUrl;
     private final String jobsServiceUrl;
@@ -34,6 +42,7 @@ public class ManagementConsoleSupport {
             CessaoReadModelRepository cessaoReadModelRepository,
             TaskAssignmentService taskAssignmentService,
             KogitoWorkflowRuntimeService workflowRuntimeService,
+            ProcessMetricsService processMetricsService,
             @Value("${fidc.consoles.management-console-url}") String managementConsoleUrl,
             @Value("${fidc.data-index.url}") String dataIndexUrl,
             @Value("${fidc.jobs.public-service-url}") String jobsServiceUrl
@@ -42,6 +51,7 @@ public class ManagementConsoleSupport {
         this.cessaoReadModelRepository = cessaoReadModelRepository;
         this.taskAssignmentService = taskAssignmentService;
         this.workflowRuntimeService = workflowRuntimeService;
+        this.processMetricsService = processMetricsService;
         this.managementConsoleUrl = managementConsoleUrl;
         this.dataIndexUrl = dataIndexUrl;
         this.jobsServiceUrl = jobsServiceUrl;
@@ -53,16 +63,15 @@ public class ManagementConsoleSupport {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cessao nao encontrada para consulta de management context."
                 ));
-        Optional<EtapaCessao> currentStageEntity = cessao.getEtapas().stream()
-                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
-                .findFirst();
-        String currentStage = currentStageEntity.map(etapa -> etapa.getNomeEtapa().name())
-                .or(() -> findLastCompletedStage(cessao).map(etapa -> etapa.getNomeEtapa().name()))
-                .orElse("SEM_ETAPA_ATIVA");
+        StageDescriptor currentStageDescriptor = resolveStageDescriptor(cessao);
+        String currentStage = currentStageDescriptor.stageName();
         Optional<CessaoReadModelDocument> readModel = cessaoReadModelRepository.findById(businessKey);
+        boolean processSvgAvailable = processSvgAvailable(workflowRuntimeService.PROCESS_ID);
+        boolean processSvgAuthorized = true;
+        String processSvgAvailabilityReason = processSvgAvailabilityReason(processSvgAvailable);
 
-        boolean humanTaskPending = currentStageEntity.isPresent()
-                && taskAssignmentService.isHumanTaskStage(currentStageEntity.get().getNomeEtapa());
+        boolean humanTaskPending = currentStageDescriptor.activeStage().isPresent()
+                && taskAssignmentService.isHumanTaskStage(currentStageDescriptor.activeStage().get().getNomeEtapa());
         boolean waitingForTimerJob = EtapaCessaoNome.AGUARDAR_CONFIRMACAO_REGISTRADORA.name().equals(currentStage);
 
         List<String> availableAdminActions = new ArrayList<>();
@@ -80,13 +89,30 @@ public class ManagementConsoleSupport {
             availableAdminActions.add("CANCEL_PROCESS_INSTANCE");
         }
 
+        processMetricsService.registerConsoleAccess(
+                "management-console",
+                processSvgAvailable ? "process-svg-ready" : "process-svg-missing"
+        );
+        if ("UNRESOLVED".equals(currentStageDescriptor.source())) {
+            processMetricsService.registerConsoleAccess("management-console", "process-svg-no-current-stage");
+        }
+        if (currentStageDescriptor.processEndedWithoutActiveStage()) {
+            processMetricsService.registerConsoleAccess("management-console", "process-svg-last-completed-stage");
+        }
+
         return new ManagementConsoleContext(
                 businessKey,
                 cessao.getWorkflowInstanceId(),
                 cessao.getStatus().name(),
                 currentStage,
+                currentStageDescriptor.stageLabel(),
+                currentStageDescriptor.source(),
+                currentStageDescriptor.processEndedWithoutActiveStage(),
                 humanTaskPending,
                 waitingForTimerJob,
+                processSvgAvailable,
+                processSvgAuthorized,
+                processSvgAvailabilityReason,
                 readModel.isPresent(),
                 readModel.map(CessaoReadModelDocument::getUltimoEvento).orElse(null),
                 readModel.map(CessaoReadModelDocument::getUltimaAtualizacao)
@@ -99,9 +125,72 @@ public class ManagementConsoleSupport {
         );
     }
 
+    private StageDescriptor resolveStageDescriptor(Cessao cessao) {
+        Optional<EtapaCessao> currentStageEntity = cessao.getEtapas().stream()
+                .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.EM_EXECUCAO)
+                .findFirst();
+        if (currentStageEntity.isPresent()) {
+            EtapaCessao etapa = currentStageEntity.get();
+            return new StageDescriptor(
+                    etapa.getNomeEtapa().name(),
+                    stageLabelFor(etapa.getNomeEtapa()),
+                    "ACTIVE_STAGE",
+                    false,
+                    Optional.of(etapa)
+            );
+        }
+
+        Optional<EtapaCessao> lastCompletedStage = findLastCompletedStage(cessao);
+        if (lastCompletedStage.isPresent()) {
+            EtapaCessao etapa = lastCompletedStage.get();
+            return new StageDescriptor(
+                    etapa.getNomeEtapa().name(),
+                    stageLabelFor(etapa.getNomeEtapa()),
+                    "LAST_COMPLETED_STAGE",
+                    true,
+                    Optional.empty()
+            );
+        }
+
+        return new StageDescriptor(
+                "SEM_ETAPA_ATIVA",
+                "Etapa atual nao determinada",
+                "UNRESOLVED",
+                false,
+                Optional.empty()
+        );
+    }
+
     private Optional<EtapaCessao> findLastCompletedStage(Cessao cessao) {
         return cessao.getEtapas().stream()
                 .filter(etapa -> etapa.getStatusEtapa() == EtapaCessaoStatus.CONCLUIDA)
                 .max(Comparator.comparingInt(EtapaCessao::getOrdem));
+    }
+
+    private boolean processSvgAvailable(String processId) {
+        return new ClassPathResource("META-INF/processSVG/" + processId + ".svg").exists();
+    }
+
+    private String processSvgAvailabilityReason(boolean processSvgAvailable) {
+        return processSvgAvailable ? "available" : "svg-missing";
+    }
+
+    private String stageLabelFor(EtapaCessaoNome etapa) {
+        String nodeName = KogitoWorkflowRuntimeService.nodeNameFor(etapa);
+        return nodeName != null ? nodeName : etapa.getDisplayName();
+    }
+
+    /**
+     * Representa os dados de stage descriptor.
+     *
+     * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
+    private record StageDescriptor(
+            String stageName,
+            String stageLabel,
+            String source,
+            boolean processEndedWithoutActiveStage,
+            Optional<EtapaCessao> activeStage
+    ) {
     }
 }

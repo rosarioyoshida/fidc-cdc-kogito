@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="420" viewBox="0 0 1500 420" role="img" aria-labelledby="process-title process-desc">
+  <title id="process-title">Controle de Cessao</title>
+  <desc id="process-desc">Fluxo operacional da cessao com etapas humanas, gateway de validacao de lastros e encerramentos.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .flow { fill: none; stroke: #94a3b8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .node { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+      .node-text { fill: #0f172a; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; }
+      .event { fill: #ffffff; stroke: #1e293b; stroke-width: 3; }
+      .end-event { fill: #fff7ed; stroke: #c2410c; stroke-width: 3; }
+      .gateway { fill: #f8fafc; stroke: #475569; stroke-width: 2.5; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1500" height="420" rx="24"/>
+
+  <path id="flow-1" class="flow" d="M118 200 H160"/>
+  <path id="flow-2" class="flow" d="M280 200 H320"/>
+  <path id="flow-3" class="flow" d="M440 200 H480"/>
+  <path id="flow-4" class="flow" d="M600 200 H640"/>
+  <path id="flow-10" class="flow" d="M696 200 H736"/>
+  <path id="flow-11" class="flow" d="M856 200 H896"/>
+  <path id="flow-12" class="flow" d="M1016 200 H1056"/>
+  <path id="flow-12a" class="flow" d="M1112 200 H1152"/>
+  <path id="flow-12b" class="flow" d="M1084 228 V330 H1380"/>
+  <path id="flow-13" class="flow" d="M1272 200 H1380"/>
+
+  <g id="start-cessao">
+    <circle class="event" cx="92" cy="200" r="28"/>
+    <text class="node-text" x="92" y="255" text-anchor="middle">Inicio</text>
+  </g>
+
+  <g id="task-01">
+    <rect class="node" x="160" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="220" y="192" text-anchor="middle">01 Importar</text>
+    <text class="node-text" x="220" y="212" text-anchor="middle">carteira</text>
+  </g>
+
+  <g id="task-02">
+    <rect class="node" x="320" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="380" y="192" text-anchor="middle">02 Validar</text>
+    <text class="node-text" x="380" y="212" text-anchor="middle">cedente</text>
+  </g>
+
+  <g id="task-03">
+    <rect class="node" x="480" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="540" y="192" text-anchor="middle">03 Analisar</text>
+    <text class="node-text" x="540" y="212" text-anchor="middle">elegibilidade</text>
+  </g>
+
+  <g id="task-09">
+    <circle class="event" cx="668" cy="200" r="28"/>
+    <text class="node-text" x="668" y="255" text-anchor="middle">Aguardar</text>
+  </g>
+
+  <g id="task-10">
+    <rect class="node" x="736" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="796" y="192" text-anchor="middle">10 Coletar</text>
+    <text class="node-text" x="796" y="212" text-anchor="middle">termo</text>
+  </g>
+
+  <g id="task-11">
+    <rect class="node" x="896" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="956" y="192" text-anchor="middle">11 Validar</text>
+    <text class="node-text" x="956" y="212" text-anchor="middle">lastros</text>
+  </g>
+
+  <g id="gateway-lastros">
+    <path class="gateway" d="M1084 172 L1112 200 L1084 228 L1056 200 Z"/>
+    <text class="node-text" x="1084" y="260" text-anchor="middle">Lastros?</text>
+  </g>
+
+  <g id="task-12">
+    <rect class="node" x="1152" y="160" width="120" height="80" rx="12"/>
+    <text class="node-text" x="1212" y="192" text-anchor="middle">12 Autorizar</text>
+    <text class="node-text" x="1212" y="212" text-anchor="middle">pagamento</text>
+  </g>
+
+  <g id="end-cessao">
+    <circle class="end-event" cx="1408" cy="200" r="28"/>
+    <circle class="end-event" cx="1408" cy="200" r="22" fill="none"/>
+    <text class="node-text" x="1408" y="255" text-anchor="middle">Concluido</text>
+  </g>
+
+  <g id="end-rejeicao">
+    <circle class="end-event" cx="1408" cy="330" r="28"/>
+    <circle class="end-event" cx="1408" cy="330" r="22" fill="none"/>
+    <text class="node-text" x="1408" y="372" text-anchor="middle">Pendencia</text>
+  </g>
+</svg>

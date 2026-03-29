@@ -26,46 +26,17 @@
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
 **Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Documentation/Compliance Gates**: [e.g., Javadoc for all changed Java classes, generated docs reviewed, DocLint clean, or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Simplicity gate: solution keeps KISS/YAGNI and justifies any added abstraction,
-  indirection, or configuration surface.
-- Architecture gate: design documents identify module boundaries, reuse strategy, and
-  where SOLID/DRY materially apply without premature generalization.
-- API design gate: when the feature exposes REST APIs, resource naming follows noun
-  based URIs, consistent pluralization, lowercase hyphenated paths, proper hierarchy,
-  HTTP verbs for actions, and query parameters for filtering/sorting/pagination.
-- API versioning gate: when the feature exposes REST APIs, the plan defines the
-  versioning strategy, breaking-change criteria, major-version policy, and
-  deprecation/compatibility approach.
-- Hypermedia gate: when the feature benefits from dynamic API navigation or workflow
-  discovery, the plan defines whether HATEOAS is required, which link format is used,
-  and how relations and next actions are exposed.
-- API error contract gate: when the feature exposes REST APIs, the plan defines the
-  RFC 9457 problem details strategy, problem type URIs, extension members, and
-  safeguards against leaking implementation internals.
-- Maintainability/scalability gate: ownership, change impact boundaries, expected
-  growth, bottlenecks, and scaling strategy are explicit for critical components.
-- Security/compliance gate: threat surface, sensitive data handling, access control,
-  audit trail needs, and regulatory constraints are explicit.
-- Observability gate: logs, metrics, tracing/correlation, health signals, and failure
-  diagnostics are defined for critical flows.
-- UX/performance gate: user-facing workflows define usability expectations,
-  accessibility constraints, hierarchy of information, user control, semantic color
-  rules, Design System constraints, token/component reuse, and measurable performance
-  targets.
-- Frontend implementation gate: when the feature has web UI, the plan identifies
-  React, Next.js, and TypeScript usage, shadcn/ui as the structural base, Atlassian
-  Design System as the visual/behavioral source of truth, centralized tokens, and
-  required component states/variants.
-- Component governance gate: when new UI components are proposed, the plan must verify
-  reuse of available shadcn/ui and repository-local components in
-  `frontend/src/components/ui` before creating new components, and document any
-  exception with owner, state coverage, maintenance impact, test plan, approval
-  path, and PR rationale.
+- Simplicity: justify any added abstraction, framework, flag, or layer against a concrete current requirement.
+- Architecture: document cohesion boundaries, ownership, and any REST/API naming, versioning, HATEOAS, or problem-details decisions that apply.
+- Security/Operations: capture security, compliance, auditability, observability, performance, and rollback expectations proportional to risk.
+- UX/Design System: when UI exists, confirm reuse of existing components, token alignment, accessibility, and any approved exceptions for new UI components.
+- Java documentation: when Java classes are introduced or changed, plan the required Javadocs as API contracts and define how generated Javadoc and DocLint validation will run before completion.
 
 ## Project Structure
 

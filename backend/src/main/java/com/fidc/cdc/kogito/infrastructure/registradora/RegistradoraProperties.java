@@ -3,6 +3,11 @@ package com.fidc.cdc.kogito.infrastructure.registradora;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Agrupa propriedades de configuracao para registradora.
+ *
+ * <p>Este tipo pertence a camada de adaptadores tecnicos e integracoes de infraestrutura. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @ConfigurationProperties(prefix = "fidc.registradora")
 public class RegistradoraProperties {
 
@@ -39,6 +44,11 @@ public class RegistradoraProperties {
         return retries;
     }
 
+    /**
+     * Representa retries no backend de cessao.
+     *
+     * <p>Este tipo pertence a camada de adaptadores tecnicos e integracoes de infraestrutura. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     public static class Retries {
 
         private int maxAttempts = 3;

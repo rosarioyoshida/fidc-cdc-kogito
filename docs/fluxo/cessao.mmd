@@ -1,0 +1,57 @@
+flowchart LR
+    inicio["Inicio da cessao"]
+    importar["Importar contratos"]
+    validar["Validar contratos"]
+    elegibilidade["Aplicar criterios de elegibilidade"]
+    precificar["Precificar contratos eleitos"]
+    informarPrecificacao["Informar precificacao e rejeitados ao cedente"]
+    obterAprovacao["Obter aprovacao do cedente"]
+    seguir{"Cedente deseja seguir com a cessao?"}
+    cancelada["Cessao cancelada pelo cedente"]
+    registrar["Registrar contratos na Registradora"]
+    ofertar["Ofertar carteira para cessionario"]
+    informarRegistro["Informar cedente sobre contratos e parcelas registrados"]
+    gerarTermo["Gerar Termo de Aceite"]
+    enviarTermo["Enviar Termo de Aceite para assinatura"]
+    aguardarAssinaturas["Aguardar assinaturas do Termo de Aceite"]
+    assinaturasOk{"Todos assinaram o Termo de Aceite?"}
+    aguardarTransferenciaValor["Aguardar transferencia do valor da cessao pela cessionaria"]
+    transferenciaConfirmada{"Transferencia confirmada?"}
+    aguardarTransferenciaLastros["Aguardar transferencia de lastros pelo cedente"]
+    lastrosTransferidos{"Lastros transferidos?"}
+    conferirLastros["Conferir dados contidos nos lastros com dados dos contratos cedidos"]
+    lastrosConferem{"Todos os lastros conferem?"}
+    tratarDivergencias["Tratar lastros divergentes de contratos"]
+    aguardarAceiteRegistradora["Aguardar aceite da oferta pela cessionaria na Registradora"]
+    ofertaAceita{"Oferta da carteira foi aceita?"}
+    sucesso["Cessao realizada com sucesso"]
+
+    inicio --> importar
+    importar --> validar
+    validar --> elegibilidade
+    elegibilidade --> precificar
+    precificar --> informarPrecificacao
+    informarPrecificacao --> obterAprovacao
+    obterAprovacao --> seguir
+    seguir -->|"Sim"| registrar
+    seguir -->|"Nao"| cancelada
+    registrar --> ofertar
+    ofertar --> informarRegistro
+    informarRegistro --> gerarTermo
+    gerarTermo --> enviarTermo
+    enviarTermo --> aguardarAssinaturas
+    aguardarAssinaturas --> assinaturasOk
+    assinaturasOk -->|"Nao"| aguardarAssinaturas
+    assinaturasOk -->|"Sim"| aguardarTransferenciaValor
+    aguardarTransferenciaValor --> transferenciaConfirmada
+    transferenciaConfirmada -->|"Nao"| aguardarTransferenciaValor
+    transferenciaConfirmada -->|"Sim"| aguardarTransferenciaLastros
+    aguardarTransferenciaLastros --> lastrosTransferidos
+    lastrosTransferidos -->|"Nao"| aguardarTransferenciaLastros
+    lastrosTransferidos -->|"Sim"| conferirLastros
+    conferirLastros --> lastrosConferem
+    lastrosConferem -->|"Nao"| tratarDivergencias
+    lastrosConferem -->|"Sim"| aguardarAceiteRegistradora
+    aguardarAceiteRegistradora --> ofertaAceita
+    ofertaAceita -->|"Nao"| aguardarAceiteRegistradora
+    ofertaAceita -->|"Sim"| sucesso
