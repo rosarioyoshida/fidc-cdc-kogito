@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_cpPiAAzLED-ggP5PSbGWZA" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_9JRGMAe-ED-s68H1jqlaew" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="_task-12_SkippableInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="_task-12_PriorityInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="_task-12_CommentInputXItem" structureRef="Object"/>
@@ -79,10 +79,10 @@
   <bpmn2:itemDefinition id="_task-01_NotCompletedNotifyInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="_task-01_BusinessAdministratorGroupIdInputXItem" structureRef="Object"/>
   <bpmn2:signal id="_-1857756468" name="registradora-confirmada"/>
-  <bpmn2:collaboration id="_F19D5802-061F-4E95-81BB-7A2BA171AACF" name="Default Collaboration">
-    <bpmn2:participant id="_E2D9766E-13A1-4DE4-8668-2E8DBB88491F" name="Pool Participant" processRef="controle_cessao"/>
+  <bpmn2:collaboration id="_C815EF3A-CE6D-4CA3-907B-D846B424F38C" name="Default Collaboration">
+    <bpmn2:participant id="_BAC65D7E-B46F-4A8C-905C-9FE768425A4B" name="Pool Participant" processRef="controle-cessao"/>
   </bpmn2:collaboration>
-  <bpmn2:process id="controle_cessao" drools:packageName="com.fidc.cdc.kogito.processes" drools:version="1.0" drools:adHoc="false" name="Controle de Cessao" isExecutable="true" processType="Public">
+  <bpmn2:process id="controle-cessao" drools:packageName="com.fidc.cdc.kogito.processes" drools:version="1.0" drools:adHoc="false" name="Controle de Cessao" isExecutable="true" processType="Public">
     <bpmn2:sequenceFlow id="flow-1" sourceRef="start-cessao" targetRef="task-01"/>
     <bpmn2:sequenceFlow id="flow-2" sourceRef="task-01" targetRef="task-02"/>
     <bpmn2:sequenceFlow id="flow-3" sourceRef="task-02" targetRef="task-03"/>
@@ -101,10 +101,10 @@
       </bpmn2:extensionElements>
       <bpmn2:outgoing>flow-1</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:userTask id="task-01" name="Importar contratos">
+    <bpmn2:userTask id="task-01" name="01 Importar carteira">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Importar contratos]]></drools:metaValue>
+          <drools:metaValue><![CDATA[01 Importar carteira]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>flow-1</bpmn2:incoming>
@@ -126,7 +126,7 @@
       <bpmn2:dataInputAssociation>
         <bpmn2:targetRef>task-01_TaskNameInputX</bpmn2:targetRef>
         <bpmn2:assignment>
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[IMPORTAR_CONTRATOS]]></bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[IMPORTAR_CARTEIRA]]></bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[task-01_TaskNameInputX]]></bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -401,7 +401,7 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
     </bpmn2:userTask>
-    <bpmn2:exclusiveGateway id="gateway-lastros" name="Lastros validados?" gatewayDirection="Diverging">
+    <bpmn2:exclusiveGateway id="gateway-lastros" name="Lastros validados?" gatewayDirection="Diverging" default="flow-12a">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Lastros validados?]]></drools:metaValue>
@@ -487,7 +487,7 @@
     </bpmn2:endEvent>
   </bpmn2:process>
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="controle_cessao">
+    <bpmndi:BPMNPlane bpmnElement="controle-cessao">
       <bpmndi:BPMNShape id="shape_end-cessao" bpmnElement="end-cessao">
         <dc:Bounds height="56" width="56" x="1380" y="172"/>
       </bpmndi:BPMNShape>
@@ -699,7 +699,7 @@
         </bpsim:Scenario>
       </bpsim:BPSimData>
     </bpmn2:extensionElements>
-    <bpmn2:source>_cpPiAAzLED-ggP5PSbGWZA</bpmn2:source>
-    <bpmn2:target>_cpPiAAzLED-ggP5PSbGWZA</bpmn2:target>
+    <bpmn2:source>_9JRGMAe-ED-s68H1jqlaew</bpmn2:source>
+    <bpmn2:target>_9JRGMAe-ED-s68H1jqlaew</bpmn2:target>
   </bpmn2:relationship>
 </bpmn2:definitions>

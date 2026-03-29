@@ -26,12 +26,17 @@
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
 **Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Documentation/Compliance Gates**: [e.g., Javadoc for all changed Java classes, generated docs reviewed, DocLint clean, or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Simplicity: justify any added abstraction, framework, flag, or layer against a concrete current requirement.
+- Architecture: document cohesion boundaries, ownership, and any REST/API naming, versioning, HATEOAS, or problem-details decisions that apply.
+- Security/Operations: capture security, compliance, auditability, observability, performance, and rollback expectations proportional to risk.
+- UX/Design System: when UI exists, confirm reuse of existing components, token alignment, accessibility, and any approved exceptions for new UI components.
+- Java documentation: when Java classes are introduced or changed, plan the required Javadocs as API contracts and define how generated Javadoc and DocLint validation will run before completion.
 
 ## Project Structure
 

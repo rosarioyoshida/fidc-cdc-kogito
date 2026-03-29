@@ -74,6 +74,8 @@
 
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
+- If Java APIs are affected, how are `null`, empty collections, invalid ranges,
+  ordering, ownership, and documented exceptions represented in Javadoc?
 
 ## Requirements *(mandatory)*
 
@@ -89,11 +91,18 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-006**: If the feature introduces or changes Java classes, each affected
+  class MUST include Javadoc written as an API contract, including relevant
+  `@param`, `@return`, `@throws`, nullability, limits, side effects, and
+  thread-safety guarantees when applicable.
+- **FR-007**: If the feature introduces or changes Java classes, generated
+  Javadoc MUST be validated before completion, including DocLint checks and a
+  review of the rendered output for invalid markup or broken references.
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-008**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-009**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
 ### Key Entities *(include if feature involves data)*
 

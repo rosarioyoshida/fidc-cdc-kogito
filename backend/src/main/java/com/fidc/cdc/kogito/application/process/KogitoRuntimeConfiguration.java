@@ -101,7 +101,7 @@ public class KogitoRuntimeConfiguration {
 
     private UserTask[] buildUserTasks(Application application) {
         return new UserTask[] {
-                createUserTask(application, "task-01", EtapaCessaoNome.IMPORTAR_CARTEIRA),
+                createUserTask(application, "task-01", EtapaCessaoNome.IMPORTAR_CONTRATOS),
                 createUserTask(application, "task-02", EtapaCessaoNome.VALIDAR_CEDENTE),
                 createUserTask(application, "task-03", EtapaCessaoNome.ANALISAR_ELEGIBILIDADE),
                 createUserTask(application, "task-10", EtapaCessaoNome.COLETAR_TERMO_ACEITE),
