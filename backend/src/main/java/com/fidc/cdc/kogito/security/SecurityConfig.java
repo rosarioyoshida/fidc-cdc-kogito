@@ -43,6 +43,11 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+/**
+ * Configura security no backend.
+ *
+ * <p>Este tipo pertence a camada de configuracao de seguranca da aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {

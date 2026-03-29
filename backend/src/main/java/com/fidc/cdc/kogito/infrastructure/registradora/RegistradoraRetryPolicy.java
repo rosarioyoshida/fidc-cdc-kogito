@@ -4,6 +4,11 @@ import com.fidc.cdc.kogito.observability.RegistradoraMetricsService;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
 
+/**
+ * Define a politica de registradora retry.
+ *
+ * <p>Este tipo pertence a camada de adaptadores tecnicos e integracoes de infraestrutura. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Component
 public class RegistradoraRetryPolicy {
 
@@ -46,6 +51,11 @@ public class RegistradoraRetryPolicy {
         }
     }
 
+    /**
+     * Define o contrato de retryable operation.
+     *
+     * <p>Este tipo pertence a camada de adaptadores tecnicos e integracoes de infraestrutura. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     @FunctionalInterface
     public interface RetryableOperation<T> {
         T execute(int attempt);

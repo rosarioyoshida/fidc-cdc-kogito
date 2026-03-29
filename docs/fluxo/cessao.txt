@@ -1,0 +1,24 @@
+1- Inicio da cessão;
+2- Importar contratos;
+3- Validar contratos;
+3- Aplicar criterios de elegibilidade;
+4- Precificar contratos eleitos;
+5- Informar precificacao e rejeitados ao cedente;
+6- Obter aprovacao do cedente;
+7- Cedente deseja seguir com a cessao? Sim(vai pra 8); Nao (Cessao cancelada pelo cedente)
+8- Registrar contratos na Registradora;
+9- Ofertar carteira para cessionario;
+10- Informar cedente sobre contratos e parcelas registrados;
+10- Gerar Termo de Aceite;
+10- Enviar Termo de aceite para assinatura;
+11- Aguardar assinaturas do Termo de aceite;
+11- Todos assinaram o Termo de aceite?; Não (volta pra 11); Sim (vai pra 12);
+12- Aguardar transferencia do valor da cessao pela cessionaria;
+13- Transferencia confirmada?; Nao(volta pra 12); Sim(vai pra 14);
+14- Aguardar transferencia de lastros pelo cedente;
+15- Lastros transferidos?Nao(volta pra 14); Sim(vai pra 16);
+16- Conferir dados contidos nos lastros com dados dos contratos cedidos;
+17- Todos os lastros conferem?Nao(vai para Tratar lastros divergentes de contratos);Sim(vai para 18);
+18- Aguardar aceite da oferta pela Cessionaria na Registradora;
+19- Oferta da carteira foi aceita?Nao(volta para 18); Sim(vai para 20);
+20- Cessao realizada com sucesso;

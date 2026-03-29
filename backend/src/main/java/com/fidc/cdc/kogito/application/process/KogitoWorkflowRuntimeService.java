@@ -16,6 +16,11 @@ import com.fidc.cdc.kogito.api.error.BusinessConflictException;
 import com.fidc.cdc.kogito.api.error.ResourceNotFoundException;
 import com.fidc.cdc.kogito.domain.cessao.EtapaCessaoNome;
 
+/**
+ * Coordena kogito workflow runtime na camada de aplicacao.
+ *
+ * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Service
 public class KogitoWorkflowRuntimeService {
 
@@ -220,6 +225,11 @@ public class KogitoWorkflowRuntimeService {
         return mapping;
     }
 
+    /**
+     * Representa os dados de runtime signal.
+     *
+     * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     private record RuntimeSignal<T>(String channel, T payload, String referenceId) implements Signal<T> {
     }
 }

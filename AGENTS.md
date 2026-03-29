@@ -1,6 +1,6 @@
 # fidc-cdc-kogito Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-25
+Auto-generated from all feature plans. Last updated: 2026-03-29
 
 ## Active Technologies
 - [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION] (main)
@@ -18,6 +18,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-25
 - N/A para a migração em si; frontend continua consumindo dados do backend, sessão autenticada via cookie HTTP-only, preferência visual via `localStorage` e cookie de tema já existentes (007-migrate-frontend-shell)
 - Java 21 no backend + Spring Boot 3.3, Spring Security, Spring HATEOAS, JPA/Hibernate, Flyway, Log4j2/SLF4J, Kogito 10.1.0, `kie-addons-springboot-process-management`, `jbpm-addons-springboot-task-management`, `kogito-addons-springboot-jobs-management`, `kie-addons-springboot-monitoring-prometheus`, addon oficial `org.kie:kie-addons-springboot-process-svg` (008-management-process-svg)
 - PostgreSQL para estado operacional; Data Index para consulta do runtime; BPMN em `backend/src/main/resources/processes`; SVG do processo em `META-INF/processSVG/{processId}.svg` no classpath, com `kogito.svg.folder.path` reservado apenas para excecao operacional (008-management-process-svg)
+- Java 21 + Spring Boot 3.3.9, Spring Security, Spring HATEOAS, Spring Data JPA, Bean Validation, Flyway, Springdoc OpenAPI, Kogito 10.1.0, Log4j2, Testcontainers (009-review-backend-javadocs)
+- PostgreSQL para runtime; arquivos Markdown em `specs/009-review-backend-javadocs/` para artefatos de planejamento (009-review-backend-javadocs)
 
 - Java 21 no backend; TypeScript LTS no frontend + Spring Boot LTS, Spring Security, Spring HATEOAS, JPA/Hibernate, Bean Validation, Flyway, Swagger/OpenAPI, Log4j2/SLF4J, Kogito, React, Next.js, shadcn/ui, Tailwind CSS (001-controle-cessao-fidc)
 
@@ -38,9 +40,9 @@ npm test; npm run lint
 Java 21 no backend; TypeScript LTS no frontend: Follow standard conventions
 
 ## Recent Changes
+- 009-review-backend-javadocs: Added Java 21 + Spring Boot 3.3.9, Spring Security, Spring HATEOAS, Spring Data JPA, Bean Validation, Flyway, Springdoc OpenAPI, Kogito 10.1.0, Log4j2, Testcontainers
 - 008-management-process-svg: Added Java 21 no backend + Spring Boot 3.3, Spring Security, Spring HATEOAS, JPA/Hibernate, Flyway, Log4j2/SLF4J, Kogito 10.1.0, `kie-addons-springboot-process-management`, `jbpm-addons-springboot-task-management`, `kogito-addons-springboot-jobs-management`, `kie-addons-springboot-monitoring-prometheus`, addon oficial `org.kie:kie-addons-springboot-process-svg`
 - 007-migrate-frontend-shell: Added Java 21 no backend; TypeScript 5 / React 19 / Next.js 15 no frontend + React 19, Next.js 15 App Router, Tailwind CSS 3, `shadcn/ui` e componentes locais em `frontend/src/components/ui`, Radix primitives já instaladas, `clsx`, `class-variance-authority`, `tailwind-merge`, `lucide-react`, Vitest, Testing Library
-- 005-global-shadcn-migration: Added Java 21 no backend; TypeScript 5 / React 19 / Next.js 15 no frontend + React 19, Next.js 15, Tailwind CSS 3, `shadcn/ui`, Radix UI primitives requeridas pelos componentes gerados, `clsx`, `lucide-react`, Vitest, Testing Library
 
 
 <!-- MANUAL ADDITIONS START -->

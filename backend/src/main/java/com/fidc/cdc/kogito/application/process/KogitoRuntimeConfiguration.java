@@ -27,6 +27,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * Representa kogito runtime configuration no backend de cessao.
+ *
+ * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+ */
 @Configuration
 public class KogitoRuntimeConfiguration {
 
@@ -119,6 +124,11 @@ public class KogitoRuntimeConfiguration {
         return task;
     }
 
+    /**
+     * Representa os dados de runtime components.
+     *
+     * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     private record RuntimeComponents(
             Application application,
             Processes processes,
@@ -126,6 +136,11 @@ public class KogitoRuntimeConfiguration {
     ) {
     }
 
+    /**
+     * Representa runtime application no backend de cessao.
+     *
+     * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     private static final class RuntimeApplication extends StaticApplication {
 
         private RuntimeApplication(StaticConfig config) {
@@ -137,6 +152,11 @@ public class KogitoRuntimeConfiguration {
         }
     }
 
+    /**
+     * Coordena no op jobs na camada de aplicacao.
+     *
+     * <p>Este tipo pertence a camada de orquestracao de casos de uso e servicos de aplicacao. O contrato deve ser interpretado a partir da assinatura exposta, das anotacoes declarativas e das colaboracoes visiveis no codigo, sem assumir detalhes internos de framework, persistencia ou integracao que nao alterem o uso observavel da API.
+     */
     private static final class NoOpJobsService implements JobsService {
 
         @Override
