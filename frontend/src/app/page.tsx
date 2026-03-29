@@ -1,4 +1,6 @@
+import React from "react";
 import { redirect } from "next/navigation";
+import { AppFooter } from "@/components/layout/app-footer";
 import { LoginPanel } from "@/features/security/login-panel";
 import { getCurrentUserOptional, signInAction } from "@/features/security/actions";
 
@@ -18,5 +20,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const lastUsername =
     typeof params.username === "string" ? decodeURIComponent(params.username) : undefined;
 
-  return <LoginPanel errorMessage={errorMessage} lastUsername={lastUsername} signInAction={signInAction} />;
+  return (
+    <div className="flex min-h-screen flex-col">
+      <LoginPanel errorMessage={errorMessage} lastUsername={lastUsername} signInAction={signInAction} />
+      <AppFooter compact />
+    </div>
+  );
 }

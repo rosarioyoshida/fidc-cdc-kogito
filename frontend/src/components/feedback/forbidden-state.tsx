@@ -14,7 +14,7 @@ export function ForbiddenState({
   return (
     <section
       className={[
-        "rounded-lg border border-danger/40 bg-danger/10 text-text",
+        "rounded-[24px] border border-danger/40 bg-danger/10 text-text shadow-soft",
         compact ? "px-3 py-2" : "p-6"
       ].join(" ")}
     >

@@ -1,5 +1,12 @@
 import { redirect } from "next/navigation";
+import { AppShell } from "@/components/layout/app-shell";
+import { Button } from "@/components/ui/button";
 import { AnaliseDashboard } from "@/features/analise/analise-dashboard";
+import {
+  buildCessaoContextNavigation,
+  buildPrimaryAction,
+  primaryNavigation
+} from "@/features/navigation/shell-config";
 import {
   apurarValorAction,
   avaliarElegibilidadeAction,
@@ -10,6 +17,7 @@ import {
   validarLastrosAction
 } from "@/features/analise/actions";
 import { getCessao } from "@/features/cessao/actions";
+import { getCurrentUser } from "@/features/security/actions";
 import { ApiError } from "@/lib/api-client";
 
 type AnalisePageProps = {
@@ -26,13 +34,27 @@ export default async function AnalisePage({ params, searchParams }: AnalisePageP
     typeof query.message === "string" ? decodeURIComponent(query.message) : undefined;
 
   try {
-    const [cessao, snapshot] = await Promise.all([
+    const [user, cessao, snapshot] = await Promise.all([
+      getCurrentUser(),
       getCessao(businessKey),
       getAnaliseSnapshot(businessKey)
     ]);
 
     return (
-      <main>
+      <AppShell
+        user={user}
+        navigation={primaryNavigation}
+        primaryAction={buildPrimaryAction()}
+        secondaryNav={buildCessaoContextNavigation(businessKey)}
+        secondaryControls={
+          <form action={refreshAnaliseAction}>
+            <input type="hidden" name="businessKey" value={businessKey} />
+            <Button type="submit" variant="secondary">
+              Atualizar painel
+            </Button>
+          </form>
+        }
+      >
         <AnaliseDashboard
           cessao={cessao}
           snapshot={snapshot}
@@ -43,9 +65,8 @@ export default async function AnalisePage({ params, searchParams }: AnalisePageP
           registrarLastroAction={registrarLastroAction}
           validarLastrosAction={validarLastrosAction}
           executarRegistradoraAction={executarRegistradoraAction}
-          refreshAction={refreshAnaliseAction}
         />
-      </main>
+      </AppShell>
     );
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {

@@ -14,11 +14,10 @@ describe("CessaoDetail", () => {
         cessao={cessaoFixture}
         permissionContext={permissionContextFixture}
         advanceAction={vi.fn()}
-        refreshAction={vi.fn()}
       />
     );
 
-    expect(screen.getByRole("button", { name: "Atualizar status" })).toBeInTheDocument();
+    expect(screen.getByText("Resumo operacional da cessao e visao das etapas em andamento.")).toBeInTheDocument();
     expect(screen.getByText("Etapas operacionais")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Avancar etapa" })).toBeInTheDocument();
     expect(screen.getByText("EM_EXECUCAO")).toBeInTheDocument();

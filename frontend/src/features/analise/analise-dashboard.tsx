@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { PageSection } from "@/components/layout/page-section";
 import { CessaoStatusPanel } from "@/features/cessao/cessao-status-panel";
 import type { Cessao } from "@/features/cessao/types";
 import { CalculoPanel } from "@/features/analise/calculo-panel";
@@ -19,7 +19,6 @@ type AnaliseDashboardProps = {
   registrarLastroAction?: (formData: FormData) => void | Promise<void>;
   validarLastrosAction?: (formData: FormData) => void | Promise<void>;
   executarRegistradoraAction?: (formData: FormData) => void | Promise<void>;
-  refreshAction?: (formData: FormData) => void | Promise<void>;
 };
 
 export function AnaliseDashboard({
@@ -31,49 +30,22 @@ export function AnaliseDashboard({
   apurarValorAction,
   registrarLastroAction,
   validarLastrosAction,
-  executarRegistradoraAction,
-  refreshAction
+  executarRegistradoraAction
 }: AnaliseDashboardProps) {
   return (
     <div className="grid gap-6">
-      <header className="flex flex-col gap-4 rounded-lg border bg-surface-raised p-6 shadow-soft md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
-            Analise da cessao
-          </p>
-          <h1 className="text-3xl font-semibold">{cessao.businessKey}</h1>
-          <p className="mt-2 text-sm leading-6 text-text-subtle">
-            Painel consolidado para elegibilidade, financeiro, documental e integracao com registradora.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={`/cessoes/${cessao.businessKey}`}
-            className="inline-flex min-h-10 items-center justify-center rounded-md border bg-surface-raised px-4 py-2 text-sm font-semibold text-text transition hover:bg-surface"
-          >
-            Voltar para cessao
-          </Link>
-
-          <form action={refreshAction}>
-            <input type="hidden" name="businessKey" value={cessao.businessKey} />
-            <button
-              type="submit"
-              className="inline-flex min-h-10 items-center justify-center rounded-md border bg-surface px-4 py-2 text-sm font-semibold text-text transition hover:bg-surface-raised"
-            >
-              Atualizar painel
-            </button>
-          </form>
-        </div>
-      </header>
+      <PageSection
+        title={`Analise ${cessao.businessKey}`}
+        description="Painel consolidado para elegibilidade, financeiro, documental e integracao com registradora."
+      >
+        <CessaoStatusPanel cessao={cessao} errorMessage={errorMessage} />
+      </PageSection>
 
       {successMessage ? (
         <section className="rounded-lg border border-success bg-success/10 px-4 py-3 text-sm text-text">
           {successMessage}
         </section>
       ) : null}
-
-      <CessaoStatusPanel cessao={cessao} errorMessage={errorMessage} />
 
       <div className="grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
         <ElegibilidadePanel

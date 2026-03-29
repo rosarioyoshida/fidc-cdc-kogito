@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import CessaoDetailPage from "@/app/cessoes/[businessKey]/page";
 import { ApiError } from "@/lib/api-client";
-import { getPermissionContext } from "@/features/security/actions";
+import { getCurrentUser, getPermissionContext } from "@/features/security/actions";
 import { getCessao } from "@/features/cessao/actions";
 
 vi.mock("next/navigation", () => ({
@@ -17,6 +17,7 @@ vi.mock("@/features/cessao/actions", () => ({
 }));
 
 vi.mock("@/features/security/actions", () => ({
+  getCurrentUser: vi.fn(),
   getPermissionContext: vi.fn()
 }));
 
@@ -31,6 +32,7 @@ describe("CessaoDetailPage", () => {
         detail: "Cessao nao encontrada para o businessKey informado."
       })
     );
+    vi.mocked(getCurrentUser).mockResolvedValue({} as never);
     vi.mocked(getPermissionContext).mockResolvedValue({} as never);
 
     await expect(

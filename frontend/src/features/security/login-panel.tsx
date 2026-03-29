@@ -16,13 +16,25 @@ export function LoginPanel({
   signInAction
 }: LoginPanelProps) {
   return (
-    <main className="grid min-h-[70vh] place-items-center">
-      <section className="w-full max-w-md rounded-lg border bg-surface-raised p-8 shadow-soft">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
+    <main className="mx-auto grid min-h-[calc(100vh-96px)] w-full max-w-5xl place-items-center px-6 py-10">
+      <section className="grid w-full gap-8 rounded-[32px] border border-border/80 bg-surface-raised p-8 shadow-soft lg:grid-cols-[1.1fr,0.9fr] lg:p-10">
+        <div className="flex flex-col justify-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
+            Plataforma
+          </p>
+          <h1 className="mb-4 text-4xl font-semibold text-text">Novo shell operacional</h1>
+          <p className="max-w-xl text-sm leading-7 text-text-subtle">
+            Acesse a experiência unificada de cessões, análise e auditoria com navegação consistente,
+            contexto por rota e ações de conta preservadas.
+          </p>
+        </div>
+
+        <div className="rounded-[28px] border border-border/70 bg-surface p-6 shadow-soft">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-text-subtle">
           Controle de Acesso
         </p>
-        <h1 className="mb-3 text-3xl font-semibold text-text">Entrar no ambiente</h1>
-        <p className="mb-6 text-sm leading-6 text-text-subtle">
+          <h2 className="mb-3 text-3xl font-semibold text-text">Entrar no ambiente</h2>
+          <p className="mb-6 text-sm leading-6 text-text-subtle">
           Use um usuario seedado do projeto para acessar as areas protegidas e operar com o perfil correspondente.
         </p>
 
@@ -57,6 +69,7 @@ export function LoginPanel({
 
           <Button type="submit">Entrar com Basic Auth</Button>
         </form>
+        </div>
       </section>
     </main>
   );

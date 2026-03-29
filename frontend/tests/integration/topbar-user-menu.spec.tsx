@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TopbarUserMenu } from "@/components/ui/topbar-user-menu";
 import { seededAccounts } from "./auth-menu-fixtures";
@@ -18,12 +19,19 @@ vi.mock("@/features/security/actions", () => ({
 }));
 
 describe("topbar user menu", () => {
-  it("renders authenticated user identity and account actions", () => {
+  it("renders authenticated user identity and account actions", async () => {
+    const user = userEvent.setup();
+
     render(<TopbarUserMenu user={seededAccounts.operador} />);
 
-    expect(screen.getAllByText("Operador Padrao")).toHaveLength(3);
-    expect(screen.getByText(/Operador · operador@fidc.local/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Ajustes da conta" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /1 notificacoes pendentes/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Menu da conta de Operador Padrao/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Menu da conta de Operador Padrao/i }));
+
+    expect(screen.getAllByText("Operador Padrao").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Operador · operador@fidc.local/).length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: "Alterar senha" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Logout" })).toBeInTheDocument();
   });
 });

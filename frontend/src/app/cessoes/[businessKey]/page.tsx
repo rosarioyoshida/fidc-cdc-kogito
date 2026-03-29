@@ -4,13 +4,20 @@ type CessaoDetailPageProps = {
 };
 
 import { notFound, redirect } from "next/navigation";
+import { AppShell } from "@/components/layout/app-shell";
+import { Button } from "@/components/ui/button";
 import { CessaoDetail } from "@/features/cessao/cessao-detail";
 import {
   advanceEtapaAction,
   getCessao,
   refreshCessaoAction
 } from "@/features/cessao/actions";
-import { getPermissionContext } from "@/features/security/actions";
+import {
+  buildCessaoContextNavigation,
+  buildPrimaryAction,
+  primaryNavigation
+} from "@/features/navigation/shell-config";
+import { getCurrentUser, getPermissionContext } from "@/features/security/actions";
 import { ApiError } from "@/lib/api-client";
 
 export default async function CessaoDetailPage({
@@ -22,21 +29,34 @@ export default async function CessaoDetailPage({
   const errorMessage =
     typeof query.error === "string" ? decodeURIComponent(query.error) : undefined;
   try {
-    const [cessao, permissionContext] = await Promise.all([
+    const [user, cessao, permissionContext] = await Promise.all([
+      getCurrentUser(),
       getCessao(businessKey),
       getPermissionContext(businessKey)
     ]);
 
     return (
-      <main>
+      <AppShell
+        user={user}
+        navigation={primaryNavigation}
+        primaryAction={buildPrimaryAction()}
+        secondaryNav={buildCessaoContextNavigation(businessKey)}
+        secondaryControls={
+          <form action={refreshCessaoAction}>
+            <input type="hidden" name="businessKey" value={businessKey} />
+            <Button type="submit" variant="secondary">
+              Atualizar status
+            </Button>
+          </form>
+        }
+      >
         <CessaoDetail
           cessao={cessao}
           permissionContext={permissionContext}
           errorMessage={errorMessage}
           advanceAction={advanceEtapaAction}
-          refreshAction={refreshCessaoAction}
         />
-      </main>
+      </AppShell>
     );
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
